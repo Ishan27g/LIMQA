@@ -1,4 +1,4 @@
 # ITProject
 
 
-Main repository for the project
+Main repository for the project.
