@@ -1,0 +1,5 @@
+.env file
+
+MONGO_HOSTNAME=mongo
+MONGO_DB=app_db
+MONGO_PORT=27017
