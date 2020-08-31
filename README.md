@@ -1,5 +1,6 @@
 # ITProject
 
+![CI](https://github.com/Lux040899/LIMQA/workflows/CI/badge.svg)
 
 Main repository for the project.
 
