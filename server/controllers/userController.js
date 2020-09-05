@@ -2,12 +2,14 @@
 const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
 const {validationResult } = require("express-validator");
+const  User = require('../models/user');
 
 const DUMMY_USERS = [
     {
         name: "qunzhi wang",
         email: "test@test.com",
-        password: "test"
+        password: "test",
+        social: "http"
     }
 ];
 
@@ -15,30 +17,51 @@ const getUsers = (req, res, next) => {
   res.json({ users: DUMMY_USERS });
 };
 
-const signup = (req, res, next) => {
+const signup = async (req, res, next) => {
   const error =  validationResult(req);
   if(!error.isEmpty()) {
       console.log(error);
-      
-      throw new HttpError("Invalid inputs passed, please check your data.", 422);
+      return next(new HttpError("Invalid inputs passed, please check your data.", 422));
   }
-  const { name, email, password } = req.body;
-
-  const hasUser = DUMMY_USERS.find(u => u.email === email);
-  if (hasUser) {
-    throw new HttpError('Could not create user, email already exists.', 422);
+  const { name, email, password, social} = req.body;
+  let existingUser
+  try {
+    existingUser = await User.findOne({ email: email})
+  } catch (err) {
+    const error = new HttpError(
+      'Signing up failed, please try agin later.',
+      500
+    );
+    return next(error);
   }
 
-  const createdUser = {
-    id: uuid4(),
-    name, // name: name
+  if(existingUser) {
+    const error = new HttpError (
+      'User exists already, please login instead',
+      422
+    );
+    return next(error);
+  }
+
+  const createdUser = new User({
+    name,
     email,
-    password
-  };
+    image : 'https://www.google.com/search?q=user+icon&rlz=1C5CHFA_enAU761AU761&sxsrf=ALeKk00fLMpTpKAC6qyRYyGE18RpT9OwyQ:1599299367370&tbm=isch&source=iu&ictx=1&fir=CRnY8psxz2WEvM%252CAbaBnhIZwWRSVM%252C_&vet=1&usg=AI4_-kQ6uVXTbAUGLP08PnL8nhZ-0P-Cow&sa=X&ved=2ahUKEwjtxLm13tHrAhXBfX0KHaWvDdoQ9QF6BAgKEGc&biw=1309&bih=746#imgrc=CRnY8psxz2WEvM',
+    password,
+    social
+  });
 
-  DUMMY_USERS.push(createdUser);
+  try {
+    await createdUser.save();
+  } catch (err) {
+    const error = new HttpError(
+      'creating user failed, please try again.'
+    );
+    return next(error);
+  }
+  
 
-  res.status(201).json({user: createdUser});
+  res.status(201).json({user: createdUser.toObject({ getters : true})});
 };
 
 const login = (req, res, next) => {

@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require("mongoose");
 
 
 
@@ -36,4 +37,13 @@ app.listen(PORT, () => {
         console.log(`Express server listening on `+ add + `:${PORT}`)
      })
 })*/
-app.listen(PORT);
+mongoose
+  .connect('mongodb+srv://qunzhi:test123@cluster0.7wtff.mongodb.net/e-portfolio?retryWrites=true&w=majority')
+  .then(() => {
+      app.listen(PORT);
+  })
+  .catch(err => {
+      console.log(err);
+  });
+
+
