@@ -48,11 +48,16 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
+  let i =0;
+  var path = [];
+  for (i = 0; i < req.files.length; i++) {
+    path.push(req.files[i].path);
+  }
 
   const createdUser = new User({
     name,
     email,
-    image: req.file.path,
+    files: path,
     password,
     social
   });

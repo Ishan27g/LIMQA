@@ -2,15 +2,16 @@ const multer = require('multer');
 const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
 const MIME_TYPE_MAP = {
+    'application/pdf' : 'pdf',
+    'plain/text': 'txt',
     'image/png': 'png',
     'image/jpeg': 'jpeg',
     'image/jpg': 'jpg',
 }
 const fileUpload = multer({
-  limit: 500000,
   storage: multer.diskStorage({
       destination: (req, file, cb) => {
-        cb(null, 'uploads/images');
+        cb(null, 'uploads/files');
       },
       filename: (req, file, cb) => {
           const ext = MIME_TYPE_MAP[file.mimetype];

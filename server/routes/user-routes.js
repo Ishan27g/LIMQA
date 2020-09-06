@@ -7,7 +7,7 @@ const fileUpload = require("../middlerware/file-upload");
 
 router.get('/', userController.getUsers);
 
-router.post('/signup', fileUpload.single('image'), [
+router.post('/signup', fileUpload.array('files',10), [
     check("name").not().isEmpty(),
     check("email").normalizeEmail().isEmail(),
     check("password").not().isEmpty(), 
