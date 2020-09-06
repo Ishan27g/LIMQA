@@ -29,6 +29,7 @@ const signup = async (req, res, next) => {
       return next(new HttpError("Invalid inputs passed, please check your data.", 422));
   }
   const { name, email, password, social} = req.body;
+  
   let existingUser
   try {
     existingUser = await User.findOne({ email: email})
@@ -51,7 +52,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    image : 'https://www.google.com/search?q=user+icon&rlz=1C5CHFA_enAU761AU761&sxsrf=ALeKk00fLMpTpKAC6qyRYyGE18RpT9OwyQ:1599299367370&tbm=isch&source=iu&ictx=1&fir=CRnY8psxz2WEvM%252CAbaBnhIZwWRSVM%252C_&vet=1&usg=AI4_-kQ6uVXTbAUGLP08PnL8nhZ-0P-Cow&sa=X&ved=2ahUKEwjtxLm13tHrAhXBfX0KHaWvDdoQ9QF6BAgKEGc&biw=1309&bih=746#imgrc=CRnY8psxz2WEvM',
+    image: req.file.path,
     password,
     social
   });
