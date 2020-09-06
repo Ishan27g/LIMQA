@@ -13,6 +13,6 @@ router.post('/signup',[
     check("password").not().isEmpty(), 
     check("password").isLength({ min: 6 }), ] , userController.signup);
 
-router.post('/login', userController.login);
+router.post('/login', check('email').normalizeEmail(),userController.login);
 
 module.exports = router;
