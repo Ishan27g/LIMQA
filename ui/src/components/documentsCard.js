@@ -7,15 +7,14 @@ import docImage from '../Image/documents.png';
 class documentsCard extends Component {
 
     render() {
+        console.log(this.props.note);
         return (
             <div>
                 <Card className='documentsCard' >
                     <Card.Img variant='top' src={docImage}/>
                     <Card.Body>
                         <Card.Title>
-                            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-                                <h3>documents title</h3>
-                            </div>
+                            {this.props.note.Title}
                         </Card.Title>
                         <br/>
                         <NavLink to={"/"}>

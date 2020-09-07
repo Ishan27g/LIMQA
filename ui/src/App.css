@@ -36,3 +36,38 @@
     transform: rotate(360deg);
   }
 }
+
+.fileupload{
+  position: relative;
+}
+
+.docUpload{
+  background-color: darkcyan;
+  height: 1.5em;
+  width: 10em;
+  line-height: 1.5em;
+  text-align: center;
+  color: white;
+  font-size: 1.2em;
+}
+
+.profileUpload{
+  background-color: darkcyan;
+  height: 1.5em;
+  width: 10em;
+  line-height: 1.5em;
+  text-align: center;
+  color: white;
+  font-size: 1.2em;
+}
+
+.imageUpload{
+  background-color: darkcyan;
+  height: 1.5em;
+  width: 10em;
+  line-height: 1.5em;
+  text-align: center;
+  color: white;
+  font-size: 1.2em;
+  margin-left: 40%;
+}
