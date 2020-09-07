@@ -81,11 +81,7 @@ class App extends Component{
           </Navbar>
         </header>
 
-        <Modal
-          show={this.state.loginButton}
-          onHide={this.state.loginButton}
-          backdrop="static"
-          keyboard={false}>
+        <Modal show={this.state.loginButton} onHide={this.handleSignClose}>
           <Modal.Body>
           <form>
             <h3>Sign In</h3>
