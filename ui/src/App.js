@@ -9,11 +9,11 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import Home from './components/Home/Home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
-
+import logo from './Image/logo.png'
 class App extends Component{
   constructor(props){
     super(props);
@@ -35,40 +35,58 @@ class App extends Component{
     this.setState({ login: true });
     this.setState({ loginButton: false });
   }
-  
+
   render(){
     return (
       <div>
         <header>
-          <Navbar bg="light" expand="lg" fixed="top" >
-            <Navbar.Brand href="/">Home icon</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
+        <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
+          <Navbar.Brand href="/">
+            <img alt="Logo" src = {logo} width="100" height="30" className="d-inline-block align-top fs-5"/>
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className ="mr-auto">
+              <Nav.Item>
                 <Nav.Link href="/">About me</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
                 <Nav.Link href="/">Experience</Nav.Link>
-                <Nav.Link href="/">Achievements</Nav.Link>
-                <Nav.Link href="/">Timeline</Nav.Link>
-                <Nav.Link href="/">Contact me</Nav.Link>
-              </Nav>
-              <Form inline>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link href="link">Achievements</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link href="link">Timeline</Nav.Link>
+                </Nav.Item>
+                <NavDropdown bg = "info" title="More" id="collasible-nav-dropdown">
+                  <Nav.Link href="link">Contact me</Nav.Link>
+                </NavDropdown>
+                </Nav>
+                <Nav>
                 {this.state.login ? (<Button variant="outline-info" href="/manage">Manage</Button>)
                 :
-                (<Button variant="outline-info" onClick={this.handleSignShow}>Log in</Button>)}
-                
-                <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                <Button variant="outline-info">Search</Button>
-              </Form>
+                (<Button variant="outline-info" onClick={this.handleSignShow}>
+                <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
+                    <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+                </svg></Button>)}
+                <Form inline>
+                  <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                  <Button variant="primary-outline-info">Search</Button>
+                </Form>
+                </Nav>
             </Navbar.Collapse>
           </Navbar>
         </header>
-        
-        <Modal 
+
+        <Modal
           show={this.state.loginButton}
           onHide={this.state.loginButton}
           backdrop="static"
           keyboard={false}>
-          <Modal.Body> 
+          <Modal.Body>
           <form>
             <h3>Sign In</h3>
 
@@ -91,7 +109,7 @@ class App extends Component{
           </form>
 
           </Modal.Body>
-          <Modal.Footer>              
+          <Modal.Footer>
             <Button size="lg" block variant="primary" onClick={this.handleSignin}>
               Log in
             </Button>
