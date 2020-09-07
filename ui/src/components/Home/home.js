@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../App.css";
+import './Home.css';
 
 import Carousel from "react-bootstrap/Carousel";
-import Image from 'react-bootstrap/Image'
+import Image from 'react-bootstrap/Image';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
@@ -21,15 +22,15 @@ class Home extends Component {
     render(){
         return(
             <body>
-                <Container>
-                <Carousel>
-                    <Carousel.Item>
+                <Container class = "cover-image-carousel">
+                <Carousel >
+                    <Carousel.Item class = "carousel-item">
                         <img
                         className="d-block w-100"
                         src= {sampleImage1}
                         alt="First slide"
                         />
-                        <Carousel.Caption>
+                        <Carousel.Caption class = "carousel-caption">
                         <h3>First slide label</h3>
                         <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                         </Carousel.Caption>

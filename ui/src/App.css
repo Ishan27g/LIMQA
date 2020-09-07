@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+.nav-item {
+  padding: 10px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.nav-item:hover, .dropdown-menu:hover{
+  background-color: #E6E6E6;
+}
