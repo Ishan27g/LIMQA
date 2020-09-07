@@ -4,13 +4,11 @@ import "../../App.css";
 
 import Carousel from "react-bootstrap/Carousel";
 import Image from 'react-bootstrap/Image'
-
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import CardDeck from 'react-bootstrap/CardDeck';
-
 
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
@@ -19,6 +17,7 @@ import profile from '../../Image/profile.png';
 import docIcon from '../../Image/documents.png';
 
 class Home extends Component {
+
     render(){
         return(
             <body>
