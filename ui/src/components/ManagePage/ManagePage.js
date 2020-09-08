@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../App.css";
-
+import './Manage.css'
 import Container from 'react-bootstrap/Container';
 import Carousel from "react-bootstrap/Carousel";
 import Image from 'react-bootstrap/Image'
@@ -57,74 +57,66 @@ class ManagePage extends Component {
         let docCards = documents.map(card =>{
           return(
             <Col sm='4'>
-              <DocCard note={card}/>  
+              <DocCard note={card}/>
             </Col>
           )
         })
 
         return(
             <body>
-                <Container>
-                <Carousel>
-                    <Carousel.Item>
-                        <img
-                        className="d-block w-100"
-                        src= {sampleImage1}
-                        alt="First slide"
-                        />
-                        <Carousel.Caption>
-                        <h3>First slide label</h3>
-                        <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                        </Carousel.Caption>
-                        <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-                        <label htmlFor="BtnBrowseHidden" className="imageUpload">
-                            upload image
-                        </label>
-                    </Carousel.Item>
+            <div class = "manage-cover-image">
+              <Carousel>
+                  <Carousel.Item>
+                      <img
+                      src= {sampleImage1}
+                      alt="First slide"
+                      />
+                      <Carousel.Caption>
+                      <h3>First slide label</h3>
+                      <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                      </Carousel.Caption>
+                  </Carousel.Item>
+                  <Carousel.Item>
+                      <img
+                      src= {sampleImage2}
+                      alt="Third slide"
+                      />
 
-                    <Carousel.Item>
-                        <img
-                        className="d-block w-100"
-                        src= {sampleImage2}
-                        alt="Third slide"
-                        />
-                        <Carousel.Caption>
-                        <h3>Second slide label</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        </Carousel.Caption>
-                        <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-                        <label for="BtnBrowseHidden" className="imageUpload">
-                            upload image
-                        </label>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                        className="d-block w-100"
-                        src= {sampleImage3}
-                        alt="Third slide"
-                        />
-                        <Carousel.Caption>
-                        <h3>Third slide label</h3>
-                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                        </Carousel.Caption>
-                        <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-                        <label for="BtnBrowseHidden" className="imageUpload">
-                            Upload image
-                        </label>
-                    </Carousel.Item>
-                </Carousel>
-                </Container>
-                <Container>
+                      <Carousel.Caption>
+                      <h3>Second slide label</h3>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                      </Carousel.Caption>
+                  </Carousel.Item>
+                  <Carousel.Item>
+                      <img
+                      src= {sampleImage3}
+                      alt="Third slide"
+                      />
+
+                      <Carousel.Caption>
+                      <h3>Third slide label</h3>
+                      <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                      </Carousel.Caption>
+                  </Carousel.Item>
+                  <Carousel.Item>
+                    <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
+                    <label for="BtnBrowseHidden" className="imageUpload">
+                      <br/>Upload Documents
+                    </label>
+                  </Carousel.Item>
+              </Carousel>
+            </div>
+            <Container>
                 <Row>
                     <Col xs={6} md={6}>
                         <Row>
                             <Image src={profile} roundedCircle />
-                        </Row>     
-                        
+                        </Row>
+
                         <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
                         <label htmlFor="BtnBrowseHidden" className="profileUpload">
                             Upload profile
-                        </label>              
+                        </label>
                     </Col >
                     <Col xs={6} md={6}>
                         <Button variant="info" onClick={this.handleEditBio}>Edit</Button>
@@ -140,12 +132,12 @@ class ManagePage extends Component {
                     </Col>
                 </Row>
                 </Container>
-                
+
                 <Container>
                 <Row>
                     <Col xs={6} md={4}>
                         <Row>
-                            <img src={docIcon}/>  
+                            <img src={docIcon}/>
                         </Row>
                         <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
                         <label htmlFor="BtnBrowseHidden" className="docUpload">
@@ -168,12 +160,12 @@ class ManagePage extends Component {
                         </Dropdown>
                     </Form>
                     </Row>
-                    <Container fluid style={{overflow:"scroll", height:'20rem'}}> 
+                    <Container fluid style={{overflow:"scroll", height:'20rem'}}>
                     <Row>
                         {docCards}
                     </Row>
                     </Container>
-                    
+
                     </Col>
                 </Row>
                 </Container>
