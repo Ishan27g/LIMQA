@@ -11,7 +11,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
-import Home from './components/Home/Home.js';
+import Home from './components/Home/home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import logo from './Image/logo.png'
 

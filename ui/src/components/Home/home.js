@@ -21,58 +21,55 @@ class Home extends Component {
 
     render(){
         return(
-            <body>
-                <Container class = "cover-image-carousel">
-                <Carousel >
-                    <Carousel.Item class = "carousel-item">
-                        <img
-                        className="d-block w-100"
-                        src= {sampleImage1}
-                        alt="First slide"
-                        />
-                        <Carousel.Caption class = "carousel-caption">
-                        <h3>First slide label</h3>
-                        <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                        </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                        className="d-block w-100"
-                        src= {sampleImage2}
-                        alt="Third slide"
-                        />
+          <body>
+              <Carousel>
+                  <Carousel.Item>
+                      <img
+                      src= {sampleImage1}
+                      alt="First slide"
+                      />
+                      <Carousel.Caption>
+                      <h3>First slide label</h3>
+                      <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                      </Carousel.Caption>
+                  </Carousel.Item>
+                  <Carousel.Item>
+                      <img
+                      src= {sampleImage2}
+                      alt="Third slide"
+                      />
 
-                        <Carousel.Caption>
-                        <h3>Second slide label</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                        className="d-block w-100"
-                        src= {sampleImage3}
-                        alt="Third slide"
-                        />
+                      <Carousel.Caption>
+                      <h3>Second slide label</h3>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                      </Carousel.Caption>
+                  </Carousel.Item>
+                  <Carousel.Item>
+                      <img
+                      src= {sampleImage3}
+                      alt="Third slide"
+                      />
 
-                        <Carousel.Caption>
-                        <h3>Third slide label</h3>
-                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                        </Carousel.Caption>
-                    </Carousel.Item>
-                </Carousel>
-                </Container>
-                <br/>
+                      <Carousel.Caption>
+                      <h3>Third slide label</h3>
+                      <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                      </Carousel.Caption>
+                  </Carousel.Item>
+              </Carousel>
+              <br/>
+
                 <Container>
                     <Row>
-                        <Col xs={6} md={4}>
+                        <Col md ={4}>
                         <Image src={profile} roundedCircle />
                         </Col>
-                        <Col xs={6} md={4}>
+                        <Col md = {4}>
                         <h1>Bio info</h1>
                         <p>here is your bio information</p>
                         </Col>
                     </Row>
                 </Container>
+
                 <Container>
                 <Carousel>
                     <Carousel.Item>
