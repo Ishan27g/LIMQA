@@ -44,3 +44,38 @@
 .nav-item:hover, .dropdown-menu:hover{
   background-color: #E6E6E6;
 }
+
+.fileupload{
+  position: relative;
+}
+
+.docUpload{
+  background-color: darkcyan;
+  height: 1.5em;
+  width: 10em;
+  line-height: 1.5em;
+  text-align: center;
+  color: white;
+  font-size: 1.2em;
+}
+
+.profileUpload{
+  background-color: darkcyan;
+  height: 1.5em;
+  width: 10em;
+  line-height: 1.5em;
+  text-align: center;
+  color: white;
+  font-size: 1.2em;
+}
+
+.imageUpload{
+  background-color: darkcyan;
+  height: 1.5em;
+  width: 10em;
+  line-height: 1.5em;
+  text-align: center;
+  color: white;
+  font-size: 1.2em;
+  margin-left: 40%;
+}
