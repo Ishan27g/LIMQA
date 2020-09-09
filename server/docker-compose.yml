@@ -1,15 +1,24 @@
 version: '3.7'
 
 services:
+    mongo:
+      image: mongo:latest
+      container_name: eportfolio-mongodb
+      ports:
+        - "27017:27017"
+      volumes: 
+      - ./data_db:/data/db
+      networks:
+        - ePortfolio_nw
     server:
       build:
         context: .
         dockerfile: Dockerfile
       image: eportfolio-nodeserver-img
       container_name: node-express
-      volumes:
-       - .:/usr/src/app
-       - /usr/src/app/node_modules
+      #volumes:
+       #- .:/usr/src/app
+       #- /usr/src/app/node_modules
       ports:
         - "8080:8080"
       depends_on:
@@ -19,8 +28,11 @@ services:
         - MONGO_HOSTNAME=$MONGO_HOSTNAME
         - MONGO_PORT=$MONGO_PORT
         - MONGO_DB=$MONGO_DB
-    mongo:
-      image: mongo
-      container_name: eportfolio-mongodb
-      ports:
-        - "27017:27017"
+      networks:
+        - ePortfolio_nw
+networks:
+  ePortfolio_nw:
+    driver: bridge
+volumes:
+  data_db:
+    external: true
