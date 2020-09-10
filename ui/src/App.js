@@ -10,10 +10,12 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import Image from 'react-bootstrap/Image';
 
 import Home from './components/Home/Home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
-import logo from './Image/logo.png'
+import logo from './Image/logo.png';
+import QRcode from './Image/QRcode.png';
 
 import loginButton from './Image/loginButton.svg';
 class App extends Component{
@@ -21,7 +23,8 @@ class App extends Component{
     super(props);
     this.state ={
         loginButton: false,
-        login: false
+        login: false,
+        QRButton: false,
     }
 }
 
@@ -33,6 +36,14 @@ class App extends Component{
     this.setState({ loginButton: true });
   }
 
+  handleQRShow = () => {
+    this.setState({ QRButton: true });
+  }
+
+  handleQRClose = () => {
+    this.setState({ QRButton: false });
+  }
+
   handleSignin = () => {
     this.setState({ login: true });
     this.setState({ loginButton: false });
@@ -40,6 +51,7 @@ class App extends Component{
 
   render(){
     return (
+        <div>
         <header>
         <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
           <Navbar.Brand href="/">
@@ -119,6 +131,23 @@ class App extends Component{
             </Switch>
           </BrowserRouter>}
         </header>
+
+        <footer>
+          <Button size="lg" block variant="outline-primary" onClick={this.handleQRShow}>
+                QR code
+          </Button>
+          <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
+            <Modal.Body>
+              <Image src={QRcode} rounded />
+            </Modal.Body>
+            <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleQRClose}>
+              Close
+            </Button>
+            </Modal.Footer>
+          </Modal>
+        </footer>
+      </div>
     );
   }
 }
