@@ -1,12 +1,17 @@
 .manage-cover-image{
   position: relative;
-  margin-top: 70px;
+  margin-top: 56px;
+  margin-bottom: 20px;
+
+  margin-left: 5%;
+  margin-right: 5%;
+
+
 }
 
-.carousel-item > img, .carousel-item > label{
-  display: block;
+.carousel-item > img{
   width: 100%;
-  height: 500px;
+  height: 25vmax;
 
 }
 

@@ -22,54 +22,67 @@ class Home extends Component {
     render(){
         return(
           <body>
+            <div class = "cover-image">
               <Carousel>
-                  <Carousel.Item>
-                      <img
-                      src= {sampleImage1}
-                      alt="First slide"
-                      />
-                      <Carousel.Caption>
-                      <h3>First slide label</h3>
-                      <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                      </Carousel.Caption>
-                  </Carousel.Item>
-                  <Carousel.Item>
-                      <img
-                      src= {sampleImage2}
-                      alt="Third slide"
-                      />
+                    <Carousel.Item>
+                        <img
+                        src= {sampleImage1}
+                        alt="First slide"
+                        />
+                        <Carousel.Caption>
+                        <h3>First slide label</h3>
+                        <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img
+                        src= {sampleImage2}
+                        alt="Third slide"
+                        />
 
-                      <Carousel.Caption>
-                      <h3>Second slide label</h3>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                      </Carousel.Caption>
-                  </Carousel.Item>
-                  <Carousel.Item>
-                      <img
-                      src= {sampleImage3}
-                      alt="Third slide"
-                      />
+                        <Carousel.Caption>
+                        <h3>Second slide label</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img
+                        src= {sampleImage3}
+                        alt="Third slide"
+                        />
 
-                      <Carousel.Caption>
-                      <h3>Third slide label</h3>
-                      <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                      </Carousel.Caption>
-                  </Carousel.Item>
-              </Carousel>
-              <br/>
+                        <Carousel.Caption>
+                        <h3>Third slide label</h3>
+                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                </Carousel>
+              </div>
 
-                <Container>
-                    <Row>
-                        <Col md ={4}>
-                        <Image src={profile} roundedCircle />
+              <div class = "basic-info">
+                <Container fluid = {true}>
+                    <Row >
+                      <Col>
+                        <h1 style = {{lineHeight: 2 }}>Welcome!<br/></h1>
+                      </Col>
+                    </Row>
+
+                    <Row >
+                        <Col>
+                        <Image src={profile} roundedCircle fluid/>
                         </Col>
-                        <Col md = {4}>
-                        <h1>Bio info</h1>
-                        <p>here is your bio information</p>
+                        <Col>
+                        <p>
+                            Twitter lover. Certified entrepreneur.
+                            Tv evangelist. Hardcore thinker.
+                            Professional reader. Problem solver. Organizer.
+                        </p>
                         </Col>
                     </Row>
                 </Container>
+              </div>
 
+              <div class = "highlighted-documents">
                 <Container>
                 <Carousel>
                     <Carousel.Item>
@@ -140,6 +153,7 @@ class Home extends Component {
                     </Carousel.Item>
                 </Carousel>
                 </Container>
+              </div>
             </body>
         )
     }
