@@ -3,7 +3,7 @@ const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
 const MIME_TYPE_MAP = {
     'application/pdf' : 'pdf',
-    'plain/text': 'txt',
+    'text/plain': 'txt',
     'image/png': 'png',
     'image/jpeg': 'jpeg',
     'image/jpg': 'jpg',
