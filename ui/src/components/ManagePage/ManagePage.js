@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../App.css";
-import './Manage.css'
+import './Manage.css';
+
 import Container from 'react-bootstrap/Container';
 import Carousel from "react-bootstrap/Carousel";
 import Image from 'react-bootstrap/Image'
@@ -11,14 +12,15 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
+import DocCard from '../documentsCard.js';
 
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
 import docIcon from '../../Image/documents.png';
+import uploadIcon from '../../Image/uploadIcon.png';
 
-import DocCard from '../documentsCard.js';
 
 class ManagePage extends Component {
     constructor(){
