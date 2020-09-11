@@ -21,12 +21,17 @@ const dbName = `${MONGO_DB}`;
 // Create a new MongoClient
 const client = new MongoClient(url);
 
-// Use connect method to connect to the Server
-client.connect(function(err) {
-  assert.equal(null, err);
-  console.log("Connected successfully to MongoDB server");
+// Use connect method to connect to MongoDB after a safe delay as it takes time to load
+setTimeout(connect, 15000);
 
-  const db = client.db(dbName);
-
-  client.close();
-});
+function connect(){
+  client.connect(function(err) {
+    assert.equal(null, err);
+    console.log("Connected successfully to MongoDB server");
+  
+    const db = client.db(dbName);
+  
+    client.close();
+  });
+  
+}
