@@ -4,44 +4,21 @@ body{
   background-repeat: repeat;
   background-size: 500px;
 }
+
 .nav-item {
   padding: 10px;
   padding-top: 0px;
   padding-bottom: 0px;
 }
+
 .nav-item:hover, .dropdown-menu:hover{
   background-color: #E6E6E6;
 }
-
-
-
-.fileupload{
-  position: relative;
+footer{
+  background-color: #E6E6E6;
+  height: 48px;
 }
 
-.docUpload{
-  background-color: darkcyan;
-  height: 1.5em;
-  width: 10em;
-  line-height: 1.5em;
-  text-align: center;
-  color: white;
-  font-size: 1.2em;
-}
-
-.profileUpload{
-  background-color: darkcyan;
-  height: 1.5em;
-  width: 10em;
-  line-height: 1.5em;
-  text-align: center;
-  color: white;
-  font-size: 1.2em;
-}
-
-.imageUpload{
-  background-color: #e6e6e6;
-  text-align: center;
-  font-size: 2.5em;
-  color: black;
+footer > .modal-body{
+  align-items: center;
 }

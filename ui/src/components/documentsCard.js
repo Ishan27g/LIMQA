@@ -18,7 +18,7 @@ class documentsCard extends Component {
                         </Card.Title>
                         <br/>
                         <NavLink to={"/"}>
-                            <Card.Link>View documents</Card.Link>
+                            <Card.Link></Card.Link>
                         </NavLink>
                     </Card.Body>
                 </Card>

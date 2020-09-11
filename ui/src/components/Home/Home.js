@@ -16,6 +16,7 @@ import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
 import docIcon from '../../Image/documents.png';
+import bioBackground from '../../Image/bioContentBackground.jpg';
 
 class Home extends Component {
 
@@ -61,17 +62,18 @@ class Home extends Component {
 
               <div class = "basic-info">
                 <Container fluid = {true}>
-                    <Row >
+                    <Row>
                       <Col>
                         <h1 style = {{lineHeight: 2 }}>Welcome!<br/></h1>
                       </Col>
                     </Row>
 
-                    <Row >
-                        <Col>
-                        <Image src={profile} roundedCircle fluid/>
+                    <Row style = {{marginTop: "2vmax"}} >
+                        <Col style = {{textAlign: "center"}}>
+                        <Image src={profile} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
                         </Col>
-                        <Col>
+                        <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
+
                         <p>
                             Twitter lover. Certified entrepreneur.
                             Tv evangelist. Hardcore thinker.
@@ -83,24 +85,28 @@ class Home extends Component {
               </div>
 
               <div class = "highlighted-documents">
-                <Container>
-                <Carousel>
+                <Row style = {{marginBottom: "3vmax"}}>
+                  <Col>
+                    <h3> Highlighted Documents </h3>
+                  </Col>
+                </Row>
+                <Carousel indicators ={false}>
                     <Carousel.Item>
-                    <CardDeck style={{height:"70%"}}>
-                    <Card >
-                        <Card.Img variant="top" src={docIcon} />
+                    <CardDeck>
+                    <Card>
+                        <Card.Img src={docIcon} />
                         <Card.Body>
+                        <Card.Title> Card Title</Card.Title>
+                        </Card.Body>
+                    </Card>
+                    <Card>
+                        <Card.Img src={docIcon} />
+                        <Card.Body bsPrefix = "card-body">
                         <Card.Title>Card title</Card.Title>
                         </Card.Body>
                     </Card>
                     <Card>
-                        <Card.Img variant="top" src={docIcon} />
-                        <Card.Body>
-                        <Card.Title>Card title</Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img variant="top" src={docIcon} />
+                        <Card.Img src={docIcon} />
                         <Card.Body>
                         <Card.Title>Card title</Card.Title>
                         </Card.Body>
@@ -152,7 +158,6 @@ class Home extends Component {
                     </CardDeck>
                     </Carousel.Item>
                 </Carousel>
-                </Container>
               </div>
             </body>
         )

@@ -27,7 +27,9 @@ class App extends Component{
         QRButton: false,
     }
 }
-
+  handleSignClose = () => {
+    this.setState({ loginButton: false });
+  }
   handleSignClose = () => {
       this.setState({ loginButton: false });
   }
@@ -45,6 +47,7 @@ class App extends Component{
   }
 
   handleSignin = () => {
+
     this.setState({ login: true });
     this.setState({ loginButton: false });
   }
@@ -83,7 +86,7 @@ class App extends Component{
                     <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                     <Button variant="outline-dark">Search</Button>
                   </Form>
-                  {this.state.login ? (<Button variant="outline-dark" className = "p-5" href="/manage">Manage</Button>)
+                  {this.state.login ? (<Button variant="outline-dark" className = "p-5" >Manage</Button>)
                   :
                   (<Button inline variant="primary-info" onClick={this.handleSignShow}>
                   <img alt="Login" src = {loginButton}/>
@@ -119,29 +122,31 @@ class App extends Component{
 
             </Modal.Body>
             <Modal.Footer>
-              <Button size="lg" block variant="primary" onClick={this.handleSignin}>
+              <Button size="lg" block variant="primary" onClick={this.handleSignin} href="/manage">
                 Login
               </Button>
             </Modal.Footer>
           </Modal>
+
           {<BrowserRouter>
             <Switch>
               <Route path="/" component={Home} exact/>
               <Route path="/manage" component={ManagePage}/>
             </Switch>
           </BrowserRouter>}
+
         </header>
 
         <footer>
-          <Button size="lg" block variant="outline-primary" onClick={this.handleQRShow}>
+          <Button size="lg" block variant="outline-dark" onClick={this.handleQRShow} style = {{float: "right", verticalAlign:"bottom"}}>
                 QR code
           </Button>
           <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
             <Modal.Body>
-              <Image src={QRcode} rounded />
+              <Image src={QRcode} rounded  />
             </Modal.Body>
             <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleQRClose}>
+            <Button variant="outline-dark" onClick={this.handleQRClose}>
               Close
             </Button>
             </Modal.Footer>

@@ -2,10 +2,10 @@
 *{box-sizing: border-box;}
 
 .basic-info{
-  margin-top: 40px;
-  margin-bottom:80px;
-  margin-left: 20%;
-  margin-right: 20%;
+  margin-top: 0vmax;
+  margin-bottom:5vmax;
+  margin-left: 15%;
+  margin-right: 15%;
   padding: 0px;
 
 }
@@ -13,13 +13,13 @@
 .carousel-item > img {
   display: block;
   width: 100%;
-  height: 25vmaxpx;
+  height: 1vmax;
 
 }
 .cover-image {
   position: relative;
   margin-top: 56px;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 
   margin-left: 5%;
   margin-right: 5%;
@@ -37,7 +37,7 @@ h2{
 }
 
 h3{
-  font-size: 2em;
+  font-size: 1.8em;
 }
 
 p{
@@ -47,11 +47,27 @@ p{
   font-weight: bolder;
   color: white;
   text-align: center;
+
 }
 
-.cover-image> .carousel-item > img{
-  display: block;
-  width: 100%;
-  height: 40%;
+.highlighted-documents{
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-top: 7vmax;
+  margin-bottom: 5vmax;
 
+}
+
+.card {
+  background-color: rgba(0,0,0,0);
+  color: white;
+  text-align: center;
+  font-size: 2em;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bolder;
+}
+
+.card-body{
+  background-color: rgba(180,180,180,0.5);
+  height: 5vmax;
 }

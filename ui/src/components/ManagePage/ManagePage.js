@@ -20,7 +20,7 @@ import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
 import docIcon from '../../Image/documents.png';
 import uploadIcon from '../../Image/uploadIcon.png';
-
+import uploadDocuments from '../../Image/uploadDocuments.svg';
 
 class ManagePage extends Component {
     constructor(){
@@ -103,77 +103,91 @@ class ManagePage extends Component {
                   <Carousel.Item>
                     <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
                     <label for="BtnBrowseHidden" className="imageUpload">
-                      <br/>Upload Documents
+                      <Image src = {uploadIcon} alt ="Upload Icon" style = {{width: "11vmax", height: "9vmax"}}/>
+                      <br/>Upload Cover Images
                     </label>
                   </Carousel.Item>
               </Carousel>
             </div>
-            <Container>
-                <Row>
-                    <Col xs={6} md={6}>
-                        <Row>
-                            <Image src={profile} roundedCircle />
-                        </Row>
 
-                        <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-                        <label htmlFor="BtnBrowseHidden" className="profileUpload">
-                            Upload profile
-                        </label>
-                    </Col >
-                    <Col xs={6} md={6}>
-                        <Button variant="info" onClick={this.handleEditBio}>Edit</Button>
-                        <h1>Bio info</h1>
-                        {this.state.editBio ? (
-                            <Form>
-                                <Form.Label>Enter your bio here</Form.Label>
-                                <Form.Control as="textarea" rows="3" />
-                                <Button variant="outline-info" onClick={this.handleSubmiteBio}>submit</Button>
-                            </Form>
-                        ):
-                        (<p>here is your bio information</p>)}
+            <div class = "manage-basic-info">
+              <Container fluid = {true}>
+                  <Row>
+                    <Col>
+                      <h1>Welcome!</h1>
                     </Col>
-                </Row>
-                </Container>
+                  </Row>
+                  <Row style ={{marginTop: "2vmax"}}>
+                      <Col style = {{textAlign: "center"}}>
+                          <Image src={profile} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
+                          <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
 
+                          <label htmlFor="BtnBrowseHidden" className="profileUpload">
+                              Upload profile
+                          </label>
+                      </Col >
+                      <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
+                          {this.state.editBio ? (
+                              <Form>
+                                  <Form.Label>Enter your bio here</Form.Label>
+                                  <Form.Control as="textarea" rows="3" />
+                                  <Button variant="outline-info" onClick={this.handleSubmiteBio}>submit</Button>
+                              </Form>
+                          ):
+                          (<p>Twitter lover. Certified
+                              entrepreneur Tv evangelist.
+                              Hardcore thinker. Professional reader.
+                              Problem solver. Organizer.
+                            </p>)}
+                          <Button variant="info" onClick={this.handleEditBio} block>Edit</Button>
+
+                      </Col>
+                  </Row>
+                </Container>
+              </div>
+
+              <div class = "document-arena">
+                <h2 style = {{marginBottom: "3vmax"}}>Document Arena</h2>
                 <Container>
-                <Row>
-                    <Col xs={6} md={4}>
-                        <Row>
-                            <img src={docIcon}/>
-                        </Row>
-                        <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-                        <label htmlFor="BtnBrowseHidden" className="docUpload">
-                            Upload Documents
-                        </label>
-                    </Col >
-                    <Col xs={6} md={8}>
-                    <Row>
-                    <Form inline>
-                        <FormControl type="text" placeholder="Search for documents" className="mr-sm-2" />
-                        <Dropdown>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            {this.state.filter}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            <Dropdown.Item onClick={this.handleFilterOnTitle}>Title</Dropdown.Item>
-                            <Dropdown.Item onClick={this.handleFilterOnTime}>Time</Dropdown.Item>
-                            <Dropdown.Item onClick={this.handleFilterOnElse}>something else</Dropdown.Item>
-                        </Dropdown.Menu>
-                        </Dropdown>
-                    </Form>
-                    </Row>
-                    <Container fluid style={{overflow:"scroll", height:'20rem'}}>
-                    <Row>
-                        {docCards}
-                    </Row>
-                    </Container>
+                  <Row style ={{}}>
+                      <Col style = {{textAlign: "center", marginTop: "15vmax", marginBottom: "10vmax"}}>
+                          <Image src={uploadDocuments} style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}/>
+                          <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
+                          <label htmlFor="BtnBrowseHidden" className="docUpload">
+                              Upload Documents
+                          </label>
+                      </Col >
 
-                    </Col>
-                </Row>
+                      <Col xs={6} md={8}>
+                      <Container fluid style={{overflow:"scroll", height:'45rem'}}>
+                        <Row>
+                          <Col style = {{textAlign: "center"}}>
+                            <Form inline>
+                                <FormControl type="text" placeholder="Search for documents" className="mr-sm-2" />
+                                <Dropdown>
+                                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                      {this.state.filter}
+                                  </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onClick={this.handleFilterOnTitle}>Title</Dropdown.Item>
+                                    <Dropdown.Item onClick={this.handleFilterOnTime}>Time</Dropdown.Item>
+                                    <Dropdown.Item onClick={this.handleFilterOnElse}>something else</Dropdown.Item>
+                                </Dropdown.Menu>
+                                </Dropdown>
+                            </Form>
+                          </Col>
+                        </Row>
+                        <Row style = {{marginTop:"3vmax"}}>
+                            {docCards}
+                        </Row>
+                      </Container>
+
+                      </Col>
+                  </Row>
                 </Container>
+              </div>
             </body>
         )
     }
 }
-
 export default ManagePage;
