@@ -121,11 +121,12 @@ class ManagePage extends Component {
                       <Col style = {{textAlign: "center"}}>
                           <Image src={profile} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
                           <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-
-                          <label htmlFor="BtnBrowseHidden" className="profileUpload">
-                              Upload profile
-                          </label>
-                      </Col >
+                      <Col>
+                      </Col>
+                        <label htmlFor="BtnBrowseHidden" className="profileUpload">
+                            Upload profile
+                        </label>
+                      </Col>
                       <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
                           {this.state.editBio ? (
                               <Form>
