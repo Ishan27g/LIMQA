@@ -7,7 +7,6 @@ import docImage from '../Image/documents.png';
 class documentsCard extends Component {
 
     render() {
-        console.log(this.props.note);
         return (
             <div>
                 <Card className='documentsCard' >

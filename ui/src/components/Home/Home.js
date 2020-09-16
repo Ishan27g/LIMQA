@@ -16,10 +16,8 @@ import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
 import docIcon from '../../Image/documents.png';
-import bioBackground from '../../Image/bioContentBackground.jpg';
 
 class Home extends Component {
-
     render(){
         return(
           <body>

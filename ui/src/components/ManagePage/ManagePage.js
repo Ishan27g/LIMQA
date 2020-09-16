@@ -18,7 +18,6 @@ import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
-import docIcon from '../../Image/documents.png';
 import uploadIcon from '../../Image/uploadIcon.png';
 import uploadDocuments from '../../Image/uploadDocuments.svg';
 
