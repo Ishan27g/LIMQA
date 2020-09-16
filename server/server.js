@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const dotenv = require('dotenv');
 const dns = require('dns');
 const os = require('os');
+const passport = require("passport");
+const session = require("express-session");
 dotenv.config();
 
 
@@ -17,9 +19,29 @@ const PORT = 8080;
 const userRoutes = require('./routes/user-routes');
 const HttpError = require('./models/http-error');
 
+require("./config/passport")(passport);
+
 const app = express();
 app.use(bodyParser.json());
 
+// Express session middleware
+app.use(session({
+    secret: "secret",
+    resave: true,
+    saveUninitialized: true
+}));
+
+// passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use((req, res, next) => {
+    res.locals.user = req.user || null;
+    next();
+})
+
+
+// Routes
 app.use('/users', userRoutes);
 
 

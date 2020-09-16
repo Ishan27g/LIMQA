@@ -3,6 +3,8 @@ const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
 const {validationResult } = require("express-validator");
 const  User = require('../models/user');
+const passport = require("passport");
+const bcrypt = require("bcryptjs");
 
 
 
@@ -54,11 +56,20 @@ const signup = async (req, res, next) => {
     path.push(req.files[i].path);
   }
 
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 10);
+  } catch (err) {
+    const error = new HttpError("Could not create user, please try again.", 500);
+    return next(error);
+  }
+  
+
   const createdUser = new User({
     name,
     email,
     files: path,
-    password,
+    password: hashedPassword,
     social
   });
 
@@ -75,30 +86,11 @@ const signup = async (req, res, next) => {
   res.status(201).json({user: createdUser.toObject({ getters : true})});
 };
 
-const login = async (req, res, next) => {
-
-  const { email, password } = req.body;
-
-  let existingUser
-  try {
-    existingUser = await User.findOne({ email: email})
-  } catch (err) {
-    const error = new HttpError(
-      'logging in failed, please try agin later.',
-      500
-    );
-    return next(error);
-  }
-
-  if(!existingUser || existingUser.password !== password) {
-    const error = new HttpError(
-      'Invalid crendectials, could not log in.',
-      401
-    );
-    return next(error);
-  }
-
-  res.json({message: 'Logged in!'});
+const login = (req, res, next) => {
+  passport.authenticate('local', {
+    successRedirect: '/users/manage',
+    failureRedirect: '/users/login'
+  })(req, res, next);
 };
 
 exports.getUsers = getUsers;
