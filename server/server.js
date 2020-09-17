@@ -7,12 +7,11 @@ const dns = require('dns');
 const os = require('os');
 const passport = require("passport");
 const session = require("express-session");
+const cors = require('cors');
 dotenv.config();
-
 
 //init mongoDB
 //require('./src/db');
-
 
 const PORT = 8080;
 
@@ -22,7 +21,9 @@ const HttpError = require('./models/http-error');
 require("./config/passport")(passport);
 
 const app = express();
+app.use(express.json());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Express session middleware
 app.use(session({
@@ -44,23 +45,26 @@ app.use((req, res, next) => {
 // Routes
 app.use('/users', userRoutes);
 
+//-----------------------Cross-Origin Resource Sharing-----------------
+app.use(cors({
+    origin: 'http://localhost',
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+app.options('*', cors())
+
+app.all('', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://localhost");
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    //Auth Each API Request created by user.
+    next();
+});
 
 app.use((req, res, next) => {
     const error = new HttpError('Could not find this route.', 404);
-    throw error;
-});
-
-app.use((error, req, res, next) => {
-    if(req.file) {
-        fs.unlink(req.file.path, err => {
-            console.log(err)
-        });
-    }
-    if (res.headerSent) {
-      return next(error);
-    }
-    res.status(error.code || 500)
-    res.json({message: error.message || 'An unknown error occurred!'});
+    next(err);
+    next();
 });
 
 /*app.get('/',(res, rsp) => {
@@ -102,5 +106,4 @@ function connect(){
     .catch(err => {
         console.log(err);
     });
-
 }
