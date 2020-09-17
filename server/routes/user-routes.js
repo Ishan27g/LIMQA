@@ -20,7 +20,7 @@ router.get('/logout', (req, res) => {
     res.redirect('/users/login');
 })
 
-
+router.get('/check', userController.check);
 
 
 router.get('/manage', ensureAuthenticated, (req, res) => res.send('manage'));

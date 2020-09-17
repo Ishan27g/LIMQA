@@ -24,7 +24,11 @@ const getUsers = async (req, res, next) => {
   );
 };
 
-
+const check = (req, res, next) => {
+  let loggedin;
+  loggedin = res.locals.login;
+  res.json( {logIn: loggedin});
+};
 
 const signup = async (req, res, next) => {
   const error =  validationResult(req);
