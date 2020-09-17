@@ -11,9 +11,12 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Image from 'react-bootstrap/Image';
-
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Home from './components/Home/Home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
+import AccountView from './components/AccountView/accountView.js';
+import AccountEdit from './components/AccountView/accountEdit.js';
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
 
@@ -86,11 +89,20 @@ class App extends Component{
                     <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                     <Button variant="outline-dark">Search</Button>
                   </Form>
-                  {this.state.login ? (<Button variant="outline-dark" className = "p-5" >Manage</Button>)
+                  {this.state.login ?
+                    (
+                    <DropdownButton id="manage-dropdown" title="Manage"
+                                        variant = "outline-dark" className ="ml-2 mr-2">
+                      <Dropdown.Item href="/View">Account</Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item href="">Log Out</Dropdown.Item>
+                    </DropdownButton>
+                    )
                   :
                   (<Button inline variant="primary-info" onClick={this.handleSignShow}>
-                  <img alt="Login" src = {loginButton}/>
-                  </Button>)}
+                    <img alt="Login" src = {loginButton}/>
+                   </Button>)
+                  }
                 </Nav>
             </Navbar.Collapse>
           </Navbar>
@@ -127,14 +139,13 @@ class App extends Component{
               </Button>
             </Modal.Footer>
           </Modal>
-
           {<BrowserRouter>
             <Switch>
               <Route path="/" component={Home} exact/>
               <Route path="/manage" component={ManagePage}/>
+              <Route path="/view" component={AccountView}/>
             </Switch>
           </BrowserRouter>}
-
         </header>
 
         <footer>
