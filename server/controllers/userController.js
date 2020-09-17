@@ -24,13 +24,15 @@ const getUsers = async (req, res, next) => {
   );
 };
 
+
+
 const signup = async (req, res, next) => {
   const error =  validationResult(req);
   if(!error.isEmpty()) {
       console.log(error);
       return next(new HttpError("Invalid inputs passed, please check your data.", 422));
   }
-  const { name, email, password, social} = req.body;
+  const { name, email, password, social, bioinfo} = req.body;
   
   let existingUser
   try {
@@ -68,9 +70,10 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    files: path,
+    documents: path,
     password: hashedPassword,
-    social
+    social,
+    bioinfo
   });
 
   try {
@@ -88,7 +91,7 @@ const signup = async (req, res, next) => {
 
 const login = (req, res, next) => {
   passport.authenticate('local', {
-    successRedirect: '/users/manage',
+    successRedirect: '/users',
     failureRedirect: '/users/login'
   })(req, res, next);
 };
@@ -96,3 +99,4 @@ const login = (req, res, next) => {
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
+exports.check = check;

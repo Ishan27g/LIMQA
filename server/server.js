@@ -17,17 +17,22 @@ dotenv.config();
 const PORT = 8080;
 
 const userRoutes = require('./routes/user-routes');
+const manageRoutes = require('./routes/manage-routes');
 const HttpError = require('./models/http-error');
+
+
+const app = express();
 
 require("./config/passport")(passport);
 
-const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 
 // Express session middleware
 app.use(session({
     secret: "secret",
-    resave: true,
+    resave: false,
     saveUninitialized: true
 }));
 
@@ -35,15 +40,18 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Global variables
 app.use((req, res, next) => {
+    res.locals.login = req.isAuthenticated();
     res.locals.user = req.user || null;
+    console.log(res.locals.login);
     next();
 })
 
 
 // Routes
-app.use('/users', userRoutes);
-
+app.use('/api/users', userRoutes);
+app.use('/api/manage', manageRoutes);
 
 app.use((req, res, next) => {
     const error = new HttpError('Could not find this route.', 404);

@@ -4,6 +4,6 @@ module.exports = {
             return next();
         }
         res.redirect('/users/login');
-        //console.log("cannot go to manage page.")
+        console.log("cannot go to this page, log in first.")
     }
-}
+};
