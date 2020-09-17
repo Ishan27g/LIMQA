@@ -95,8 +95,8 @@ const signup = async (req, res, next) => {
 
 const login = (req, res, next) => {
   passport.authenticate('local', {
-    successRedirect: '/users',
-    failureRedirect: '/users/login'
+    successRedirect: '/api/users',
+    failureRedirect: '/api/users/login'
   })(req, res, next);
 };
 
