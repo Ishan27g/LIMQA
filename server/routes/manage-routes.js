@@ -6,5 +6,7 @@ const fileUpload = require("../middlerware/file-upload");
 const { ensureAuthenticated } = require('../middlerware/auth');
 
 router.get('/bioinfo', ensureAuthenticated,  manageController.getBioinfo);
+// expect json data send from front-end.
+router.put('/bioinfo', ensureAuthenticated,  manageController.updateBioinfo);
 
 module.exports = router;

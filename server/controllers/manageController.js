@@ -17,6 +17,39 @@ const getBioinfo = async (req, res, next) => {
   );
 };
 
+const updateBioinfo  = async (req, res, next) => {
+
+  const { bioinfo } = req.body;
+
+  let user;
+  try {
+    user = await User.findOne({email: req.user.email});
+  } catch (err) {
+    const error = new HttpError(
+      'Something went wrong, could not update place.',
+      500
+    );
+    return next(error);
+  }
+  if(user) {
+    user.bioinfo = bioinfo;
+  }
+
+  try {
+    await user.save();
+  } catch (err) {
+    const error = new HttpError(
+      'Something went wrong, could not update place.',
+      500
+    );
+    return next(error);
+  }
+
+  res.status(200).json({ user: user.toObject({ getters: true }) });
+};
+
+
 
 
 exports.getBioinfo = getBioinfo;
+exports.updateBioinfo = updateBioinfo;
