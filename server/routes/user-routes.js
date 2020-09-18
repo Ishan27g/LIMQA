@@ -7,7 +7,7 @@ const { ensureAuthenticated } = require('../middlerware/auth');
 
 router.get('/', userController.getUsers);
 
-router.post('/signup', fileUpload.array('files',10), [
+router.post('/signup', fileUpload.array('documents',10), [
     check("name").not().isEmpty(),
     check("email").normalizeEmail().isEmail(),
     check("password").not().isEmpty(), 
@@ -19,6 +19,9 @@ router.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/users/login');
 })
+
+router.get('/check', userController.check);
+
 
 router.get('/manage', ensureAuthenticated, (req, res) => res.send('manage'));
 

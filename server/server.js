@@ -18,6 +18,7 @@ const PORT = 8080;
 
 const userRoutes = require('./routes/user-routes');
 
+const manageRoutes = require('./routes/manage-routes');
 const HttpError = require('./models/http-error');
 
 
@@ -27,8 +28,6 @@ require("./config/passport")(passport);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
-
 
 // Express session middleware
 app.use(session({
@@ -61,8 +60,8 @@ app.use((req, res, next) => {
 
 
 // Routes
-app.use('/users', userRoutes);
-
+app.use('/api/users', userRoutes);
+app.use('/api', manageRoutes);
 
 app.use((req, res, next) => {
     const error = new HttpError('Could not find this route.', 404);
