@@ -7,7 +7,6 @@ import docImage from '../Image/documents.png';
 class documentsCard extends Component {
 
     render() {
-        console.log(this.props.note);
         return (
             <div>
                 <Card className='documentsCard' >
@@ -18,7 +17,7 @@ class documentsCard extends Component {
                         </Card.Title>
                         <br/>
                         <NavLink to={"/"}>
-                            <Card.Link>View documents</Card.Link>
+                            <Card.Link></Card.Link>
                         </NavLink>
                     </Card.Body>
                 </Card>

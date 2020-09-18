@@ -7,6 +7,10 @@ const { ensureAuthenticated } = require('../middlerware/auth');
 
 router.get('/bioinfo', ensureAuthenticated,  manageController.getBioinfo);
 // expect json data send from front-end.
-router.put('/bioinfo', ensureAuthenticated,  manageController.updateBioinfo);
+router.put('/bioinfo', [ check("bioinfo").not().isEmpty() ], ensureAuthenticated,  manageController.updateBioinfo);
+
+router.get('/changeEmail', ensureAuthenticated,  manageController.getEmail);
+// expect json data send from front-end.
+router.put('/changeEmail', [ check("email").normalizeEmail().isEmail() ], ensureAuthenticated,  manageController.updateEmail);
 
 module.exports = router;

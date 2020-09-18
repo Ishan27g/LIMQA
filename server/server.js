@@ -17,6 +17,7 @@ dotenv.config();
 const PORT = 8080;
 
 const userRoutes = require('./routes/user-routes');
+
 const manageRoutes = require('./routes/manage-routes');
 const HttpError = require('./models/http-error');
 
@@ -27,7 +28,6 @@ require("./config/passport")(passport);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
 
 // Express session middleware
 app.use(session({
@@ -47,6 +47,17 @@ app.use((req, res, next) => {
     console.log(res.locals.login);
     next();
 })
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, PUT');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
 
 
 // Routes
@@ -98,7 +109,7 @@ setTimeout(connect, 10000);
 function connect(){
     mongoose
     //.connect('mongodb+srv://qunzhi:test123@cluster0.7wtff.mongodb.net/e-portfolio?retryWrites=true&w=majority')
-        .connect(url)
+        .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("Connected to mongoDB")
         app.listen(PORT, () => {
