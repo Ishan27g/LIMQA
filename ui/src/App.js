@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import {Redirect, Router} from 'react-router';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -40,9 +41,24 @@ class App extends Component{
         Alertpassword: false,
         email: "",
         password: "",
-        AlertLogin: ""
+        AlertLogin: "",
+        loginInfo: true
     }
-}
+  }
+
+  componentDidMount(){
+    const check = 'http://localhost:8080/api/users/check';
+    axios.get(check, { withCredentials: true })
+      .then(response => {
+        if (response.data.logIn){
+          this.setState({
+            loginButton: false,
+            login: true
+          })
+        }
+      })
+  };
+
   handleSignClose = () => {
     this.setState({ loginButton: false });
   }
@@ -92,14 +108,27 @@ class App extends Component{
 
       }
       else{ 
-          const url = 'http://localhost:8080/users/login';
-          axios.post(url,obj)
+          const url = 'http://localhost:8080/api/users/login';
+          const check = 'http://localhost:8080/api/users/check';
+          axios.post(url,obj, { withCredentials: true })
           .then(response => {
-              console.log(response);
-              this.props.history.push('/manage');
+              console.log(response.data);
+              axios.get(check, { withCredentials: true })
+              .then(response => {
+                console.log(response.data.logIn);
+                if (response.data.logIn){
+                  this.setState({
+                    loginButton: false,
+                    login: true
+                  })
+                }
+              })
           })
           .catch(function(error) {
               console.log(error);
+              this.setState({
+                loginInfo: false
+              });
           })
       }
   }
@@ -143,7 +172,7 @@ class App extends Component{
                     <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                     <Button variant="outline-dark">Search</Button>
                   </Form>
-                  {this.state.login ? (<Button variant="outline-dark" className = "p-5" >Manage</Button>)
+                  {this.state.login ? (<Button variant="outline-dark" className = "p-5" href = '/manage'>Manage</Button>)
                   :
                   (<Button inline variant="primary-info" onClick={this.handleSignShow}>
                   <img alt="Login" src = {loginButton}/>
@@ -181,6 +210,16 @@ class App extends Component{
                 this.state.Alertpassword === true ?(
                   <Alert variant={'danger'}>
                     please enter your password!
+                  </Alert>                     
+                ):
+                (
+                  <section></section>
+                ) 
+              }
+              {
+                this.state.loginInfo === false ?(
+                  <Alert variant={'danger'}>
+                    incorrect email or password!
                   </Alert>                     
                 ):
                 (

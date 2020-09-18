@@ -44,17 +44,18 @@ app.use(passport.session());
 app.use((req, res, next) => {
     res.locals.login = req.isAuthenticated();
     res.locals.user = req.user || null;
-    console.log(res.locals.login);
+    console.log(res.locals.user);
     next();
 })
 
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader(
       'Access-Control-Allow-Headers',
       'Origin, X-Requested-With, Content-Type, Accept, Authorization'
     );
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, PUT');
+    res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
 
@@ -108,7 +109,7 @@ setTimeout(connect, 10000);
 function connect(){
     mongoose
     //.connect('mongodb+srv://qunzhi:test123@cluster0.7wtff.mongodb.net/e-portfolio?retryWrites=true&w=majority')
-        .connect(url)
+        .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("Connected to mongoDB")
         app.listen(PORT, () => {
