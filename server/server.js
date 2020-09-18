@@ -7,28 +7,33 @@ const dns = require('dns');
 const os = require('os');
 const passport = require("passport");
 const session = require("express-session");
-const cors = require('cors');
 dotenv.config();
+
 
 //init mongoDB
 //require('./src/db');
 
+
 const PORT = 8080;
 
 const userRoutes = require('./routes/user-routes');
+
 const HttpError = require('./models/http-error');
+
+
+const app = express();
 
 require("./config/passport")(passport);
 
-const app = express();
-app.use(express.json());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
+
+
 
 // Express session middleware
 app.use(session({
     secret: "secret",
-    resave: true,
+    resave: false,
     saveUninitialized: true
 }));
 
@@ -36,35 +41,45 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Global variables
 app.use((req, res, next) => {
+    res.locals.login = req.isAuthenticated();
     res.locals.user = req.user || null;
+    console.log(res.locals.login);
     next();
 })
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, PUT');
+    next();
+});
 
 
 // Routes
 app.use('/users', userRoutes);
 
-//-----------------------Cross-Origin Resource Sharing-----------------
-app.use(cors({
-    origin: 'http://localhost',
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
-
-app.options('*', cors())
-
-app.all('', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost");
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    //Auth Each API Request created by user.
-    next();
-});
 
 app.use((req, res, next) => {
     const error = new HttpError('Could not find this route.', 404);
-    next(err);
-    next();
+    throw error;
+});
+
+app.use((error, req, res, next) => {
+    if(req.file) {
+        fs.unlink(req.file.path, err => {
+            console.log(err)
+        });
+    }
+    if (res.headerSent) {
+      return next(error);
+    }
+    res.status(error.code || 500)
+    res.json({message: error.message || 'An unknown error occurred!'});
 });
 
 /*app.get('/',(res, rsp) => {
@@ -94,7 +109,7 @@ setTimeout(connect, 10000);
 function connect(){
     mongoose
     //.connect('mongodb+srv://qunzhi:test123@cluster0.7wtff.mongodb.net/e-portfolio?retryWrites=true&w=majority')
-        .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+        .connect(url)
     .then(() => {
         console.log("Connected to mongoDB")
         app.listen(PORT, () => {
@@ -106,4 +121,5 @@ function connect(){
     .catch(err => {
         console.log(err);
     });
+
 }
