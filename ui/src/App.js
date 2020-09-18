@@ -93,11 +93,7 @@ class App extends Component{
       }
       else{ 
           const url = 'http://localhost:8080/users/login';
-          axios.post(url,     
-            {headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'JWT fefege...'
-            }}, obj)
+          axios.post(url,obj)
           .then(response => {
               console.log(response);
               this.props.history.push('/manage');
