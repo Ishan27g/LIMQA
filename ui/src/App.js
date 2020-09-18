@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Redirect, Router} from 'react-router';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -20,7 +19,6 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import Home from './components/Home/Home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import AccountView from './components/AccountView/accountView.js';
-import AccountEdit from './components/AccountView/accountEdit.js';
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
 
@@ -43,9 +41,9 @@ class App extends Component{
         QRButton: false,
         Alertemail: false,
         Alertpassword: false,
-        email: "",
-        password: "",
-        AlertLogin: "",
+        email: '',
+        password: '',
+        AlertLogin: '',
         loginInfo: true
     }
   }
@@ -57,7 +55,8 @@ class App extends Component{
         if (response.data.logIn){
           this.setState({
             loginButton: false,
-            login: true
+            login: true,
+            loginInfo: true
           })
         }
       })
@@ -99,8 +98,6 @@ class App extends Component{
           password: this.state.password
       };
 
-      console.log(obj);
-
       if(!obj.email || !obj.password){
           console.log("missing email or password!");
           if(!obj.email){
@@ -116,7 +113,6 @@ class App extends Component{
           const check = 'http://localhost:8080/api/users/check';
           axios.post(url,obj, { withCredentials: true })
           .then(response => {
-              console.log(response.data);
               axios.get(check, { withCredentials: true })
               .then(response => {
                 console.log(response.data.logIn);
@@ -128,11 +124,9 @@ class App extends Component{
                 }
               })
           })
+          // wait backend to implement failure login response
           .catch(function(error) {
               console.log(error);
-              this.setState({
-                loginInfo: false
-              });
           })
       }
   }
@@ -176,12 +170,12 @@ class App extends Component{
                     <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                     <Button variant="outline-dark">Search</Button>
                   </Form>
-                  {this.state.login ? (<Button variant="outline-dark" className = "p-5" href = '/manage'>Manage</Button>)
                   {this.state.login ?
                     (
                     <DropdownButton id="manage-dropdown" title="Manage"
                                         variant = "outline-dark" className ="ml-2 mr-2">
                       <Dropdown.Item href="/View">Account</Dropdown.Item>
+                      <Dropdown.Item href="/manage">Manage Documents</Dropdown.Item>
                       <Dropdown.Divider />
                       <Dropdown.Item href="">Log Out</Dropdown.Item>
                     </DropdownButton>

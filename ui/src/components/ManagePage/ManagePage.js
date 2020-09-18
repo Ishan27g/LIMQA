@@ -27,11 +27,20 @@ class ManagePage extends Component {
         this.state = {
             editBio : false,
             filter : "Title",
+            bioinfo: '',
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
+        this.handleFilterOnTitle = this.handleFilterOnTitle.bind(this);
+        this.handleFilterOnTime = this.handleFilterOnTime.bind(this);
+        this.handleFilterOnElse = this.handleFilterOnElse.bind(this);
+        this.onChangBioInfo = this.onChangBioInfo.bind(this);
     }
 
+    componentDidMount(){
+      // wait for back end for routes
+    };
+    
     handleEditBio = () => {
         this.setState({ editBio: true });
     }
@@ -50,6 +59,12 @@ class ManagePage extends Component {
 
     handleFilterOnElse = () => {
         this.setState({filter: "Else"});
+    }
+
+    onChangBioInfo(e){
+      this.setState({
+        bioinfo: e.target.value
+      })
     }
 
     render(){
@@ -130,7 +145,7 @@ class ManagePage extends Component {
                           {this.state.editBio ? (
                               <Form>
                                   <Form.Label>Enter your bio here</Form.Label>
-                                  <Form.Control as="textarea" rows="3" />
+                                  <Form.Control as="textarea" rows="3" onChange={this.onChangBioInfo}/>
                                   <Button variant="outline-info" onClick={this.handleSubmiteBio}>submit</Button>
                               </Form>
                           ):
