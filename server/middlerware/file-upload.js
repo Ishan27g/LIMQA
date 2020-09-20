@@ -13,7 +13,7 @@ const MIME_TYPE_MAP = {
 
 /*
   this middle ware stores documents that meets the requirements in 'uploads/images'
-  directory, and generate a random username for it.
+  directory, and generate a file name for it.
   if the file type doesn't in MIME_TYPE_MAP, it will return an error shows invalid file type.
 */
 const fileUpload = multer({
@@ -23,7 +23,7 @@ const fileUpload = multer({
       },
       filename: (req, file, cb) => {
           const ext = MIME_TYPE_MAP[file.mimetype];
-          cb(null, uuid4() + '.' + ext);
+          cb(null, file.originalname + '.' + ext);
       }
   }),
   fileFilter: (req, file, cb) => {
