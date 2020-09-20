@@ -17,17 +17,17 @@ dotenv.config();
 const PORT = 8080;
 
 const userRoutes = require('./routes/user-routes');
-
 const manageRoutes = require('./routes/manage-routes');
+
 const HttpError = require('./models/http-error');
 
 
 const app = express();
 
-require("./config/passport")(passport);
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+require("./config/passport")(passport);
 
 // Express session middleware
 app.use(session({
@@ -35,6 +35,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+
 
 // passport middleware
 app.use(passport.initialize());
@@ -47,6 +48,7 @@ app.use((req, res, next) => {
     console.log(res.locals.user);
     next();
 })
+
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -104,7 +106,7 @@ const url =`mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}`;
 
 // Use connect method to connect to MongoDB after a safe delay as it takes time to install mongoDB in docker for the first time. Can remove delay after 1st run.
 // no need for delay if running mongoDb locally
-setTimeout(connect, 10000);
+//setTimeout(connect, 10000);
 
 function connect(){
     mongoose

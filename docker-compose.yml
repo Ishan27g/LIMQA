@@ -31,10 +31,6 @@ services:
       depends_on:
         - mongo
       env_file: server/.env
-      #  environment:
-      #  - MONGO_HOSTNAME=$MONGO_HOSTNAME
-      #  - MONGO_PORT=$MONGO_PORT
-      #  - MONGO_DB=$MONGO_DB
       networks:
         - ePortfolio_nw
 

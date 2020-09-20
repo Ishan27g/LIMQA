@@ -11,6 +11,15 @@ const userSchema = new Schema({
     bioinfo: { type: String, required: true}
 });
 
+const photoSchema = new Schema({
+    name: {type : String, required: true},
+    profilePhoto: {type : String, required: true},
+    coverImages: {type : String, required: true}
+});
+
+
 userSchema.plugin(uniqueValidator);
+photoSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('User'/* name of the model*/, userSchema);
+module.exports = mongoose.model('Photos'/* name of the model*/, photoSchema);
