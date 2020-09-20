@@ -1,3 +1,6 @@
+// set up user routes for use signup, login, and logout.
+// signup api: /api/users/signup
+// login api: /api/users/login
 const express = require('express');
 const userController = require("../controllers/userController");
 const router = express.Router();
