@@ -92,7 +92,7 @@ const signup = async (req, res, next) => {
 
   res.status(201).json({user: createdUser.toObject({ getters : true})});
 };
-
+// use passport middle ware to authenticate user.
 const login = (req, res, next) => {
   passport.authenticate('local', {
     successRedirect: '/api/users',
