@@ -1,5 +1,3 @@
-node_modules
-data_db
-build
-node_modules
-tester.css
+node_modules/
+data_db/
+uploads/
