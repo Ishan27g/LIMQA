@@ -16,7 +16,7 @@ import Alert from 'react-bootstrap/Alert';
 
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
-import Home from './components/Home/Home.js';
+import Home from './components/Home/home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import AccountView from './components/AccountView/accountView.js';
 import logo from './Image/logo.png';
