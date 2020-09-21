@@ -3,6 +3,7 @@ const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
 const {validationResult } = require("express-validator");
 const  User = require('../models/user');
+const Social = require('../models/social');
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 
@@ -30,14 +31,15 @@ const check = (req, res, next) => {
   res.json( {logIn: loggedin});
 };
 
+
 const signup = async (req, res, next) => {
   const error =  validationResult(req);
   if(!error.isEmpty()) {
       console.log(error);
       return next(new HttpError("Invalid inputs passed, please check your data.", 422));
   }
-  const { name, email, password, social, bioinfo} = req.body;
-  
+  const { name, email, password, bioinfo, semail} = req.body;
+
   let existingUser
   try {
     existingUser = await User.findOne({ email: email})
@@ -70,19 +72,24 @@ const signup = async (req, res, next) => {
     return next(error);
   }
   
+  /*const cretedSocial = new Social({
+    name = 
+  })*/
 
   const createdUser = new User({
     name,
     email,
     documents: path,
     password: hashedPassword,
-    social,
-    bioinfo
+    social: [], 
+    bioinfo,
+    semail  
   });
 
   try {
     await createdUser.save();
   } catch (err) {
+    console.log(err);
     const error = new HttpError(
       'creating user failed, please try again.'
     );
@@ -92,7 +99,7 @@ const signup = async (req, res, next) => {
 
   res.status(201).json({user: createdUser.toObject({ getters : true})});
 };
-
+// use passport middle ware to authenticate user.
 const login = (req, res, next) => {
   passport.authenticate('local', {
     successRedirect: '/api/users',
