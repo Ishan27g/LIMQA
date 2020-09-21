@@ -12,7 +12,8 @@ const getBioinfo = async (req, res, next) => {
   res.json(
     {bioinfo: user.bioinfo,
     username: user.name,
-    useremail: user.email}
+    useremail: user.email,
+    userID : user.id}
   );
 };
 

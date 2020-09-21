@@ -16,8 +16,8 @@ dotenv.config();
 
 const PORT = 8080;
 
+// require routes.
 const userRoutes = require('./routes/user-routes');
-
 const manageRoutes = require('./routes/manage-routes');
 const HttpError = require('./models/http-error');
 
@@ -48,6 +48,7 @@ app.use((req, res, next) => {
     next();
 })
 
+// set the respond headers to make sure the communication between backend and browser works.
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader(
