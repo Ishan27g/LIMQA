@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const dotenv = require('dotenv');
 const dns = require('dns');
 const os = require('os');
+const passport = require("passport");
+const session = require("express-session");
 dotenv.config();
 
 
@@ -15,13 +17,52 @@ dotenv.config();
 const PORT = 8080;
 
 const userRoutes = require('./routes/user-routes');
+
+const manageRoutes = require('./routes/manage-routes');
 const HttpError = require('./models/http-error');
 
+
 const app = express();
+
+require("./config/passport")(passport);
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-app.use('/users', userRoutes);
+// Express session middleware
+app.use(session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: true
+}));
 
+// passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Global variables
+app.use((req, res, next) => {
+    res.locals.login = req.isAuthenticated();
+    res.locals.user = req.user || null;
+    console.log(res.locals.user);
+    next();
+})
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, PUT');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
+
+
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api', manageRoutes);
 
 app.use((req, res, next) => {
     const error = new HttpError('Could not find this route.', 404);
@@ -68,7 +109,7 @@ setTimeout(connect, 10000);
 function connect(){
     mongoose
     //.connect('mongodb+srv://qunzhi:test123@cluster0.7wtff.mongodb.net/e-portfolio?retryWrites=true&w=majority')
-        .connect(url)
+        .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("Connected to mongoDB")
         app.listen(PORT, () => {

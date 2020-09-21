@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Kavoon&family=Roboto:wght@300&display=swap');
+
+.acc-set{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.acc-header,
+.acc-info,
+  .acc-basic-info,
+  .acc-set-edit,
+
+.acc-social-header,
+  .acc-social-list,
+
+.acc-contact-header,
+  .acc-contact-list
+
+{
+    padding: 1vmax;
+}
+
+.acc-image, .acc-info,
+.acc-edit-button, .acc-update-password
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.acc-header,
+.acc-info,
+.acc-social-header, .acc-social, .acc-social-list,
+.acc-contact-header, .acc-contact, .acc-contact-list {
+  margin-top: 1vmax;
+  margin-bottom: 1vmax;
+}
+.acc-set{
+  margin: 0px;
+  margin-top: 70px;
+  margin-Bottom: 1vmax;
+}
+.acc-set > .container{
+  width: 100%;
+  background-color: white;
+}
+
+.acc-header{
+  margin-bottom: 2vmax;
+}
+.acc-header > h1{
+  font-family: serif;
+  font-size: 2.5em;
+  color: black;
+}
+
+.acc-basic-info{
+  margin-right: 1vmax;
+  margin-top: 0vmax;
+  margin-bottom: 0vmax;
+  margin-left: -9vmin;
+  width: 70%;
+}
+.acc-image{
+  margin: 1vmax;
+  margin-top: 0vmax;
+  margin-bottom: 0vmax;
+}
+
+.acc-username , .acc-email{
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  font-family: 'Roboto', sans-serif;
+}
+.acc-username{
+  font-size: 2.5vmax;
+  font-weight: bolder;
+}
+
+.acc-set-edit{
+  margin: 1vmax;
+  margin-top: 0vmax;
+  margin-bottom: 0vmax;
+}
+
+.acc-update-password{
+  padding-top: 0.5vmax;
+}
+
+.acc-edit-button > .btn{
+  width: 50%;
+}
+
+.acc-update-password > label:hover{
+    text-decoration: underline;
+}
+
+.acc-social-header > h2, .acc-contact-header > h2{
+  font-family: serif;
+  font-size: 1.75em;
+  color: black;
+}
+.acc-social-header, .acc-contact-header, .acc-contact, .acc-social{
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.acc-social-list > .list-group-item,
+.acc-contact-list > .list-group-item{
+  width: 40vmax;
+}
+
+.acc-social-list > .list-group-item > p,
+.acc-contact-list > .list-group-item > p{
+  color: black;
+  font-size: 1.25em;
+  font-weight: normal;
+  text-align: left;
+}
+
+.acc-social-list > .list-group-item > h4,
+.acc-contact-list > .list-group-item > h4{
+  font-family: "Roboto", sans-serif;
+  font-size: 1.25em;
+  font-weight: bolder;
+}
+.acc-social-list > .list-group-item > p > span:hover{
+  color: blue;
+}
+
+.acc-social-list > .list-group-item > h4{
+  font-family: "Roboto", sans-serif;
+  font-size: 1.25em;
+  font-weight: bolder;
+}
+
+.acc-social-list, .acc-contact-list{
+  margin-left: 2vmax;
+  margin-right: 2vmax;
+}

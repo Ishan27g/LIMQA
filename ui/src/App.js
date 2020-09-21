@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,9 +12,13 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Image from 'react-bootstrap/Image';
+import Alert from 'react-bootstrap/Alert';
 
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Home from './components/Home/Home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
+import AccountView from './components/AccountView/accountView.js';
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
 
@@ -21,17 +26,44 @@ import loginButton from './Image/loginButton.svg';
 class App extends Component{
   constructor(props){
     super(props);
+    this.handleSignClose = this.handleSignClose.bind(this);
+    this.handleSignShow = this.handleSignShow.bind(this);
+    this.handleQRShow = this.handleQRShow.bind(this);
+    this.handleQRClose = this.handleQRClose.bind(this);
+    this.handleSignin = this.handleSignin.bind(this);
+    this.onChangeEmail = this.onChangeEmail.bind(this);
+    this.onChangePassword = this.onChangePassword.bind(this);
+    this.Adminlogin = this.Adminlogin.bind(this);
+
     this.state ={
         loginButton: false,
         login: false,
         QRButton: false,
+        Alertemail: false,
+        Alertpassword: false,
+        email: '',
+        password: '',
+        AlertLogin: '',
+        loginInfo: true
     }
-}
+  }
+
+  componentDidMount(){
+    const check = 'http://localhost:8080/api/users/check';
+    axios.get(check, { withCredentials: true })
+      .then(response => {
+        if (response.data.logIn){
+          this.setState({
+            loginButton: false,
+            login: true,
+            loginInfo: true
+          })
+        }
+      })
+  };
+
   handleSignClose = () => {
     this.setState({ loginButton: false });
-  }
-  handleSignClose = () => {
-      this.setState({ loginButton: false });
   }
 
   handleSignShow = () => {
@@ -46,8 +78,60 @@ class App extends Component{
     this.setState({ QRButton: false });
   }
 
-  handleSignin = () => {
+  onChangeEmail(e){
+    this.setState({
+      Alertemail: false,
+      email: e.target.value
+    });
+  }
 
+  onChangePassword(e){
+    this.setState({
+      Alertpassword: false,
+      password: e.target.value
+    });
+  }
+
+  Adminlogin(){
+      const obj = {
+          email: this.state.email,
+          password: this.state.password
+      };
+
+      if(!obj.email || !obj.password){
+          console.log("missing email or password!");
+          if(!obj.email){
+              this.setState({Alertemail: true});
+          }
+          if(!obj.password){
+              this.setState({Alertpassword: true});
+          }
+
+      }
+      else{ 
+          const url = 'http://localhost:8080/api/users/login';
+          const check = 'http://localhost:8080/api/users/check';
+          axios.post(url,obj, { withCredentials: true })
+          .then(response => {
+              axios.get(check, { withCredentials: true })
+              .then(response => {
+                console.log(response.data.logIn);
+                if (response.data.logIn){
+                  this.setState({
+                    loginButton: false,
+                    login: true
+                  })
+                }
+              })
+          })
+          // wait backend to implement failure login response
+          .catch(function(error) {
+              console.log(error);
+          })
+      }
+  }
+
+  handleSignin = () => {
     this.setState({ login: true });
     this.setState({ loginButton: false });
   }
@@ -86,11 +170,21 @@ class App extends Component{
                     <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                     <Button variant="outline-dark">Search</Button>
                   </Form>
-                  {this.state.login ? (<Button variant="outline-dark" className = "p-5" >Manage</Button>)
+                  {this.state.login ?
+                    (
+                    <DropdownButton id="manage-dropdown" title="Manage"
+                                        variant = "outline-dark" className ="ml-2 mr-2">
+                      <Dropdown.Item href="/View">Account</Dropdown.Item>
+                      <Dropdown.Item href="/manage">Manage Documents</Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item href="">Log Out</Dropdown.Item>
+                    </DropdownButton>
+                    )
                   :
                   (<Button inline variant="primary-info" onClick={this.handleSignShow}>
-                  <img alt="Login" src = {loginButton}/>
-                  </Button>)}
+                    <img alt="Login" src = {loginButton}/>
+                   </Button>)
+                  }
                 </Nav>
             </Navbar.Collapse>
           </Navbar>
@@ -102,39 +196,60 @@ class App extends Component{
               <h3 className ="text-center font-size-15px" style={{ color: 'black' }}>
               Welcome back!</h3>
 
-              <div className="form-group">
-                <label>Email address</label>
-                <input type="email" className="form-control" placeholder="Enter email" />
-              </div>
-
-              <div className="form-group">
-                <label>Password</label>
-                <input type="password" className="form-control" placeholder="Enter password" />
-              </div>
-
-              <div className="form-group">
-                <div className="custom-control custom-checkbox">
-                <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
-                </div>
-              </div>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control type="email" placeholder="Enter email" onChange={this.onChangeEmail} />
+              </Form.Group>
+              {
+                this.state.Alertemail === true ?(
+                  <Alert variant={'danger'}>
+                    please enter your email!
+                  </Alert>                     
+                ):
+                (
+                  <section></section>
+                ) 
+              }
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
+              </Form.Group>
+              {
+                this.state.Alertpassword === true ?(
+                  <Alert variant={'danger'}>
+                    please enter your password!
+                  </Alert>                     
+                ):
+                (
+                  <section></section>
+                ) 
+              }
+              {
+                this.state.loginInfo === false ?(
+                  <Alert variant={'danger'}>
+                    incorrect email or password!
+                  </Alert>                     
+                ):
+                (
+                  <section></section>
+                ) 
+              }
             </form>
 
             </Modal.Body>
             <Modal.Footer>
-              <Button size="lg" block variant="primary" onClick={this.handleSignin} href="/manage">
+              <Button size="lg" block variant="primary" onClick={this.Adminlogin}>
                 Login
               </Button>
             </Modal.Footer>
           </Modal>
-
           {<BrowserRouter>
             <Switch>
               <Route path="/" component={Home} exact/>
               <Route path="/manage" component={ManagePage}/>
+              <Route path="/view" component={AccountView}/>
             </Switch>
           </BrowserRouter>}
-
         </header>
 
         <footer>

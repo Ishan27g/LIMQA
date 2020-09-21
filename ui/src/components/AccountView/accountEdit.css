@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Kavoon&family=Roboto:wght@300&display=swap');
+
+.edit-edit{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.edit-header,
+    .edit-image > .container,
+.edit-info,
+  .edit-basic-info,
+  .edit-set-save,
+
+.edit-social-header,
+.edit-contact-header
+
+{
+    padding: 1vmax;
+}
+
+.edit-image-display, .edit-image-label,
+.edit-info,
+.edit-edit-button, .edit-update-password
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-header,
+.edit-info,
+.edit-social-header, .edit-social, .edit-social-list,
+.edit-contact-header, .edit-contact, .edit-contact-list {
+  margin-top: 1vmax;
+  margin-bottom: 1vmax;
+}
+.edit-set{
+  margin: 0px;
+  margin-top: 70px;
+  margin-Bottom: 1vmax;
+}
+.edit-set > .container{
+  width: 100%;
+  background-color: white;
+}
+
+.edit-header{
+  margin-bottom: 2vmax;
+}
+.edit-header > h1{
+  font-family: serif;
+  font-size: 2.5em;
+  color: black;
+}
+
+.edit-basic-info{
+  margin-right: 1vmax;
+  margin-top: 0vmax;
+  margin-bottom: 0vmax;
+  margin-left: -7vmin;
+  width: 70%;
+}
+.edit-image > .container{
+  margin: 1vmax;
+  margin-top: 0vmax;
+  margin-bottom: 0vmax;
+}
+
+.edit-username , .edit-email{
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  font-family: 'Roboto', sans-serif;
+}
+.edit-username{
+  font-size: 2.5vmax;
+  font-weight: bolder;
+}
+
+.edit-set-save{
+  margin: 1vmax;
+  margin-top: 0vmax;
+  margin-bottom: 0vmax;
+}
+
+.edit-update-password{
+  padding-top: 0.5vmax;
+}
+
+.edit-edit-button > .btn{
+  width: 50%;
+}
+
+.edit-update-password > label:hover{
+    text-decoration: underline;
+}
+.edit-image-label > label:hover{
+  text-decoration: underline;
+}
+.edit-social-header > h2, .edit-contact-header > h2{
+  font-family: serif;
+  font-size: 1.75em;
+  color: black;
+}
+.edit-social-header, .edit-contact-header, .edit-contact, .edit-social{
+  margin-left: 10%;
+  margin-right: 10%;
+}
+.edit-social-list > .list-group-item,
+.edit-contact-list > .list-group-item{
+  width: 40vmax;
+}
+
+.edit-social-list > .list-group-item > p,
+.edit-contact-list > .list-group-item > p{
+  color: black;
+  font-size: 1.25em;
+  font-weight: normal;
+  text-align: left;
+}
+
+.edit-social-list > .list-group-item > h4,
+.edit-contact-list > .list-group-item > h4{
+  font-family: "Roboto", sans-serif;
+  font-size: 1.25em;
+  font-weight: bolder;
+}
+.edit-social-list > .list-group-item > p > span:hover{
+  color: blue;
+}
+
+.edit-social-list > .list-group-item > h4{
+  font-family: "Roboto", sans-serif;
+  font-size: 1.25em;
+  font-weight: bolder;
+}
+
+.edit-social-list, .edit-contact-list{
+  margin-left: 2vmax;
+  margin-right: 2vmax;
+
+}

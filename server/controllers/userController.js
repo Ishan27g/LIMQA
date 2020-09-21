@@ -3,6 +3,8 @@ const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
 const {validationResult } = require("express-validator");
 const  User = require('../models/user');
+const passport = require("passport");
+const bcrypt = require("bcryptjs");
 
 
 
@@ -22,13 +24,19 @@ const getUsers = async (req, res, next) => {
   );
 };
 
+const check = (req, res, next) => {
+  let loggedin;
+  loggedin = res.locals.login;
+  res.json( {logIn: loggedin});
+};
+
 const signup = async (req, res, next) => {
   const error =  validationResult(req);
   if(!error.isEmpty()) {
       console.log(error);
       return next(new HttpError("Invalid inputs passed, please check your data.", 422));
   }
-  const { name, email, password, social} = req.body;
+  const { name, email, password, social, bioinfo} = req.body;
   
   let existingUser
   try {
@@ -54,12 +62,22 @@ const signup = async (req, res, next) => {
     path.push(req.files[i].path);
   }
 
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 10);
+  } catch (err) {
+    const error = new HttpError("Could not create user, please try again.", 500);
+    return next(error);
+  }
+  
+
   const createdUser = new User({
     name,
     email,
-    files: path,
-    password,
-    social
+    documents: path,
+    password: hashedPassword,
+    social,
+    bioinfo
   });
 
   try {
@@ -75,32 +93,14 @@ const signup = async (req, res, next) => {
   res.status(201).json({user: createdUser.toObject({ getters : true})});
 };
 
-const login = async (req, res, next) => {
-
-  const { email, password } = req.body;
-
-  let existingUser
-  try {
-    existingUser = await User.findOne({ email: email})
-  } catch (err) {
-    const error = new HttpError(
-      'logging in failed, please try agin later.',
-      500
-    );
-    return next(error);
-  }
-
-  if(!existingUser || existingUser.password !== password) {
-    const error = new HttpError(
-      'Invalid crendectials, could not log in.',
-      401
-    );
-    return next(error);
-  }
-
-  res.json({message: 'Logged in!'});
+const login = (req, res, next) => {
+  passport.authenticate('local', {
+    successRedirect: '/api/users',
+    failureRedirect: '/api/users/login'
+  })(req, res, next);
 };
 
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
+exports.check = check;

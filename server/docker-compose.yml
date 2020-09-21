@@ -16,8 +16,8 @@ services:
         dockerfile: Dockerfile
       image: eportfolio-nodeserver-img
       container_name: node-express
-      #volumes:
-       #- .:/usr/src/app
+      volumes:
+      - ./uploads:/usr/src/uploads
        #- /usr/src/app/node_modules
       ports:
         - "8080:8080"
@@ -35,4 +35,6 @@ networks:
     driver: bridge
 volumes:
   data_db:
+    external: true
+  uploads:
     external: true
