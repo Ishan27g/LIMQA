@@ -10,6 +10,7 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import CardDeck from 'react-bootstrap/CardDeck';
+import CoverImage from '../CoverImage/coverImage.js';
 
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
@@ -18,11 +19,33 @@ import profile from '../../Image/profile.png';
 import docIcon from '../../Image/documents.png';
 
 class Home extends Component {
+    constructor(){
+        super();
+        this.state = {
+            bioinfo: '',
+            coverPage: [],
+            profilePage: '',
+            documents: ''
+        }
+    }
+
+    componentDidMount(){
+        // wait for back end for routes
+    };
+
     render(){
+        const coverImg = [{path: '../../Image/sampleImage1.jpg'}, {path: '../../Image/sampleImage2.jpg'}, {path: '../../Image/sampleImage3.jpg'}];
+        let coverImage = coverImg.map(cover =>{
+          return(
+            <CoverImage note={cover}/>
+          )
+        })
+
         return(
           <body>
             <div class = "cover-image">
               <Carousel>
+                    {coverImage}
                     <Carousel.Item>
                         <img
                         src= {sampleImage1}

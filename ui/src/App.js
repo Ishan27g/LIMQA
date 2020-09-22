@@ -59,7 +59,7 @@ class App extends Component{
             loginInfo: true
           })
         }
-      })
+    })
   };
 
   handleSignClose = () => {

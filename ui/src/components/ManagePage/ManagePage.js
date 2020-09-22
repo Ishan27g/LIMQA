@@ -13,6 +13,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DocCard from '../documentsCard.js';
+import CoverImage from '../CoverImage/coverImage.js';
 
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
@@ -68,7 +69,6 @@ class ManagePage extends Component {
     }
 
     render(){
-
         const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
         let docCards = documents.map(card =>{
           return(
@@ -77,11 +77,17 @@ class ManagePage extends Component {
             </Col>
           )
         })
-
+        const coverImg = [{path: '../../Image/sampleImage1.jpg'}, {path: '../../Image/sampleImage2.jpg'}, {path: '../../Image/sampleImage3.jpg'}];
+        let coverImage = coverImg.map(cover =>{
+          return(
+            <CoverImage note={cover}/>
+          )
+        })
         return(
             <body>
             <div class = "manage-cover-image">
               <Carousel>
+                  {coverImage}
                   <Carousel.Item>
                       <img
                       src= {sampleImage1}
