@@ -21,7 +21,6 @@ const userRoutes = require('./routes/user-routes');
 const manageRoutes = require('./routes/manage-routes');
 const HttpError = require('./models/http-error');
 
-
 const app = express();
 
 require("./config/passport")(passport);
