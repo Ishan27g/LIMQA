@@ -142,7 +142,7 @@ const updateAcc  = async (req, res, next) => {
   user.officeAddress = req.body.Address;
   
   
-  if (typeof req.body.Email !== 'undefined') {
+  if (normalizeEmail(req.body.Email) !== user.email) {
     let email;
     email = req.body.Email;
     email = normalizeEmail(email);
@@ -175,7 +175,7 @@ const updateAcc  = async (req, res, next) => {
   
     
   
-  if (typeof req.body.Semail !== 'undefined') {
+  if (normalizeEmail(req.body.Semail) !== user.semail) {
     let Semail;
     Semail = req.body.Semail;
     Semail = normalizeEmail(Semail);
