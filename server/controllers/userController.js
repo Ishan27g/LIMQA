@@ -27,8 +27,10 @@ const getUsers = async (req, res, next) => {
 
 const check = (req, res, next) => {
   let loggedin;
+  let id;
   loggedin = res.locals.login;
-  res.json( {logIn: loggedin});
+  id = res.locals.user.id;
+  res.json( {logIn: loggedin, userid : id});
 };
 
 

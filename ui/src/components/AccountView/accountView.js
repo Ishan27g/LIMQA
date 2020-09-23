@@ -31,7 +31,8 @@ class AccountView extends Component {
       officeAddress: '',
       SupplymentaryEmail: '',
       profileImage: '',
-      mobile: Number
+      mobile: '',
+      userid: ''
     }
     this.handleEditingOpen = this.handleEditingOpen.bind(this);
     this.updateChanges = this.updateChanges.bind(this);
@@ -46,7 +47,35 @@ class AccountView extends Component {
   }
 
   componentDidMount(){
-    // wait for back end for routes
+    const check = 'http://localhost:8080/api/users/check';
+    axios.get(check, { withCredentials: true })
+    .then(response => {
+      console.log(response.data.userid)
+      this.setState({
+        userid: response.data.userid
+      })
+      const accurl = 'http://localhost:8080/api/accSetting/'+ this.state.userid;
+      axios.get(accurl, { withCredentials: true })
+      .then(res => {
+        this.setState({
+          email: res.data.user.email,
+          SupplymentaryEmail: res.data.user.semail,
+          mobile: res.data.user.mobile,
+          officeAddress: res.data.user.address,
+          linkedin: res.data.user.social[0].url,
+          instagram: res.data.user.social[1].url,
+          facebook: res.data.user.social[2].url,
+          name: res.data.user.Username
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
+
   };
 
   handleEditingOpen = () => {
@@ -283,10 +312,10 @@ class AccountView extends Component {
 
                     <Col className = "acc-basic-info">
                       <Row md="auto" className = "acc-username">
-                        <label>Username</label>
+                        <label>{this.state.name}</label>
                       </Row>
                       <Row md="auto" className = "acc-email">
-                        <label>email@email.com </label>
+                      <label>{this.state.email}</label>
                       </Row>
                     </Col>
 
@@ -308,15 +337,15 @@ class AccountView extends Component {
                         <ListGroup  className = "acc-social-list">
                           <ListGroup.Item>
                               <h4>Linkedin</h4>
-                              <p>&nbsp;&nbsp;URL: <span><label>(ADD LINK)</label></span></p>
+                              <p>&nbsp;&nbsp;URL: <span><label>{this.state.linkedin}</label></span></p>
                           </ListGroup.Item>
                           <ListGroup.Item>
                               <h4>Instagram</h4>
-                              <p>&nbsp;&nbsp;URL: <span><label>(ADD LINK)</label></span></p>
+                              <p>&nbsp;&nbsp;URL: <span><label>{this.state.instagram}</label></span></p>
                           </ListGroup.Item>
                           <ListGroup.Item>
                               <h4>Facebook</h4>
-                              <p>&nbsp;&nbsp;URL: <span><label>(ADD LINK)</label></span></p>
+                              <p>&nbsp;&nbsp;URL: <span><label>{this.state.facebook}</label></span></p>
                           </ListGroup.Item>
                         </ListGroup>
                     </Row>
@@ -327,15 +356,15 @@ class AccountView extends Component {
                       <ListGroup className = "acc-contact-list">
                         <ListGroup.Item>
                           <h4>Office Address</h4>
-                          <p>&nbsp;&nbsp;<span><label>(ADD ADDRESS)</label></span></p>
+                          <p>&nbsp;&nbsp;<span><label>{this.state.officeAddress}</label></span></p>
                       </ListGroup.Item>
                       <ListGroup.Item>
                           <h4>MObile</h4>
-                          <p>&nbsp;&nbsp;<span><label>(ADD NO. with country code)</label></span></p>
+                          <p>&nbsp;&nbsp;<span><label>{this.state.mobile}</label></span></p>
                       </ListGroup.Item>
                       <ListGroup.Item>
                           <h4>Supplymentary E-mail</h4>
-                          <p>&nbsp;&nbsp;<span><label>(ADD E-MAIL)</label></span></p>
+                            <p>&nbsp;&nbsp;<span><label>{this.state.SupplymentaryEmail}</label></span></p>
                       </ListGroup.Item>
                       </ListGroup>
                   </Row>

@@ -131,6 +131,21 @@ class App extends Component{
       }
   }
 
+  handlesignup(){
+    const signurl = 'http://localhost:8080/api/users/signup';
+    const user = {
+      email: 'test@test.com'
+    };
+    axios.post(signurl,user, { withCredentials: true })
+    .then(response => {
+
+    })
+    // wait backend to implement failure login response
+    .catch(function(error) {
+        console.log(error);
+    })
+  }
+
   handleSignin = () => {
     this.setState({ login: true });
     this.setState({ loginButton: false });
