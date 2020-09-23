@@ -139,11 +139,23 @@ const signup = async (req, res, next) => {
 };
 // use passport middle ware to authenticate user.
 const login = (req, res, next) => {
-  passport.authenticate('local', {
-    successRedirect: '/api/users',
-    failureRedirect: '/api/users/login'
+  passport.authenticate('local', (err, user, info) => {
+    if(err) {
+      return next(err);
+    } 
+    if( ! user) {
+      return res.send({ success : false, message : 'authentication failed' }); 
+    }
+
+    req.login(user, loginErr => {
+      if (loginErr) {
+        return next(loginErr);
+      }
+      return res.send({ success : true, message : 'authentication succeeded' });
+    });
   })(req, res, next);
 };
+
 
 exports.getUsers = getUsers;
 exports.signup = signup;
