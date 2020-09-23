@@ -85,7 +85,9 @@ const signup = async (req, res, next) => {
     password: hashedPassword,
     social: [], 
     bioinfo,
-    semail  
+    semail,
+    officeAddress: "",
+    mobile: ""
   });
 
   try {
@@ -97,7 +99,7 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-
+  
   const CreatedLinkedin = new Social( {
     name: "Linkedin",
     url: "http://Linkedin.com",

@@ -107,53 +107,40 @@ const updateAcc  = async (req, res, next) => {
   let ins;
   let linkedin;
   let facebook;
-  let all;
   
-  var empty = false;
-  try {
-    socials = await user.social;
-  } catch (err) {
-    empty = true;
-    console.log("empty: "+ empty);
-    console.log(err);
-  }
+  socials = user.social;
 
-  if(!empty) {
-    socials = user.social;
-    if(socials.length!== 0) {
-
-      let i =0;
-      for (i = 0; i < socials.length; i++) {
-        let id = socials[i];
-        console.log(id);
-        try {
-          media = await Social.findById(id);
-        } catch (err) {
-          console.log(err);
-          const error = new HttpError (
-            "Something went wrong, could not find social media.",
-            500
-          );
-        }
-        console.log("media is "+ media);
-        if (media.name === "Instagram" ) {
-          ins = media;
-        }
-        if (media.name === "Linkedin") {
-          linkedin = media;
-        }
-        if (media.name === "Facebook") {
-          facebook = media;
-        }
+  if(socials.length!== 0) {
+    let i =0;
+    for (i = 0; i < socials.length; i++) {
+      let id = socials[i];
+      console.log(id);
+      try {
+        media = await Social.findById(id);
+      } catch (err) {
+        console.log(err);
+        const error = new HttpError (
+          "Something went wrong, could not find social media.",
+          500
+        );
       }
-    } 
-  }
-
-
+      console.log("media is "+ media);
+      if (media.name === "Instagram" ) {
+        ins = media;
+      }
+      if (media.name === "Linkedin") {
+        linkedin = media;
+      }
+      if (media.name === "Facebook") {
+        facebook = media;
+      }
+    }
+  } 
   
-  if (typeof req.body.Username !== 'undefined') {
-    user.name = req.body.Username;
-  }
+  user.mobile = req.body.Mobile;
+  user.name = req.body.Username;
+  user.officeAddress = req.body.Address;
+  
   
   if (typeof req.body.Email !== 'undefined') {
     let email;
@@ -186,12 +173,8 @@ const updateAcc  = async (req, res, next) => {
     }
   }
   
-  if (typeof req.body.Address !== 'undefined') {
-    user.officeAddress = req.body.Address;
-  }
-  if (typeof req.body.Mobile !== 'undefined') {
-    user.mobile = req.body.Mobile;
-  }
+    
+  
   if (typeof req.body.Semail !== 'undefined') {
     let Semail;
     Semail = req.body.Semail;
@@ -224,82 +207,35 @@ const updateAcc  = async (req, res, next) => {
   }
 
   // create or update new Social object and save to user.
- 
-  if (typeof req.body.LinkedinName !== 'undefined') {
-    
-    const { LinkedinName, Linkedinurl } = req.body;
-    const CreatedLinkedin = new Social( {
-      name: LinkedinName,
-      url: Linkedinurl,
-      owner: userId
-    })
-    console.log(CreatedLinkedin);
-    
-    if (typeof linkedin !== 'undefined') {
 
-      const update = {url: Linkedinurl};
-      try {
-        await linkedin.updateOne(update);
-      } catch (err) {
-        console.log(err);
-        const error = new HttpError(
-          "Cannot update link.",
-          500
-        )
+    const updateLinkedin = {url: req.body.Linkedinurl};
+    try {
+      await linkedin.updateOne(updateLinkedin);
+    } catch (err) {        
+      console.log(err);
+      const error = new HttpError(
+        "Cannot update link.",
+        500        
+      )
         return next(error);
-      };
+    };
 
-      
-    }
-    
-    if (typeof linkedin === 'undefined') {
-      try {
-      await CreatedLinkedin.save();
-      await user.social.push(CreatedLinkedin);
-      await user.save();
+
+    const updateIns = {url: req.body.Instagramurl};
+    try {
+      await ins.updateOne(updateIns);
     } catch (err) {
       console.log(err);
       const error = new HttpError(
-        'creating social failed, please try again.'
-      );
-      return next(error);
-    }
-    }
-
-  
-    /*try {
-      const sess = await mongoose.startSession();
-      sess.startTransaction();
-      await CreatedLinkedin.save({ session: sess });
-      user.social.push(CreatedLinkedin);
-      await user.save({ session: sess });
-      await sess.commitTransaction();
-    } catch (err) {
-      console.log(err);
-      const error = new HttpError(
-        'Creating social failed, please try again.',
+        "Cannot update link.",
         500
-      );
+      )
       return next(error);
-    }*/
-  }
+    };
 
-  if (typeof req.body.InstagramName !== 'undefined') {
-
-    const { InstagramName, Instagramurl } = req.body;
-    const CreatedInstagram = new Social( {
-      name: InstagramName,
-      url : Instagramurl,
-      owner: userId
-    })
-
-    console.log(CreatedInstagram);
-
-    if (typeof ins  !== 'undefined') {
-
-      const update = {url: Instagramurl};
+    const updateFacebook = {url: req.body.Facebookurl};
       try {
-        await ins.updateOne(update);
+        await facebook.updateOne(updateFacebook);
       } catch (err) {
         console.log(err);
         const error = new HttpError(
@@ -308,62 +244,7 @@ const updateAcc  = async (req, res, next) => {
         )
         return next(error);
       };
-    }
-  
-    if (typeof ins  === 'undefined') {
-      try {
-        await CreatedInstagram.save();
-        await user.social.push(CreatedInstagram);
-        await user.save();
-      } catch (err) {
-        console.log(err);
-        const error = new HttpError(
-          'creating social failed, please try again.'
-        );
-        return next(error);
-      }
-    }  
-  }
-
-  if (typeof req.body.FacebookName !== 'undefined') {
-
-    const { FacebookName, Facebookurl } = req.body;
-    const CreatedFacebook = new Social( {
-      name: FacebookName,
-      url : Facebookurl,
-      owner: userId
-    })
-    console.log(CreatedFacebook);
-
-    if (typeof facebook  !== 'undefined') {
-      const update = {url: Facebookurl};
-      try {
-        await facebook.updateOne(update);
-      } catch (err) {
-        console.log(err);
-        const error = new HttpError(
-          "Cannot update link.",
-          500
-        )
-        return next(error);
-      };
-    }
-    
-    if (typeof facebook  === 'undefined') {
-      try {
-        await CreatedFacebook.save();
-        await user.social.push(CreatedFacebook);
-        await user.save();
-      } catch (err) {
-        console.log(err);
-        const error = new HttpError(
-          'creating social failed, please try again.'
-        );
-        return next(error);
-      }
-    }
-
-  }
+ 
 
 
   try {
@@ -376,6 +257,7 @@ const updateAcc  = async (req, res, next) => {
     );
     return next(error);
   }
+
   let newsocial;
   try {
     newsocial = await Social.find({});
