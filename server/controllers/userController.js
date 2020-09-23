@@ -85,7 +85,9 @@ const signup = async (req, res, next) => {
     password: hashedPassword,
     social: [], 
     bioinfo,
-    semail  
+    semail,
+    officeAddress: "",
+    mobile: ""
   });
 
   try {
@@ -98,16 +100,62 @@ const signup = async (req, res, next) => {
     return next(error);
   }
   
+  const CreatedLinkedin = new Social( {
+    name: "Linkedin",
+    url: "http://Linkedin.com",
+    owner: createdUser.id
+  });
+
+  const CreatedInstagram = new Social( {
+    name: "Instagram",
+    url: "http://Instagram.com",
+    owner: createdUser.id
+  })
+  const CreatedFacebook = new Social( {
+    name: "Facebook",
+    url: "http://Facebook.com",
+    owner: createdUser.id
+  })
+
+  try {
+    await CreatedLinkedin.save();
+    await CreatedInstagram.save();
+    await CreatedFacebook.save();
+
+    await createdUser.social.push(CreatedLinkedin);
+    await createdUser.social.push(CreatedFacebook);
+    await createdUser.social.push(CreatedInstagram);
+    await createdUser.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'creating social failed, please try again.'
+    );
+    return next(error);
+  }
+
 
   res.status(201).json({user: createdUser.toObject({ getters : true})});
 };
 // use passport middle ware to authenticate user.
 const login = (req, res, next) => {
-  passport.authenticate('local', {
-    successRedirect: '/api/users',
-    failureRedirect: '/api/users/login'
+  passport.authenticate('local', (err, user, info) => {
+    if(err) {
+      return next(err);
+    } 
+    if( ! user) {
+      return res.send({ success : false, message : 'authentication failed' }); 
+    }
+
+    req.login(user, loginErr => {
+      if (loginErr) {
+        return next(loginErr);
+      }
+      return res.send({ success : true, message : 'authentication succeeded' });
+    });
   })(req, res, next);
 };
+
 
 exports.getUsers = getUsers;
 exports.signup = signup;
