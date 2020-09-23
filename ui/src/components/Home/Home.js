@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../App.css";
 import './Home.css';
 
+import axios from "axios";
 import Carousel from "react-bootstrap/Carousel";
 import Image from 'react-bootstrap/Image';
 import Col from 'react-bootstrap/Col';
@@ -30,7 +31,20 @@ class Home extends Component {
     }
 
     componentDidMount(){
-        // wait for back end for routes
+        axios.get('http://localhost:8080/api/users')
+        .then(res =>{
+            this.setState({
+                bioinfo: res.data.users[0].bioinfo
+            })
+            if (!res.data.users[0].bioinfo || this.state.bioinfo.length < 1){
+                this.setState({
+                    bioinfo: 'this person have no bioinfo yet'
+                })
+            }
+        })
+        .catch(function(error) {
+            console.log(error);
+        })
     };
 
     render(){
@@ -96,9 +110,7 @@ class Home extends Component {
                         <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
 
                         <p>
-                            Twitter lover. Certified entrepreneur.
-                            Tv evangelist. Hardcore thinker.
-                            Professional reader. Problem solver. Organizer.
+                          {this.state.bioinfo}
                         </p>
                         </Col>
                     </Row>

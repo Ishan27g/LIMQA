@@ -50,6 +50,10 @@ class ManagePage extends Component {
           userid: response.data.userid
         })
       })
+      .catch(function(error) {
+        console.log(error);
+    })
+    
       const biourl = 'http://localhost:8080/api/bioinfo';
       axios.get(biourl, { withCredentials: true })
       .then(res =>{
@@ -57,7 +61,16 @@ class ManagePage extends Component {
           bio: res.data.bioinfo,
           updateBio: res.data.bioinfo
         })
+        if (!res.data.bioinfo || this.state.bio.length < 1){
+          this.setState({
+            bio: 'this person have no bioinfo yet',
+            updateBio: 'this person have no bioinfo yet',
+          })
+      }
       })
+      .catch(function(error) {
+        console.log(error);
+    })
     };
     
     handleEditBio = () => {
