@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../App.css";
 import "./docViewer.css";
-
+import "./tester.css";
 
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -68,10 +68,10 @@ class DocViewer extends Component {
 
           <Modal.Header className = "docview-header">
             {/*Change doc-name to document name*/}
-            <Modal.Title id = "doc-name" >Document Name</Modal.Title>
+            <Modal.Title id = "doc-name">Document Name</Modal.Title>
 
             {/*Change doc-date to document added date*/}
-            <h6> Added on: <span id = "doc-date"> Date </span> </h6>
+            <h6> Added on: <span id = "doc-date"> DATE </span> </h6>
           </Modal.Header>
 
           <Modal.Body className = "docview-body" >
@@ -82,7 +82,9 @@ class DocViewer extends Component {
                   <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
                 </Col>
                 <Col className = "docview-properties">
-
+                  <Row>
+                    <h4>Attached Tags</h4>
+                  </Row>
                 </Col>
               </Row>
             </Container>
@@ -92,6 +94,7 @@ class DocViewer extends Component {
             <Button variant = "outline-dark" onClick ={this.handleViewerEdit}>Edit</Button>
           </Modal.Footer>
         </Modal>
+
 
         <Modal
           dialogClassName = "docview"
