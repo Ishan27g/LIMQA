@@ -48,7 +48,7 @@ class Home extends Component {
     };
 
     render(){
-        const coverImg = [{path: '../../Image/sampleImage1.jpg'}, {path: '../../Image/sampleImage2.jpg'}, {path: '../../Image/sampleImage3.jpg'}];
+        const coverImg = ['../../Image/sampleImage1.jpg', '../../Image/sampleImage2.jpg', '../../Image/sampleImage3.jpg'];
         let coverImage = coverImg.map(cover =>{
           return(
             <CoverImage note={cover}/>

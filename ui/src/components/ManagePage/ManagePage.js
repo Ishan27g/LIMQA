@@ -31,7 +31,11 @@ class ManagePage extends Component {
           filter : "Title",
           bio: '',
           updateBio: '',
-          userid:''
+          userid:'',
+          cover: [],
+          profile: '',
+          updateProfile: null,
+          updateCover: null
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -73,6 +77,7 @@ class ManagePage extends Component {
     })
     };
     
+    onChangeProfileImage
     handleEditBio = () => {
         this.setState({ editBio: true });
     }
@@ -119,7 +124,7 @@ class ManagePage extends Component {
             </Col>
           )
         })
-        const coverImg = [{path: '../../Image/sampleImage1.jpg'}, {path: '../../Image/sampleImage2.jpg'}, {path: '../../Image/sampleImage3.jpg'}];
+        const coverImg = ['../../Image/sampleImage1.jpg', '../../Image/sampleImage2.jpg', '../../Image/sampleImage3.jpg'];
         let coverImage = coverImg.map(cover =>{
           return(
             <CoverImage note={cover}/>
