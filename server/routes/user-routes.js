@@ -19,4 +19,10 @@ router.post('/login', check('email').normalizeEmail(),userController.login);
 router.post('/profilePhoto', fileUpload.single('file'), photoController.addProfilePhoto);
 router.get('/profilePhoto', photoController.getProfilePhoto);
 
+router.post('/coverImages', fileUpload.array('files',5), photoController.addCoverImages);
+router.get('/coverImages', photoController.getCoverImages);
+
+router.post('/bgImage', fileUpload.single('file'), photoController.addBgImage);
+router.get('/bgImage', photoController.getBgImage);
+
 module.exports = router;
