@@ -7,7 +7,7 @@ const userSchema = new Schema({
     name: {type : String, required: true},
     email: {type : String, required: true, unique: true},
     password: { type : String, required: true, minlength: 6}, 
-    social: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Social'}],
+    social: [{ type: Schema.Types.ObjectId, required: true, ref: 'Social'}],
     documents: [{type : String, required: true}],
     bioinfo: { type: String, required: true},
     officeAddress: { type: String, required: false},
