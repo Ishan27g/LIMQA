@@ -59,7 +59,7 @@ class App extends Component{
             loginInfo: true
           })
         }
-      })
+    })
   };
 
   handleSignClose = () => {
@@ -113,22 +113,42 @@ class App extends Component{
           const check = 'http://localhost:8080/api/users/check';
           axios.post(url,obj, { withCredentials: true })
           .then(response => {
-              axios.get(check, { withCredentials: true })
-              .then(response => {
-                console.log(response.data.logIn);
-                if (response.data.logIn){
-                  this.setState({
-                    loginButton: false,
-                    login: true
-                  })
-                }
-              })
+              if (response.data.success){
+                axios.get(check, { withCredentials: true })
+                .then(response => {
+                  console.log(response.data.logIn);
+                  if (response.data.logIn){
+                    this.setState({
+                      loginButton: false,
+                      login: true
+                    })
+                  }
+                })
+              }else{
+                this.setState({
+                  loginInfo: false
+                })
+              }
           })
-          // wait backend to implement failure login response
           .catch(function(error) {
               console.log(error);
           })
       }
+  }
+
+  handlesignup(){
+    const signurl = 'http://localhost:8080/api/users/signup';
+    const user = {
+      email: 'test@test.com'
+    };
+    axios.post(signurl,user, { withCredentials: true })
+    .then(response => {
+
+    })
+    // wait backend to implement failure login response
+    .catch(function(error) {
+        console.log(error);
+    })
   }
 
   handleSignin = () => {

@@ -8,7 +8,7 @@ module.exports = {
         if(req.isAuthenticated()) {
             return next();
         }
-        res.redirect('/users/login');
+        // res.redirect('/users/login');
         console.log("cannot go to this page, log in first.")
     }
 };
