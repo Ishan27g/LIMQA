@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../App.css";
 import "./accountEdit.css";
+import "./tester.css";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 

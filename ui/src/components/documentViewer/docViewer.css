@@ -1,0 +1,38 @@
+
+.docview {
+  max-width: 75%;
+  margin-top: 2vmax;
+}
+
+.docview-header > .modal-title {
+  font-size: 2em;
+}
+
+.docview-header > h6 {
+  text-transform: uppercase;
+  font-size: 0.85em;
+}
+
+.docview-header > h6 > span {
+  text-transform: none;
+  font-size: 1.35em;
+}
+
+.docview-properties{
+  display: flex;
+  align-items: top;
+  justify-content: flex-start;
+}
+.docview-properties > .list-group {
+  width: 100%;
+  padding: 1vmax;
+}
+
+.docview-footer{
+  display: flex;
+  justify-content: space-between;
+}
+
+.docview-footer > .btn{
+
+}
