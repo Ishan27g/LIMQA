@@ -6,6 +6,7 @@ const  User = require('../models/user');
 const Social = require('../models/social');
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
+const Photos = require('../models/photos');
 
 
 
@@ -77,6 +78,21 @@ const signup = async (req, res, next) => {
   /*const cretedSocial = new Social({
     name = 
   })*/
+  const createdPhotos = new Photos({
+    email : email,
+    profilePhoto: "",
+    coverImages: "",
+    bgImage: ""
+  })
+  try {
+    await createdPhotos.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'creating photos failed, please try again.'
+    );
+    return next(error);
+  }
 
   const createdUser = new User({
     name,
@@ -86,6 +102,7 @@ const signup = async (req, res, next) => {
     social: [], 
     bioinfo,
     semail,
+    photos: createdPhotos, 
     officeAddress: "",
     mobile: ""
   });
@@ -99,7 +116,7 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-  
+
   const CreatedLinkedin = new Social( {
     name: "Linkedin",
     url: "http://Linkedin.com",
@@ -133,8 +150,6 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-
-
   res.status(201).json({user: createdUser.toObject({ getters : true})});
 };
 // use passport middle ware to authenticate user.
