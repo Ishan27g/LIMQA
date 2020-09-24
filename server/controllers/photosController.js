@@ -19,8 +19,8 @@ const getBgImage = async (req, res, next) => {
     }
     if(existingPhoto) {
         var bgImage = existingPhoto.toObject({getters: true})
-        console.log("bgImage is saved at " + bgImage.bgImage)
-        //read the image using fs and send the image content back in the response
+        res.status(200).json({ bgImage });
+        /*read the image using fs and send the image content back in the response
         fs.readFile(bgImage.bgImage, function (err, content) {
         if (err) {
             res.writeHead(400, {'Content-type':'text/html'})
@@ -30,7 +30,7 @@ const getBgImage = async (req, res, next) => {
             res.writeHead(200,{'Content-type':'image/jpg'});
             res.end(content);
         }
-    });
+    });*/
     }   
     else{
         const error = new HttpError(
@@ -77,6 +77,8 @@ const getCoverImages = async (req, res, next) => {
     }
     if(existingPhoto) {
         var coverImages = existingPhoto.toObject({getters: true})
+        res.status(200).json({ coverImages });
+        /*
         console.log("Cover image is saved at " + existingPhoto.toObject({getters: true}))
         //console.log("Cover image 0 is saved at " +coverImages.coverImages[0])
         //read the image using fs and send the image content back in the response
@@ -89,7 +91,9 @@ const getCoverImages = async (req, res, next) => {
             res.writeHead(200,{'Content-type':'image/jpg'});
             res.end(content);
         }
+       
     });
+     */
     }   
     else{
         const error = new HttpError(
@@ -141,8 +145,9 @@ const getProfilePhoto = async (req, res, next) => {
         return next(error);
     }
     if(existingPhoto) {
-        console.log("profile photo is saved at " + existingPhoto.profilePhoto)
-        //read the image using fs and send the image content back in the response
+        var coverImages = existingPhoto.toObject({getters: true})
+        res.status(200).json({ coverImages });
+        /*read the image using fs and send the image content back in the response
         fs.readFile(existingPhoto.profilePhoto, function (err, content) {
         if (err) {
             res.writeHead(400, {'Content-type':'text/html'})
@@ -152,7 +157,7 @@ const getProfilePhoto = async (req, res, next) => {
             res.writeHead(200,{'Content-type':'image/jpg'});
             res.end(content);
         }
-    });
+    });*/
     }   
     else{
         const error = new HttpError(
