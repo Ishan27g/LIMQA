@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../App.css";
 import "./docViewer.css";
-import "./tester.css";
 
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -57,6 +56,7 @@ class DocViewer extends Component {
     {/* Leaves abruptly w/o saving Changes */}
     this.setState({docEditor:false, docViewer: false, checkEdit: false});
   }
+
   render() {
     return(
       <div>
@@ -85,6 +85,40 @@ class DocViewer extends Component {
                   <Row>
                     <h4>Attached Tags</h4>
                   </Row>
+                  <Row className = "doc-tags">
+                    { /*Add a List of badges: indent  1 vmax*/}
+                    <ListGroup>
+                      <ListGroup.Item>
+                        {/*Add a Badge*/}
+                      </ListGroup.Item>
+                    </ListGroup>
+                  </Row>
+                  <Row>
+                    <h4> Description</h4>
+                  </Row>
+                  <Row className = "doc-description">
+                      {/* Add document description */}
+                    <p id = "doc-desc">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Id eu nisl nunc mi ipsum faucibus. Augue maursis
+                      augue neque gravida.
+                    </p>
+                  </Row>
+                  <Row>
+                      <h4>Achievements</h4>
+
+                      {/* If the field is not an achievemnt change the opacity of h4*/}
+                  </Row>
+                  {/* only show this row when document is an achievement is checked out */}
+                  <Row className = "doc-achievement"
+                        show = {this.state.Actext}>
+                    {/* Add acheivement name */}
+                    <h5>NAME: <span id= "doc-ac-date"> AC NAME</span></h5>
+                    {/* Add acheivement date */}
+                    <h5>DATE: <span id= "doc-ac-date"> AC DATE</span></h5>
+                  </Row>
+
                 </Col>
               </Row>
             </Container>
@@ -157,7 +191,7 @@ class DocViewer extends Component {
         <Modal.Footer className = "docview-footer">
             <Button variant = "outline-dark" onClick ={this.handleEditorShow} >Return</Button>
             <Button
-              variant = "outline-dark"
+              variant = "outline-danger"
               onClick ={this.handleAbruptLeave}>Close</Button>
         </Modal.Footer>
         </Modal>
