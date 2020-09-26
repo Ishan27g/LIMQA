@@ -33,9 +33,8 @@ class ManagePage extends Component {
           updateBio: '',
           userid:'',
           cover: [],
-          profile: '',
           updateProfile: null,
-          updateCover: null
+          updateCover: null,
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -43,13 +42,16 @@ class ManagePage extends Component {
         this.handleFilterOnTime = this.handleFilterOnTime.bind(this);
         this.handleFilterOnElse = this.handleFilterOnElse.bind(this);
         this.onChangBioInfo = this.onChangBioInfo.bind(this);
+        this.onChangeProfileImage = this.onChangeProfileImage.bind(this);
+        this.onChangeCoverImage = this.onChangeCoverImage.bind(this);
+        this.uploadProfileImage = this.uploadProfileImage.bind(this);
+        this.uploadCoverImage = this.uploadCoverImage.bind(this);
     }
 
     componentDidMount(){
       const idurl = 'http://localhost:8080/api/users/check';
       axios.get(idurl, { withCredentials: true })
       .then(response => {
-        console.log(response.data.userid)
         this.setState({
           userid: response.data.userid
         })
@@ -74,10 +76,75 @@ class ManagePage extends Component {
       })
       .catch(function(error) {
         console.log(error);
-    })
+      })
+
+      const imgUrl = 'http://localhost:8080/api/users/coverImages';
+      axios.get(imgUrl, { withCredentials: true })
+      .then(res =>{
+        var i;
+        const tempCover = [];
+        for (i=0; i<res.data.coverImages.coverImages.length; i++){
+          tempCover.push('http://localhost:8080/api/users/coverImages/'+i)
+        }
+        this.setState({
+          cover: tempCover
+        })
+
+        if (this.state.cover.length < 1){
+          this.setState({
+            cover: [sampleImage1, sampleImage2, sampleImage3]
+          })
+        }
+        
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
     };
     
-    onChangeProfileImage
+    onChangeProfileImage(e){
+      console.log(e.target.files[0]);
+      this.setState({
+        updateProfile: e.target.files[0]
+      })
+    }
+
+    uploadProfileImage(){
+      if (this.state.updateProfile !== null){
+        const proImg = new FormData();
+        proImg.append('file', this.state.updateProfile)
+        axios.post('http://localhost:8080/api/users/profilePhoto', proImg, { withCredentials: true })
+        .then( res => {
+          console.log(res);
+        })
+        .catch(function(error) {
+          console.log(error);
+        })
+      }
+    }
+
+    onChangeCoverImage(e){
+      console.log(e.target.files[0]);
+      this.setState({
+        updateCover: e.target.files[0]
+      })
+    }
+
+    uploadCoverImage(){
+      if (this.state.updateCover !== null){
+        const covImg = new FormData();
+        covImg.append('files', this.state.updateCover)
+        axios.post('http://localhost:8080/api/users/coverImages', covImg, { withCredentials: true })
+        .then( res => {
+          console.log(res);
+        })
+        .catch(function(error) {
+          console.log(error);
+        })
+      }
+
+    }
+
     handleEditBio = () => {
         this.setState({ editBio: true });
     }
@@ -123,56 +190,36 @@ class ManagePage extends Component {
               <DocCard note={card}/>
             </Col>
           )
-        })
-        const coverImg = ['../../Image/sampleImage1.jpg', '../../Image/sampleImage2.jpg', '../../Image/sampleImage3.jpg'];
+        });
+        const coverImg = this.state.cover;
         let coverImage = coverImg.map(cover =>{
           return(
-            <CoverImage note={cover}/>
-          )
-        })
+            <Carousel.Item>
+                <CoverImage note={cover} />
+            </Carousel.Item>
+        )
+        });
         return(
             <body>
             <div class = "manage-cover-image">
               <Carousel>
                   {coverImage}
                   <Carousel.Item>
-                      <img
-                      src= {sampleImage1}
-                      alt="First slide"
-                      />
-                      <Carousel.Caption>
-                      <h3>First slide label</h3>
-                      <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                      </Carousel.Caption>
-                  </Carousel.Item>
-                  <Carousel.Item>
-                      <img
-                      src= {sampleImage2}
-                      alt="Third slide"
-                      />
-
-                      <Carousel.Caption>
-                      <h3>Second slide label</h3>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                      </Carousel.Caption>
-                  </Carousel.Item>
-                  <Carousel.Item>
-                      <img
-                      src= {sampleImage3}
-                      alt="Third slide"
-                      />
-
-                      <Carousel.Caption>
-                      <h3>Third slide label</h3>
-                      <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                      </Carousel.Caption>
-                  </Carousel.Item>
-                  <Carousel.Item>
-                    <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-                    <label for="BtnBrowseHidden" className="imageUpload">
-                      <Image src = {uploadIcon} alt ="Upload Icon" style = {{width: "11vmax", height: "9vmax"}}/>
+                    <input
+                     type="file"
+                     style={{display: "none"}}
+                     onChange={this.onChangeCoverImage}
+                     ref={coverInput=>this.coverInput=coverInput}
+                     multiple/>
+                    <label className="imageUpload">
+                      <Image 
+                      src = {uploadIcon}
+                      alt ="Upload Icon" 
+                      style = {{width: "11vmax", height: "9vmax"}}
+                      onClick = {() => this.coverInput.click()} />
                       <br/>Upload Cover Images
                     </label>
+                    <Button variant="info" onClick={this.uploadCoverImage} block>Upload Cover Image</Button>
                   </Carousel.Item>
               </Carousel>
             </div>
@@ -186,13 +233,16 @@ class ManagePage extends Component {
                   </Row>
                   <Row style ={{marginTop: "2vmax"}}>
                       <Col style = {{textAlign: "center"}}>
-                          <Image src={profile} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
-                          <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
+                          <Image src={'http://localhost:8080/api/users/profilePhoto'} roundedCircle style = {{height: "20vmax", width: "20vmax"}} onError={(e)=>{e.target.onerror = null; e.target.src=profile}}/>
+                          <input 
+                           type="file"
+                           onChange={this.onChangeProfileImage}
+                           style={{display: 'none'}}
+                           ref={profileInput=>this.profileInput=profileInput} />
                       <Col>
+                        <Button variant="info" onClick={() => this.profileInput.click()}>Select photo</Button> {' '}
+                        <Button variant="info" onClick={this.uploadProfileImage}>Upload photo</Button>                  
                       </Col>
-                        <label htmlFor="BtnBrowseHidden" className="profileUpload">
-                            Upload profile
-                        </label>
                       </Col>
                       <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
                           {this.state.editBio ? (

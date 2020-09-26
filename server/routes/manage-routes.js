@@ -12,4 +12,5 @@ router.put('/bioinfo/:uid', ensureAuthenticated, [ check("bioinfo").not().isEmpt
 router.get('/accSetting/:uid', ensureAuthenticated, manageController.getAcc);
 // expect form data 
 router.put('/accSetting/:uid', ensureAuthenticated, fileUpload.single('profileimg'), manageController.updateAcc);
+
 module.exports = router;

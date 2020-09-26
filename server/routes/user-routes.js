@@ -8,6 +8,8 @@ const fileUpload = require("../middlerware/file-upload");
 
 router.get('/', userController.getUsers);
 
+router.get('/check', userController.check);
+
 router.post('/signup', fileUpload.array('files',10), [
     check("name").not().isEmpty(),
     check("email").normalizeEmail().isEmail(),
@@ -21,6 +23,7 @@ router.get('/profilePhoto', photoController.getProfilePhoto);
 
 router.post('/coverImages', fileUpload.array('files',5), photoController.addCoverImages);
 router.get('/coverImages', photoController.getCoverImages);
+router.get('/coverImages/:id', photoController.getCoverImagesById);
 
 router.post('/bgImage', fileUpload.single('file'), photoController.addBgImage);
 router.get('/bgImage', photoController.getBgImage);

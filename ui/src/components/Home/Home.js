@@ -24,9 +24,9 @@ class Home extends Component {
         super();
         this.state = {
             bioinfo: '',
-            coverPage: [],
             profilePage: '',
-            documents: ''
+            documents: '',
+            cover:[sampleImage1, sampleImage2, sampleImage3],
         }
     }
 
@@ -41,6 +41,30 @@ class Home extends Component {
                     bioinfo: 'this person have no bioinfo yet'
                 })
             }
+            console.log(res.data.users[0].photos)
+        })
+        .catch(function(error) {
+            console.log(error);
+        })
+
+        const imgUrl = 'http://localhost:8080/api/users/coverImages';
+        axios.get(imgUrl, { withCredentials: true })
+        .then(res =>{
+            var i;
+            const tempCover = [];
+            for (i=0; i<res.data.coverImages.coverImages.length; i++){
+            tempCover.push('http://localhost:8080/api/users/coverImages/'+i)
+            }
+            this.setState({
+            cover: tempCover
+            })
+
+            if (this.state.cover.length < 1){
+            this.setState({
+                cover: [sampleImage1, sampleImage2, sampleImage3]
+            })
+            }
+            
         })
         .catch(function(error) {
             console.log(error);
@@ -48,11 +72,13 @@ class Home extends Component {
     };
 
     render(){
-        const coverImg = ['../../Image/sampleImage1.jpg', '../../Image/sampleImage2.jpg', '../../Image/sampleImage3.jpg'];
+        var coverImg = this.state.cover;
         let coverImage = coverImg.map(cover =>{
-          return(
-            <CoverImage note={cover}/>
-          )
+            return(
+                <Carousel.Item>
+                    <CoverImage note={cover} />
+                </Carousel.Item>
+            )
         })
 
         return(
@@ -60,38 +86,6 @@ class Home extends Component {
             <div class = "cover-image">
               <Carousel>
                     {coverImage}
-                    <Carousel.Item>
-                        <img
-                        src= {sampleImage1}
-                        alt="First slide"
-                        />
-                        <Carousel.Caption>
-                        <h3>First slide label</h3>
-                        <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                        </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                        src= {sampleImage2}
-                        alt="Third slide"
-                        />
-
-                        <Carousel.Caption>
-                        <h3>Second slide label</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                        src= {sampleImage3}
-                        alt="Third slide"
-                        />
-
-                        <Carousel.Caption>
-                        <h3>Third slide label</h3>
-                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                        </Carousel.Caption>
-                    </Carousel.Item>
                 </Carousel>
               </div>
 
@@ -105,7 +99,7 @@ class Home extends Component {
 
                     <Row style = {{marginTop: "2vmax"}} >
                         <Col style = {{textAlign: "center"}}>
-                        <Image src={profile} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
+                        <Image src={'http://localhost:8080/api/users/profilePhoto'} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
                         </Col>
                         <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
 
