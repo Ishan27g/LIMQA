@@ -34,7 +34,7 @@ const getBgImage = async (req, res, next) => {
     }   
     else{
         const error = new HttpError(
-            'User not found.',
+            'User not found.'+req.user.email,
             500
             );
         return next(error);
@@ -78,11 +78,10 @@ const getCoverImages = async (req, res, next) => {
     if(existingPhoto) {
         var coverImages = existingPhoto.toObject({getters: true})
         res.status(200).json({ coverImages });
-        /*
         console.log("Cover image is saved at " + existingPhoto.toObject({getters: true}))
         //console.log("Cover image 0 is saved at " +coverImages.coverImages[0])
         //read the image using fs and send the image content back in the response
-        fs.readFile(coverImages.coverImages[0], function (err, content) {
+        /*fs.readFile(coverImages.coverImages[0], function (err, content) {
         if (err) {
             res.writeHead(400, {'Content-type':'text/html'})
             console.log(err);
@@ -92,17 +91,51 @@ const getCoverImages = async (req, res, next) => {
             res.end(content);
         }
        
-    });
-     */
+        });*/
     }   
     else{
         const error = new HttpError(
-            'User not found.',
+            'User not found.' ,
             500
             );
         return next(error);
     }
   };
+
+const getCoverImagesById = async (req, res, next) =>{
+    let existingPhoto
+    try {
+        existingPhoto = await Photos.findOne({ email: req.user.email})
+    } catch (err) {
+        const error = new HttpError(
+        'Photos not found.',
+        500
+        );
+        return next(error);
+    }
+    if(existingPhoto) {
+        const id = req.params.id;
+        var coverImages = existingPhoto.toObject({getters: true})
+        fs.readFile(coverImages.coverImages[id], function (err, content) {
+        if (err) {
+            res.writeHead(400, {'Content-type':'text/html'})
+            console.log(err);
+            res.end("No such image");    
+        } else {
+            res.writeHead(200,{'Content-type':'image/jpg'});
+            res.end(content);
+        }
+       
+        });
+    }   
+    else{
+        const error = new HttpError(
+            'User not found.' ,
+            500
+            );
+        return next(error);
+    }
+}
 
 const addCoverImages = async (req, res, next) =>{
     let existingPhoto
@@ -146,8 +179,8 @@ const getProfilePhoto = async (req, res, next) => {
     }
     if(existingPhoto) {
         var coverImages = existingPhoto.toObject({getters: true})
-        res.status(200).json({ coverImages });
-        /*read the image using fs and send the image content back in the response
+        //res.status(200).json({ coverImages });
+        //read the image using fs and send the image content back in the response
         fs.readFile(existingPhoto.profilePhoto, function (err, content) {
         if (err) {
             res.writeHead(400, {'Content-type':'text/html'})
@@ -157,11 +190,11 @@ const getProfilePhoto = async (req, res, next) => {
             res.writeHead(200,{'Content-type':'image/jpg'});
             res.end(content);
         }
-    });*/
+    });
     }   
     else{
         const error = new HttpError(
-            'User not found.',
+            'User not found.'+req.user.email,
             500
             );
         return next(error);
@@ -171,7 +204,7 @@ const getProfilePhoto = async (req, res, next) => {
 const addProfilePhoto = async (req, res, next) =>{
     let existingPhoto
     try {
-        existingPhoto = await Photos.findOne({ email: req.user.email})
+        existingPhoto = await Photos.findOne({ id: req.user.email})
     } catch (err) {
         const error = new HttpError(
             'Photos not found.',
@@ -198,9 +231,11 @@ const addProfilePhoto = async (req, res, next) =>{
     }
 }
 
+
 exports.getProfilePhoto = getProfilePhoto;
 exports.addProfilePhoto = addProfilePhoto;
 exports.getCoverImages = getCoverImages;
 exports.addCoverImages = addCoverImages;
 exports.getBgImage = getBgImage;
 exports.addBgImage = addBgImage;
+exports.getCoverImagesById = getCoverImagesById;
