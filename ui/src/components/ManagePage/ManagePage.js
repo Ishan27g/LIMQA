@@ -13,6 +13,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DocCard from '../documentsCard.js';
+import CoverImage from '../CoverImage/coverImage.js';
 
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
@@ -20,14 +21,21 @@ import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
 import uploadIcon from '../../Image/uploadIcon.png';
 import uploadDocuments from '../../Image/uploadDocuments.svg';
+import axios from "axios";
 
 class ManagePage extends Component {
     constructor(){
         super();
         this.state = {
-            editBio : false,
-            filter : "Title",
-            bioinfo: '',
+          editBio : false,
+          filter : "Title",
+          bio: '',
+          updateBio: '',
+          userid:'',
+          cover: [],
+          profile: '',
+          updateProfile: null,
+          updateCover: null
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -38,15 +46,48 @@ class ManagePage extends Component {
     }
 
     componentDidMount(){
-      // wait for back end for routes
+      const idurl = 'http://localhost:8080/api/users/check';
+      axios.get(idurl, { withCredentials: true })
+      .then(response => {
+        console.log(response.data.userid)
+        this.setState({
+          userid: response.data.userid
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+    })
+    
+      const biourl = 'http://localhost:8080/api/bioinfo';
+      axios.get(biourl, { withCredentials: true })
+      .then(res =>{
+        this.setState({
+          bio: res.data.bioinfo,
+          updateBio: res.data.bioinfo
+        })
+        if (!res.data.bioinfo || this.state.bio.length < 1){
+          this.setState({
+            bio: 'this person have no bioinfo yet',
+            updateBio: 'this person have no bioinfo yet',
+          })
+      }
+      })
+      .catch(function(error) {
+        console.log(error);
+    })
     };
     
+    onChangeProfileImage
     handleEditBio = () => {
         this.setState({ editBio: true });
     }
 
     handleSubmiteBio = () => {
-        this.setState({ editBio: false });
+      const obj = {
+        bioinfo: this.state.updateBio
+    };
+      axios.put('http://localhost:8080/api/bioinfo/'+this.state.userid, obj, { withCredentials: true })
+      this.setState({ editBio: false });
     }
 
     handleFilterOnTitle = () => {
@@ -62,13 +103,19 @@ class ManagePage extends Component {
     }
 
     onChangBioInfo(e){
-      this.setState({
-        bioinfo: e.target.value
-      })
+      if (e.target.value.length > 0){
+        this.setState({
+          updateBio: e.target.value
+        })
+      }else{
+        const info = this.state.bio;
+        this.setState({
+          updateBio: info
+        })
+      }
     }
 
     render(){
-
         const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
         let docCards = documents.map(card =>{
           return(
@@ -77,11 +124,17 @@ class ManagePage extends Component {
             </Col>
           )
         })
-
+        const coverImg = ['../../Image/sampleImage1.jpg', '../../Image/sampleImage2.jpg', '../../Image/sampleImage3.jpg'];
+        let coverImage = coverImg.map(cover =>{
+          return(
+            <CoverImage note={cover}/>
+          )
+        })
         return(
             <body>
             <div class = "manage-cover-image">
               <Carousel>
+                  {coverImage}
                   <Carousel.Item>
                       <img
                       src= {sampleImage1}
@@ -144,16 +197,14 @@ class ManagePage extends Component {
                       <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
                           {this.state.editBio ? (
                               <Form>
-                                  <Form.Label>Enter your bio here</Form.Label>
+                                  <Form.Label>Enter your new bio here</Form.Label>
                                   <Form.Control as="textarea" rows="3" onChange={this.onChangBioInfo}/>
-                                  <Button variant="outline-info" onClick={this.handleSubmiteBio}>submit</Button>
+                                  <Button variant="info" onClick={this.handleSubmiteBio} block>submit</Button>
                               </Form>
                           ):
-                          (<p>Twitter lover. Certified
-                              entrepreneur Tv evangelist.
-                              Hardcore thinker. Professional reader.
-                              Problem solver. Organizer.
-                            </p>)}
+                          (
+                          <p>{this.state.bio}</p>
+                          )}
                           <Button variant="info" onClick={this.handleEditBio} block>Edit</Button>
 
                       </Col>
