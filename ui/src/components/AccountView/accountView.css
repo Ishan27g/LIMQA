@@ -140,3 +140,23 @@
   margin-left: 2vmax;
   margin-right: 2vmax;
 }
+
+.acc-set > .container,
+  .acc-header,
+  .acc-info,
+    .acc-basic-info,
+        .acc-image, .acc-username , .acc-email,
+    .acc-set-edit,
+        .acc-edit-button, .acc-update-password,
+
+
+  .acc-social-header,
+  .acc-social,
+    .acc-social-list,
+
+  .acc-contact-header,
+  .acc-contact,
+    .acc-contact-list
+{
+  border: 1px solid red;
+}

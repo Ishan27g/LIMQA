@@ -1,0 +1,55 @@
+
+.docview {
+  max-width: 75%;
+  margin-top: 2vmax;
+}
+
+.docview-header > .modal-title {
+  font-size: 2em;
+}
+
+.docview-header > h6 {
+  text-transform: uppercase;
+  font-size: 0.85em;
+}
+
+.docview-header > h6 > span {
+  text-transform: none;
+  font-size: 1.35em;
+}
+
+.docview-properties, .doc-achievement, .doc-description{
+  display: block;
+  align-items: top;
+  justify-content: flex-start;
+}
+.docview-properties > .row {
+  margin-top: 1vmax;
+  margin-left: 1vmax;
+}
+.docview-properties > .doc-tags ,
+.docview-properties > .doc-achievement,
+.docview-properties > .doc-description{
+  margin-left: 2vmax;
+  margin-top: 1vmax
+}
+
+.docview-footer{
+  display: flex;
+  justify-content: space-between;
+}
+
+.doc-description > p{
+  color: black;
+}
+
+.docview,
+  .docview-header,
+  .docview-body,
+    .docview-image,
+      .docview-properties,
+      .docview-properties > .row ,
+  .docview-footer
+{
+
+}

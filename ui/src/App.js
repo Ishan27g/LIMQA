@@ -19,6 +19,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import Home from './components/Home/Home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import AccountView from './components/AccountView/accountView.js';
+import DocViewer from './components/documentViewer/docViewer.js';
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
 
@@ -108,7 +109,7 @@ class App extends Component{
           }
 
       }
-      else{ 
+      else{
           const url = 'http://localhost:8080/api/users/login';
           const check = 'http://localhost:8080/api/users/check';
           axios.post(url,obj, { withCredentials: true })
@@ -224,11 +225,11 @@ class App extends Component{
                 this.state.Alertemail === true ?(
                   <Alert variant={'danger'}>
                     please enter your email!
-                  </Alert>                     
+                  </Alert>
                 ):
                 (
                   <section></section>
-                ) 
+                )
               }
               <Form.Group controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
@@ -238,21 +239,21 @@ class App extends Component{
                 this.state.Alertpassword === true ?(
                   <Alert variant={'danger'}>
                     please enter your password!
-                  </Alert>                     
+                  </Alert>
                 ):
                 (
                   <section></section>
-                ) 
+                )
               }
               {
                 this.state.loginInfo === false ?(
                   <Alert variant={'danger'}>
                     incorrect email or password!
-                  </Alert>                     
+                  </Alert>
                 ):
                 (
                   <section></section>
-                ) 
+                )
               }
             </form>
 
@@ -265,7 +266,7 @@ class App extends Component{
           </Modal>
           {<BrowserRouter>
             <Switch>
-              <Route path="/" component={Home} exact/>
+              <Route path="/" component={DocViewer} exact/>
               <Route path="/manage" component={ManagePage}/>
               <Route path="/view" component={AccountView}/>
             </Switch>
