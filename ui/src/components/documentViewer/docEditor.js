@@ -38,20 +38,27 @@ class DocEditor extends Component {
       this.handleDelete = this.handleDelete.bind(this);
 
        this.state = {
+         /*Viewer mode State*/
+
          docViewer: true,
          docEditor: false,
          checkEdit: false,
          checkDelete: false,
          addTags: false,
+         uploadMode: false,
+
+         /*Document Properties*/
          docname: "Document Name",
          docdate: "Document Date",
          tags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership"],
-         allTags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership", "Extra1", "Extra2", "Extra3"],
          highlighted: false,
          docdesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magnaaliqua. Id eu nisl nunc mi ipsum faucibus. Augue maursisaugue neque gravida.",
          achievement: true,
          acinst: "Institution name",
-         acdate: "Date of Achievement"
+         acdate: "Date of Achievement",
+
+         /*All Tags Created*/
+         allTags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership", "Extra1", "Extra2", "Extra3"]
        }
     }
 
