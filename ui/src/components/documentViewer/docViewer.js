@@ -13,7 +13,6 @@ import FileViewer from "react-file-viewer";
 import Collapse from 'react-bootstrap/Collapse';
 
 import Tag from './../Tags/Tag.js';
-import DocEditor from './docEditor.js';
 import doc from '../../Image/documents.png';
 
 const onError = () =>{

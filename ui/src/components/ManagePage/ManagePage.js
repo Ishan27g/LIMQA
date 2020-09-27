@@ -14,8 +14,6 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
-import FileViewer from "react-file-viewer";
-
 
 import CoverImage from '../CoverImage/coverImage.js';
 import Docview from '../documentViewer/doc.js';
@@ -38,12 +36,13 @@ class ManagePage extends Component {
           bio: '',
           updateBio: '',
           userid:'',
-          cover: [],
+          cover: [sampleImage1, sampleImage2, sampleImage3],
           updateProfile: null,
           updateCover: null,
           updateDoc: null,
           docPath: '',
-          doctype: ''
+          doctype: '',
+          documents: [],
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -66,6 +65,15 @@ class ManagePage extends Component {
       .then(response => {
         this.setState({
           userid: response.data.userid
+        }, ()=>{
+          const docUrl = 'http://localhost:8080/api/documents/' + this.state.userid;
+          axios.get(docUrl, { withCredentials: true })
+          .then(res=>{
+            console.log(res.data);
+            this.setState({
+              documents: res.data.documents
+            })
+          })
         });
       })
       .catch(function(error) {
@@ -84,7 +92,7 @@ class ManagePage extends Component {
             bio: 'this person have no bioinfo yet',
             updateBio: 'this person have no bioinfo yet',
           })
-      }
+        }
       })
       .catch(function(error) {
         console.log(error);
@@ -93,21 +101,17 @@ class ManagePage extends Component {
       const imgUrl = 'http://localhost:8080/api/users/coverImages';
       axios.get(imgUrl, { withCredentials: true })
       .then(res =>{
-        var i;
-        const tempCover = [];
-        for (i=0; i<res.data.coverImages.coverImages.length; i++){
+        
+        if (res.data.coverImages.coverImages[0] !== ""){
+          var i;
+          const tempCover = [];
+          for (i=0; i<res.data.coverImages.coverImages.length; i++){
           tempCover.push('http://localhost:8080/api/users/coverImages/'+i)
-        }
-        this.setState({
-          cover: tempCover
-        });
-
-        if (this.state.cover.length < 1){
+          }
           this.setState({
-            cover: [sampleImage1, sampleImage2, sampleImage3]
+            cover: tempCover
           });
         }
-        
       })
       .catch(function(error) {
         console.log(error);
@@ -166,6 +170,15 @@ class ManagePage extends Component {
         bioinfo: this.state.updateBio
     };
       axios.put('http://localhost:8080/api/bioinfo/'+this.state.userid, obj, { withCredentials: true })
+      .then(res =>{
+        const tempBio = this.state.updateBio;
+        this.setState({
+          bio: tempBio
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
       this.setState({ editBio: false });
     }
 
@@ -195,14 +208,11 @@ class ManagePage extends Component {
     }
 
     onChangeDocUpload(e){
-      console.log(e.target.files[0]);
-
       this.setState({
         updateDoc: e.target.files[0],
         docPath: URL.createObjectURL(e.target.files[0])
       }, ()=>{
         console.log(this.state.updateDoc);
-        console.log(this.state.docPath);
       });
     }
 
@@ -217,10 +227,10 @@ class ManagePage extends Component {
     }
 
     render(){
-      var doc = {path: this.state.docPath, type: this.state.doctype};
-      const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
+      var doc = {doc: this.state.updateDoc, id: this.state.userid};
+      //const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
+      var documents = this.state.documents;
       let docCards = documents.map(card =>{
-        doc = card;
         return(
           <Col sm='4'>
             <div>
@@ -228,7 +238,7 @@ class ManagePage extends Component {
                 <Card.Img variant='top' src={docImage}/>
                 <Card.Body>
                 <Card.Title onClick={this.openDocView}>
-                  {card.Title}
+                  {card.name}
                 </Card.Title>
                 </Card.Body>
               </Card>

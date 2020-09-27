@@ -18,7 +18,7 @@ import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
 import docIcon from '../../Image/documents.png';
-import Docview from '../documentViewer/docViewer.js'
+import Docview from '../documentViewer/doc.js';
 
 class Home extends Component {
     constructor(props){
@@ -42,7 +42,6 @@ class Home extends Component {
             if (!res.data.users[0].bioinfo || this.state.bioinfo.length < 1){
                 this.setState({ bioinfo: 'this person have no bioinfo yet' });
             }
-            console.log(res.data.users[0].photos)
         })
         .catch(function(error) {
             console.log(error);
@@ -51,19 +50,16 @@ class Home extends Component {
         const imgUrl = 'http://localhost:8080/api/users/coverImages';
         axios.get(imgUrl, { withCredentials: true })
         .then(res =>{
-            var i;
-            const tempCover = [];
-            for (i=0; i<res.data.coverImages.coverImages.length; i++){
-            tempCover.push('http://localhost:8080/api/users/coverImages/'+i)
-            }
-            this.setState({ cover: tempCover });
-
-            if (this.state.cover.length < 1){
+            if (res.data.coverImages.coverImages[0] !== ""){
+                var i;
+                const tempCover = [];
+                for (i=0; i<res.data.coverImages.coverImages.length; i++){
+                tempCover.push('http://localhost:8080/api/users/coverImages/'+i)
+                }
                 this.setState({
-                    cover: [sampleImage1, sampleImage2, sampleImage3]
+                    cover: tempCover
                 });
             }
-
         })
         .catch(function(error) {
             console.log(error);
