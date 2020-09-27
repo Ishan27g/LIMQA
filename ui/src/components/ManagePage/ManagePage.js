@@ -18,7 +18,7 @@ import FileViewer from "react-file-viewer";
 
 
 import CoverImage from '../CoverImage/coverImage.js';
-import Docview from '../documentViewer/docViewer.js';
+import Docview from '../documentViewer/doc.js';
 
 import docImage from '../../Image/documents.png';
 import profile from '../../Image/profile.png';
@@ -208,9 +208,8 @@ class ManagePage extends Component {
 
     uploadDoc(){
       if(this.state.updateDoc !== null){
-        this.docView.current.handleViewerShow();
+        this.docView.current.handleUploadMode();
       }
-      
     }
 
     openDocView = () =>{

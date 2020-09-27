@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../App.css";
 import "./docViewer.css";
+import "./docEditor.css";
 
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -40,13 +41,12 @@ class DocMode extends Component {
 
      this.state = {
        /*Viewer mode State*/
-
-       docEditor: true,
+       docEditor: false,
        checkEdit: false,
        checkDelete: false,
        addTags: false,
        uploadMode: false,
-
+       docViewer: false,
        /*Document Properties*/
        docname: "Document Name",
        docdate: "Document Date",
@@ -77,7 +77,7 @@ class DocMode extends Component {
   }
   /*Goes into Edit Mode*/
   handleViewerEdit = () => {
-    this.setState({ docViewer: false , docEditor: true});
+    this.setState({ docViewer: true , docEditor: true});
 
   }
   /* Save Changes before going back to Viewer Mode*/
@@ -111,6 +111,14 @@ class DocMode extends Component {
   /*Delete document and close Editor*/
   handleDelete =() =>{
     this.setState({checkDelete: false, docEditor: false, docViewer: false});
+  }
+
+  handleUploadMode =()=>{
+    this.setState({
+      uploadMode: true,
+      docEditor: true,
+      docViewer: true
+    })
   }
 
 
@@ -256,7 +264,12 @@ class DocMode extends Component {
                 </Modal.Body>
                 <Modal.Footer className = "docedit-footer">
                   <Button variant = "outline-dark" onClick ={this.handleEditorClose} >Close</Button>
-                  <Button variant = "outline-dark" onClick ={this.handleSaveChanges}>Save Changes</Button>
+                  {this.state.uploadMode? (
+                    <div></div>
+                  ): (
+                    <Button variant = "outline-dark" onClick ={this.handleSaveChanges}>Save Changes</Button>
+                  )}
+                  
                 </Modal.Footer>
               </Modal>
 
