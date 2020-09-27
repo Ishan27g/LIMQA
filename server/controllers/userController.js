@@ -35,6 +35,7 @@ const check = (req, res, next) => {
 
 
 const signup = async (req, res, next) => {
+
   const error =  validationResult(req);
   if(!error.isEmpty()) {
       console.log(error);
@@ -81,7 +82,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    documents: path,
+    documents: [],
     password: hashedPassword,
     social: [], 
     bioinfo,
