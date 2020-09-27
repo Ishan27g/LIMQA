@@ -300,7 +300,7 @@ const uploadFiles = async (req, res, next) => {
   const CreatedFile = new File({
     name: req.file.originalname,
     description,
-    path: req.path,
+    path: req.file.path,
     owner: userId,
     highlighted,
     achivement,
