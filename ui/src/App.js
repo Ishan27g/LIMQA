@@ -13,16 +13,21 @@ import Modal from 'react-bootstrap/Modal';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Image from 'react-bootstrap/Image';
 import Alert from 'react-bootstrap/Alert';
-
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+
 import Home from './components/Home/Home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import AccountView from './components/AccountView/accountView.js';
+import Doc from './components/documentViewer/doc.js';
+import DocViewer from './components/documentViewer/docViewer.js';
+import DocEditor from './components/documentViewer/docEditor.js';
+
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
 
 import loginButton from './Image/loginButton.svg';
+
 class App extends Component{
   constructor(props){
     super(props);

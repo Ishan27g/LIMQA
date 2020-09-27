@@ -18,29 +18,59 @@
   font-size: 1.35em;
 }
 
-.docview-properties, .doc-achievement, .doc-description{
+.docview-header > .modal-title > h4{
+  font-size: 1.5em;
+  padding: 5px;
+}
+.docview-image{
+  padding: 2vmax;
+}
+.doc-highlighted > h4{
+  background-color: rgba(245,233,109,0.3);
+  font-style: italic;
+}
+
+.docview-properties, .doc-achievement{
   display: block;
   align-items: top;
   justify-content: flex-start;
 }
+
 .docview-properties > .row {
-  margin-top: 1vmax;
-  margin-left: 1vmax;
+  margin: 1vmax;
 }
 .docview-properties > .doc-tags ,
 .docview-properties > .doc-achievement,
 .docview-properties > .doc-description{
   margin-left: 2vmax;
-  margin-top: 1vmax
+  margin-top: 1vmax;
+  background-color: rgba(200,200,200,0.2);
+  border-radius: 10px;
+  padding: 1vmax;
 }
 
-.docview-footer{
-  display: flex;
-  justify-content: space-between;
+.docview-properties > .doc-tags > h4 > .badge{
+  margin-left: 0.8vmax;
+  margin-right: 0.8vmax;
+  margin-bottom: 0.4vmax;
+
+}
+.docview-properties > .doc-tags {
+padding-bottom: 0.6vmax; /* orignal padding - bottom margin of badge*/
 }
 
 .doc-description > p{
   color: black;
+}
+
+.doc-achievement > h5 {
+  font-weight: normal;
+  padding-top: 0.2vmax;
+  padding-bottom: 0.2vmax;
+}
+.docview-footer{
+  display: flex;
+  justify-content: space-between;
 }
 
 .docview,
@@ -49,6 +79,7 @@
     .docview-image,
       .docview-properties,
       .docview-properties > .row ,
+      .docview-properties > .row > .col,
   .docview-footer
 {
 
