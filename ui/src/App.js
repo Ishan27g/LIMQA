@@ -21,11 +21,13 @@ import ManagePage from './components/ManagePage/ManagePage.js';
 import AccountView from './components/AccountView/accountView.js';
 import Doc from './components/documentViewer/doc.js';
 import DocViewer from './components/documentViewer/docViewer.js';
+import DocEditor from './components/documentViewer/docEditor.js';
 
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
 
 import loginButton from './Image/loginButton.svg';
+
 class App extends Component{
   constructor(props){
     super(props);
@@ -268,8 +270,7 @@ class App extends Component{
           </Modal>
           {<BrowserRouter>
             <Switch>
-              <Route path="/" component={DocViewer} exact/>
-
+              <Route path="/" component={DocEditor} exact/>
               <Route path="/manage" component={ManagePage}/>
               <Route path="/view" component={AccountView}/>
             </Switch>

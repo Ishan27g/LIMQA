@@ -6,8 +6,6 @@ import "./docViewer.css";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
-import ListGroup from 'react-bootstrap/ListGroup';
-import FormControl from 'react-bootstrap/FormControl';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
@@ -62,12 +60,13 @@ class DocViewer extends Component {
     this.setState({ docViewer: false , docEditor: true});
 
   }
+  /* Save Changes before going back to Viewer Mode*/
   handleSaveChanges = () => {
-    {/* Save Changes before going back to Viewer Mode*/}
     this.setState({docEditor:false, docViewer: true});
   }
+  /* Leaves abruptly w/o saving Changes */
   handleAbruptLeave = () => {
-    {/* Leaves abruptly w/o saving Changes */}
+
     this.setState({docEditor:false, docViewer: false, checkEdit: false});
   }
 
@@ -102,7 +101,7 @@ class DocViewer extends Component {
           <Modal.Body className = "docview-body" >
             <Container fluid>
               <Row>
-                <Col className = "docview-image" xs ={5}>
+                <Col className = "docview-image" xs ={5} md = {5}>
                   {/*Change Image Src to document preview */}
                   <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
                 </Col>
@@ -113,9 +112,6 @@ class DocViewer extends Component {
                   </Row>
                   <Row className = "doc-tags">
                     <h4>{tagsMap}</h4>
-                  </Row>
-                  <Row classname = "create-tags">
-
                   </Row>
                   <Row>
                     <h4> Description</h4>

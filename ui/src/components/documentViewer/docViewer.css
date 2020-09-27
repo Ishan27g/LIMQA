@@ -22,7 +22,9 @@
   font-size: 1.5em;
   padding: 5px;
 }
-
+.docview-image{
+  padding: 2vmax;
+}
 .doc-highlighted > h4{
   background-color: rgba(245,233,109,0.3);
   font-style: italic;
@@ -33,9 +35,9 @@
   align-items: top;
   justify-content: flex-start;
 }
+
 .docview-properties > .row {
-  margin-top: 1vmax;
-  margin-left: 1vmax;
+  margin: 1vmax;
 }
 .docview-properties > .doc-tags ,
 .docview-properties > .doc-achievement,
@@ -61,12 +63,15 @@ padding-bottom: 0.6vmax; /* orignal padding - bottom margin of badge*/
   color: black;
 }
 
+.doc-achievement > h5 {
+  font-weight: normal;
+  padding-top: 0.2vmax;
+  padding-bottom: 0.2vmax;
+}
 .docview-footer{
   display: flex;
   justify-content: space-between;
 }
-
-
 
 .docview,
   .docview-header,
