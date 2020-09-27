@@ -115,9 +115,9 @@ class ManagePage extends Component {
                       </Carousel.Caption>
                   </Carousel.Item>
                   <Carousel.Item>
-                    <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
+                    <input type="file" id="BtnBrowseHidden" name="files" />
                     <label for="BtnBrowseHidden" className="imageUpload">
-                      <Image src = {uploadIcon} alt ="Upload Icon" style = {{width: "11vmax", height: "9vmax"}}/>
+                      <Image src = {uploadIcon} alt ="Upload Icon" />
                       <br/>Upload Cover Images
                     </label>
                   </Carousel.Item>
@@ -131,17 +131,17 @@ class ManagePage extends Component {
                       <h1>Welcome!</h1>
                     </Col>
                   </Row>
-                  <Row style ={{marginTop: "2vmax"}}>
-                      <Col style = {{textAlign: "center"}}>
-                          <Image src={profile} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
-                          <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
+                  <Row className = "manage-basic-info-row">
+                      <Col className = "column1" >
+                          <Image src={profile} roundedCircle/>
+                          <input type="file" id="BtnBrowseHidden" name="files" />
                       <Col>
                       </Col>
                         <label htmlFor="BtnBrowseHidden" className="profileUpload">
                             Upload profile
                         </label>
                       </Col>
-                      <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
+                      <Col className = "column2" >
                           {this.state.editBio ? (
                               <Form>
                                   <Form.Label>Enter your bio here</Form.Label>
@@ -162,21 +162,21 @@ class ManagePage extends Component {
               </div>
 
               <div class = "document-arena">
-                <h2 style = {{marginBottom: "3vmax"}}>Document Arena</h2>
+                <h2>Document Arena</h2>
                 <Container>
-                  <Row style ={{}}>
-                      <Col style = {{textAlign: "center", marginTop: "15vmax", marginBottom: "10vmax"}}>
-                          <Image src={uploadDocuments} style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}/>
-                          <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
+                  <Row className = "document-arena-row">
+                      <Col className = "column1">
+                          <Image src={uploadDocuments} />
+                          <input type="file" id="BtnBrowseHidden" name="files"/>
                           <label htmlFor="BtnBrowseHidden" className="docUpload">
                               Upload Documents
                           </label>
                       </Col >
 
                       <Col xs={6} md={8}>
-                      <Container fluid style={{overflow:"scroll", height:'45rem'}}>
+                      <Container fluid >
                         <Row>
-                          <Col style = {{textAlign: "center"}}>
+                          <Col id="column1">
                             <Form inline>
                                 <FormControl type="text" placeholder="Search for documents" className="mr-sm-2" />
                                 <Dropdown>
@@ -192,7 +192,7 @@ class ManagePage extends Component {
                             </Form>
                           </Col>
                         </Row>
-                        <Row style = {{marginTop:"3vmax"}}>
+                        <Row id="row-do">
                             {docCards}
                         </Row>
                       </Container>

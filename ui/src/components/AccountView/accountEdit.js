@@ -34,11 +34,10 @@ class AccountEdit extends Component {
                     <Col className = "edit-image">
                       <Container>
                         <Row className = "edit-image-display">
-                        <Image src={profile} roundedCircle
-                                style = {{height: "10vmax", width: "10vmax"}}/>
+                        <Image src={profile} roundedCircle/>
                         </Row>
                         <Row className = "edit-image-label">
-                          <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
+                          <input type="file" id="BtnBrowseHidden" name="files"/>
                           <label htmlFor="BtnBrowseHidden" >
                             Edit Image
                           </label>

@@ -62,15 +62,15 @@ class Home extends Component {
                 <Container fluid = {true}>
                     <Row>
                       <Col>
-                        <h1 style = {{lineHeight: 2 }}>Welcome!<br/></h1>
+                        <h1>Welcome!<br/></h1>
                       </Col>
                     </Row>
 
-                    <Row style = {{marginTop: "2vmax"}} >
-                        <Col style = {{textAlign: "center"}}>
-                        <Image src={profile} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
+                    <Row id="row-special">
+                        <Col id="col-special1">
+                        <Image src={profile} roundedCircle />
                         </Col>
-                        <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
+                        <Col id="col-special2">
 
                         <p>
                             Twitter lover. Certified entrepreneur.
@@ -83,7 +83,7 @@ class Home extends Component {
               </div>
 
               <div class = "highlighted-documents">
-                <Row style = {{marginBottom: "3vmax"}}>
+                <Row>
                   <Col>
                     <h3> Highlighted Documents </h3>
                   </Col>
