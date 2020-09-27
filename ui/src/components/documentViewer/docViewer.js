@@ -11,8 +11,16 @@ import FormControl from 'react-bootstrap/FormControl';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
+import FileViewer from "react-file-viewer";
 
 import doc from '../../Image/documents.png';
+
+const onError = () =>{
+  return(
+    <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
+  )
+}
+
 class DocViewer extends Component {
   constructor(props){
     super(props);
@@ -25,7 +33,7 @@ class DocViewer extends Component {
     this.handleAbruptLeave = this.handleAbruptLeave.bind(this);
 
      this.state = {
-       docViewer: true,
+       docViewer: false,
        docEditor: false,
        checkEdit: false
      }
@@ -49,15 +57,18 @@ class DocViewer extends Component {
     this.setState({ docViewer: false , docEditor: true});
   }
   handleSaveChanges = () => {
-    {/* Save Changes before going back to Viewer Mode*/}
+    /* Save Changes before going back to Viewer Mode*/
     this.setState({docEditor:false, docViewer: true});
   }
   handleAbruptLeave = () => {
-    {/* Leaves abruptly w/o saving Changes */}
+    /* Leaves abruptly w/o saving Changes */
     this.setState({docEditor:false, docViewer: false, checkEdit: false});
   }
 
+
+
   render() {
+    console.log(this.props);
     return(
       <div>
         <Modal
@@ -79,7 +90,10 @@ class DocViewer extends Component {
               <Row>
                 <Col className = "docview-image" xs ={5}>
                   {/*Change Image Src to document preview */}
+                  <FileViewer fileType={this.props.doc.type} filePath={this.props.doc.path} onError={onError} />
+                  {/*
                   <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
+                  */}
                 </Col>
                 <Col className = "docview-properties">
                   <Row>

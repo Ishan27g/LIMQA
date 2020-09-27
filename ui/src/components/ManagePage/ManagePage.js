@@ -1,31 +1,37 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../App.css";
 import './Manage.css';
 
-import Container from 'react-bootstrap/Container';
+import axios from "axios";
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import Carousel from "react-bootstrap/Carousel";
-import Image from 'react-bootstrap/Image'
 import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DocCard from '../documentsCard.js';
-import CoverImage from '../CoverImage/coverImage.js';
+import Image from 'react-bootstrap/Image'
+import Row from 'react-bootstrap/Row';
+import FileViewer from "react-file-viewer";
 
+
+import CoverImage from '../CoverImage/coverImage.js';
+import Docview from '../documentViewer/docViewer.js';
+
+import docImage from '../../Image/documents.png';
+import profile from '../../Image/profile.png';
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
-import profile from '../../Image/profile.png';
 import uploadIcon from '../../Image/uploadIcon.png';
 import uploadDocuments from '../../Image/uploadDocuments.svg';
-import axios from "axios";
 
 class ManagePage extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
+        this.docView = React.createRef();
         this.state = {
           editBio : false,
           filter : "Title",
@@ -35,6 +41,9 @@ class ManagePage extends Component {
           cover: [],
           updateProfile: null,
           updateCover: null,
+          updateDoc: null,
+          docPath: '',
+          doctype: ''
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -46,6 +55,9 @@ class ManagePage extends Component {
         this.onChangeCoverImage = this.onChangeCoverImage.bind(this);
         this.uploadProfileImage = this.uploadProfileImage.bind(this);
         this.uploadCoverImage = this.uploadCoverImage.bind(this);
+        this.onChangeDocUpload = this.onChangeDocUpload.bind(this);
+        this.uploadDoc = this.uploadDoc.bind(this);
+        this.openDocView = this.openDocView.bind(this);
     }
 
     componentDidMount(){
@@ -54,7 +66,7 @@ class ManagePage extends Component {
       .then(response => {
         this.setState({
           userid: response.data.userid
-        })
+        });
       })
       .catch(function(error) {
         console.log(error);
@@ -66,7 +78,7 @@ class ManagePage extends Component {
         this.setState({
           bio: res.data.bioinfo,
           updateBio: res.data.bioinfo
-        })
+        });
         if (!res.data.bioinfo || this.state.bio.length < 1){
           this.setState({
             bio: 'this person have no bioinfo yet',
@@ -88,25 +100,25 @@ class ManagePage extends Component {
         }
         this.setState({
           cover: tempCover
-        })
+        });
 
         if (this.state.cover.length < 1){
           this.setState({
             cover: [sampleImage1, sampleImage2, sampleImage3]
-          })
+          });
         }
         
       })
       .catch(function(error) {
         console.log(error);
-      })
+      });
     };
     
     onChangeProfileImage(e){
       console.log(e.target.files[0]);
       this.setState({
         updateProfile: e.target.files[0]
-      })
+      });
     }
 
     uploadProfileImage(){
@@ -119,15 +131,15 @@ class ManagePage extends Component {
         })
         .catch(function(error) {
           console.log(error);
-        })
-      }
+        });
+      };
     }
 
     onChangeCoverImage(e){
       console.log(e.target.files[0]);
       this.setState({
         updateCover: e.target.files[0]
-      })
+      });
     }
 
     uploadCoverImage(){
@@ -140,8 +152,8 @@ class ManagePage extends Component {
         })
         .catch(function(error) {
           console.log(error);
-        })
-      }
+        });
+      };
 
     }
 
@@ -173,56 +185,92 @@ class ManagePage extends Component {
       if (e.target.value.length > 0){
         this.setState({
           updateBio: e.target.value
-        })
+        });
       }else{
         const info = this.state.bio;
         this.setState({
           updateBio: info
-        })
+        });
       }
     }
 
+    onChangeDocUpload(e){
+      console.log(e.target.files[0]);
+
+      this.setState({
+        updateDoc: e.target.files[0],
+        docPath: URL.createObjectURL(e.target.files[0])
+      }, ()=>{
+        console.log(this.state.updateDoc);
+        console.log(this.state.docPath);
+      });
+    }
+
+    uploadDoc(){
+      if(this.state.updateDoc !== null){
+        this.docView.current.handleViewerShow();
+      }
+      
+    }
+
+    openDocView = () =>{
+      this.docView.current.handleViewerShow();
+    }
+
     render(){
-        const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
-        let docCards = documents.map(card =>{
-          return(
-            <Col sm='4'>
-              <DocCard note={card}/>
-            </Col>
-          )
-        });
-        const coverImg = this.state.cover;
-        let coverImage = coverImg.map(cover =>{
-          return(
-            <Carousel.Item>
-                <CoverImage note={cover} />
-            </Carousel.Item>
-        )
-        });
+      var doc = {path: this.state.docPath, type: this.state.doctype};
+      const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
+      let docCards = documents.map(card =>{
+        doc = card;
         return(
-            <body>
-            <div class = "manage-cover-image">
-              <Carousel>
-                  {coverImage}
-                  <Carousel.Item>
-                    <input
-                     type="file"
-                     style={{display: "none"}}
-                     onChange={this.onChangeCoverImage}
-                     ref={coverInput=>this.coverInput=coverInput}
-                     multiple/>
-                    <label className="imageUpload">
-                      <Image 
-                      src = {uploadIcon}
-                      alt ="Upload Icon" 
-                      style = {{width: "11vmax", height: "9vmax"}}
-                      onClick = {() => this.coverInput.click()} />
-                      <br/>Upload Cover Images
-                    </label>
-                    <Button variant="info" onClick={this.uploadCoverImage} block>Upload Cover Image</Button>
-                  </Carousel.Item>
-              </Carousel>
+          <Col sm='4'>
+            <div>
+              <Card className='documentsCard' >
+                <Card.Img variant='top' src={docImage}/>
+                <Card.Body>
+                <Card.Title onClick={this.openDocView}>
+                  {card.Title}
+                </Card.Title>
+                </Card.Body>
+              </Card>
             </div>
+          </Col>
+        )
+      });
+      
+      const coverImg = this.state.cover;
+      let coverImage = coverImg.map(cover =>{
+        return(
+          <Carousel.Item>
+            <CoverImage note={cover} />
+          </Carousel.Item>
+        )
+      });
+
+      return(
+        <body>
+        <div class = "manage-cover-image">
+          <Carousel>
+            {coverImage}
+          <Carousel.Item>
+            <input
+             type="file"
+             style={{display: "none"}}
+             onChange={this.onChangeCoverImage}
+             ref={coverInput=>this.coverInput=coverInput}
+             multiple/>
+            <label className="imageUpload">
+              <Image 
+               src = {uploadIcon}
+               alt ="Upload Icon" 
+               style = {{width: "11vmax", height: "9vmax"}}
+               onClick = {() => this.coverInput.click()} />
+              <br/>Upload Cover Images
+              </label>
+              <Button variant="info" onClick={this.uploadCoverImage} block>Upload Cover Image</Button>
+          </Carousel.Item>
+          </Carousel>
+        </div>
 
             <div class = "manage-basic-info">
               <Container fluid = {true}>
@@ -262,18 +310,25 @@ class ManagePage extends Component {
                 </Container>
               </div>
 
+              <Docview doc={doc} ref={this.docView}/>
+
               <div class = "document-arena">
                 <h2 style = {{marginBottom: "3vmax"}}>Document Arena</h2>
                 <Container>
                   <Row style ={{}}>
                       <Col style = {{textAlign: "center", marginTop: "15vmax", marginBottom: "10vmax"}}>
-                          <Image src={uploadDocuments} style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}/>
-                          <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-                          <label htmlFor="BtnBrowseHidden" className="docUpload">
-                              Upload Documents
-                          </label>
+                        <input 
+                         type="file" 
+                         style={{display: "none"}} 
+                         onChange={this.onChangeDocUpload}
+                         ref={docInput=>this.docInput=docInput}/>
+                        <Image 
+                         src={uploadDocuments} 
+                         style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}
+                         onClick = {() => this.docInput.click()}/>
+                        <Button variant="info" onClick={this.uploadDoc} block>Upload doc</Button>
                       </Col >
-
+                      
                       <Col xs={6} md={8}>
                       <Container fluid style={{overflow:"scroll", height:'45rem'}}>
                         <Row>
