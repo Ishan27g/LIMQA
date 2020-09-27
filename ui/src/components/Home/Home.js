@@ -64,7 +64,7 @@ class Home extends Component {
                 cover: [sampleImage1, sampleImage2, sampleImage3]
             })
             }
-            
+
         })
         .catch(function(error) {
             console.log(error);

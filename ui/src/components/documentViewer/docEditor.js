@@ -14,62 +14,10 @@ import Container from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
 
 import Tag from './../Tags/Tag.js';
-import DocEditor from './docEditor.js';
+
 import doc from '../../Image/documents.png';
 
-
 class DocViewer extends Component {
-  constructor(props){
-    super(props);
-    this.handleViewerClose = this.handleViewerClose.bind(this);
-    this.handleViewerShow = this.handleViewerShow.bind(this);
-    this.handleEditorClose = this.handleEditorClose.bind(this);
-    this.handleEditorShow = this.handleEditorShow.bind(this);
-    this.handleViewerEdit = this.handleViewerEdit.bind(this);
-    this.handleSaveChanges = this.handleSaveChanges.bind(this);
-    this.handleAbruptLeave = this.handleAbruptLeave.bind(this);
-
-     this.state = {
-       docViewer: true,
-       docEditor: false,
-       checkEdit: false,
-       docname: "Document Name",
-       docdate: "Document Date",
-       tags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership"],
-       highlighted: true,
-       docdesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magnaaliqua. Id eu nisl nunc mi ipsum faucibus. Augue maursisaugue neque gravida.",
-       achievement: true,
-       acinst: "Institution name",
-       acdate: "Date of Achievement"
-     }
-  }
-
-  handleViewerShow = () => {
-    this.setState({ docViewer: true });
-  }
-  handleViewerClose = () => {
-    this.setState({ docViewer: false});
-  }
-  handleEditorClose = () => {
-    this.setState({ checkEdit: true});
-  }
-  /*Returns From checkEdit to re-edit document*/
-  handleEditorShow = () => {
-    this.setState({ checkEdit: false, docEditor: true});
-  }
-  /*Goes into Edit Mode*/
-  handleViewerEdit = () => {
-    this.setState({ docViewer: false , docEditor: true});
-
-  }
-  handleSaveChanges = () => {
-    {/* Save Changes before going back to Viewer Mode*/}
-    this.setState({docEditor:false, docViewer: true});
-  }
-  handleAbruptLeave = () => {
-    {/* Leaves abruptly w/o saving Changes */}
-    this.setState({docEditor:false, docViewer: false, checkEdit: false});
-  }
 
   render() {
     var tags = this.state.tags;
@@ -80,7 +28,7 @@ class DocViewer extends Component {
     })
 
     return(
-
+      <div>
         <Modal
           dialogClassName = "docview"
           show = {this.state.docViewer}
@@ -155,6 +103,19 @@ class DocViewer extends Component {
           </Modal.Footer>
         </Modal>
 
+        <Modal
+          show={this.state.checkEdit} >
+        <Modal.Header>
+          <h4> All unsaved changes will be lost </h4>
+        </Modal.Header>
+        <Modal.Footer className = "docview-footer">
+            <Button variant = "outline-dark" onClick ={this.handleEditorShow} >Return</Button>
+            <Button
+              variant = "outline-danger"
+              onClick ={this.handleAbruptLeave}>Close</Button>
+        </Modal.Footer>
+        </Modal>
+      </div>
     )
   }
 }
