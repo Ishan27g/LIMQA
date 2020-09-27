@@ -12,6 +12,7 @@ const Tag = require('../models/tag');
 
 const { db, updateOne } = require('../models/user');
 const { fields } = require('../middlerware/file-upload');
+const tag = require('../models/tag');
 
 
 const getBioinfo = async (req, res, next) => {
@@ -308,11 +309,32 @@ const uploadFiles = async (req, res, next) => {
     tags:[]
   })
 
-  console.log(CreatedFile);
+const work = new Tag({
+    name: "Work-Experience",
+    color: "red"
+});
+
+const Academic = new Tag({
+    name: "Academic",
+    color: "blue"
+})
+
+try{
+    await work.save();
+    await Academic.save();
+} catch (err) {
+    console.log(err);
+    const error = new HttpError (
+        "created tags failed",
+        500
+    );
+};
   try {
     await CreatedFile.save();
-    await CreatedFile.tags.push(work)
-
+    await CreatedFile.tags.push(work);
+    await CreatedFile.tags.push(Academic);
+    await CreatedFile.save();
+    
     await user.documents.push(CreatedFile);
 
     await user.save();
@@ -334,7 +356,13 @@ const getFiles = async (req, res, next) => {
 
   let user;
   try {
-    user = await User.findById(userId).populate('documents');;
+    user = await User.findById(userId).populate(
+      {path: 'documents',
+        populate: {
+          path: 'tags',
+          model: 'Tag'
+        }
+      });
   } catch (err) {
     console.log(err);
     const error = new HttpError (
