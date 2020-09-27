@@ -20,6 +20,10 @@
     padding: 1vmax;
 }
 
+.edit-image-display > img {
+  height: 10vmax; 
+  width: 10vmax;
+}
 .edit-image-display, .edit-image-label,
 .edit-info,
 .edit-edit-button, .edit-update-password
@@ -30,7 +34,7 @@
 }
 
 .edit-header,
-.edit-info,
+.edit-info,`e
 .edit-social-header, .edit-social, .edit-social-list,
 .edit-contact-header, .edit-contact, .edit-contact-list {
   margin-top: 1vmax;
@@ -141,4 +145,7 @@
   margin-left: 2vmax;
   margin-right: 2vmax;
 
+}
+#BtnBrowseHidden {
+  display: none;
 }

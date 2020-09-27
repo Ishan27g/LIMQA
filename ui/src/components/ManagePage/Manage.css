@@ -9,6 +9,18 @@
 
 
 }
+
+.manage-cover-image > .carousel-item > input,
+.manage-basic-info > .manage-basic-info-row > .column1 > input, 
+.document-arena > #BtnBrowseHidden {
+  display: none;
+}
+
+.manage-cover-image > .carousel-item > img {
+  height: 20vmax;
+  width: 20vmax;
+}
+
 .manage-basic-info{
   margin-top: 0vmax;
   margin-bottom:5vmax;
@@ -17,6 +29,26 @@
   padding: 0px;
 
 }
+
+.manage-basic-info > .manage-basic-info-row{
+  margin-top: 2vmax;
+}
+
+.manage-basic-info > .manage-basic-info-row > .column1 {
+  text-align: center;
+}
+
+.manage-basic-info > .manage-basic-info-row > .column1 > img {
+  height: 20vmax;
+  width: 20vmax;
+}
+.manage-basic-info > .manage-basic-info-row > .column2 {
+  background-color: rgba(180,180,180,0.5);
+  border: 2px solid black;
+  border-radius: 15px;
+}
+
+
 .carousel-item > img {
   display: block;
   width: 100%;
@@ -72,4 +104,33 @@
   margin-top: 5vmax;
   margin-bottom: 5vmax;
   text-align: center;
+}
+
+.document-arena > h2 {
+  margin-bottom: 3vmax;
+}
+
+.document-arena-row > .column1 {
+  text-align: center;
+  margin-top: 15vmax;
+  margin-bottom: 10vmax;
+}
+
+.document-arena-row > .column1 > img {
+  height: 20vmax;
+  width: 15vmax;
+  background-color: rgba(200,200,200,0.4);
+}
+
+.document-arena-row > Container {
+  overflow:scroll; 
+  height:45rem;
+}
+
+.document-arena-row > #column1 {
+  text-align: center;
+}
+
+#row-do {
+  margin-top: 3vmax;
 }

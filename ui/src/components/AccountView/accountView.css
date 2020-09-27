@@ -29,6 +29,11 @@
   justify-content: center;
   align-items: center;
 }
+
+.acc-image > img {
+  height: 10vmax; 
+  width: 10vmax;
+}
 .acc-header,
 .acc-info,
 .acc-social-header, .acc-social, .acc-social-list,
@@ -159,4 +164,13 @@
     .acc-contact-list
 {
   border: 1px solid red;
+}
+
+#BtnBrowseHidden {
+  display: none;
+}
+
+.acc-image > img {
+  height: 10vmax; 
+  width: 10vmax;
 }

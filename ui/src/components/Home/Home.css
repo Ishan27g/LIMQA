@@ -10,6 +10,28 @@
 
 }
 
+.basic-info > h1 {
+  line-height: 2;
+}
+
+#row-special {
+  margin-top: 2vmax;
+}
+
+#col-special1 {
+  text-align: center;
+}
+
+#row-special > img{
+  height: "20vmax"; 
+  width: "20vmax";
+}
+
+#col-special2 {
+  background-color: rgba(180,180,180,0.5); 
+  border: 2px solid black; 
+  border-radius: 15px;
+} 
 .carousel-item > img {
   display: block;
   width: 100%;
@@ -56,6 +78,10 @@ p{
   margin-top: 7vmax;
   margin-bottom: 5vmax;
 
+}
+
+.highlighted-documents > Row {
+  margin-bottom: 3vmax;
 }
 
 .card {
