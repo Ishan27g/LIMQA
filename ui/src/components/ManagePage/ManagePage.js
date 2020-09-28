@@ -40,6 +40,7 @@ class ManagePage extends Component {
           updateProfile: null,
           updateCover: null,
           updateDoc: null,
+          profileImg: 'http://localhost:8080/api/users/profilePhoto',
           docPath: '',
           doctype: '',
           documents: [],
@@ -131,6 +132,10 @@ class ManagePage extends Component {
         axios.post('http://localhost:8080/api/users/profilePhoto', proImg, { withCredentials: true })
         .then( res => {
           console.log(res);
+          const tempProfile = URL.createObjectURL(this.state.updateProfile);
+          this.setState({
+            profileImg: tempProfile
+          }, ()=>{console.log(this.state.profileImg)})
         })
         .catch(function(error) {
           console.log(error);
@@ -152,6 +157,13 @@ class ManagePage extends Component {
         axios.post('http://localhost:8080/api/users/coverImages', covImg, { withCredentials: true })
         .then( res => {
           console.log(res);
+          if(this.state.cover.length<5){
+            var tempCo = this.state.cover;
+            tempCo.push(URL.createObjectURL(this.state.updateCover));
+            this.setState({
+              cover: tempCo
+            })
+          }
         })
         .catch(function(error) {
           console.log(error);
@@ -289,7 +301,7 @@ class ManagePage extends Component {
                   </Row>
                   <Row style ={{marginTop: "2vmax"}}>
                       <Col style = {{textAlign: "center"}}>
-                          <Image src={'http://localhost:8080/api/users/profilePhoto'} roundedCircle style = {{height: "20vmax", width: "20vmax"}} onError={(e)=>{e.target.onerror = null; e.target.src=profile}}/>
+                          <Image src={this.state.profileImg} roundedCircle style = {{height: "20vmax", width: "20vmax"}} onError={(e)=>{e.target.onerror = null; e.target.src=profile}}/>
                           <input 
                            type="file"
                            onChange={this.onChangeProfileImage}

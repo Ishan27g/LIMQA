@@ -145,6 +145,11 @@ class DocMode extends Component {
     axios.post(postDoc, docForm, { withCredentials: true } )
     .then(res=>{
       console.log(res);
+      this.setState({
+        docViewer: false,
+        DocEditor: false,
+        uploadMode: false
+      })
     })
     .catch(function(error) {
       console.log(error);

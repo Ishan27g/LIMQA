@@ -119,8 +119,8 @@ class AccountView extends Component {
     var form = new FormData();
     form.append('Email', this.state.updateEmail);
     form.append('Mobile', this.state.updateMobile);
-    form.append('Semail', this.state.SupplymentaryEmail);
-    form.append('Address', this.state.officeAddress);
+    form.append('Semail', this.state.UpdataSupplymentaryEmail);
+    form.append('Address', this.state.UpdateOfficeAddress);
     form.append('LinkedinName', 'Linkedin');
     form.append('Linkedinurl', this.state.updateLinkedin);
     form.append('FacebookName', 'Facebook');
@@ -132,6 +132,17 @@ class AccountView extends Component {
     axios.put(updateUrl, form, { withCredentials: true })
     .then(res => {
       console.log("update successfully", res.data);
+      this.setState({
+        email: this.state.updateEmail,
+        SupplymentaryEmail: this.state.UpdataSupplymentaryEmail,
+        mobile: res.data.user.mobile,
+        updateMobile: this.state.updateMobile,
+        officeAddress: this.state.UpdateOfficeAddress,
+        name: this.state.name,
+        linkedin: this.state.updateLinkedin,
+        instagram:this.state.UpdateInstagram,
+        facebook: this.state.UpdateFacebook,
+      })
     })
     .catch(function(error) {
       console.log(error);
