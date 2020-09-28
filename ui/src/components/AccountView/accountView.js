@@ -135,7 +135,7 @@ class AccountView extends Component {
       this.setState({
         email: this.state.updateEmail,
         SupplymentaryEmail: this.state.UpdataSupplymentaryEmail,
-        mobile: res.data.user.mobile,
+        mobile: res.data.user.updataMobile,
         updateMobile: this.state.updateMobile,
         officeAddress: this.state.UpdateOfficeAddress,
         name: this.state.updateName,

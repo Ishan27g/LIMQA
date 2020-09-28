@@ -42,6 +42,9 @@ class DocMode extends Component {
     this.onChangeDescripton = this.onChangeDescripton.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
     this.uploadDoc = this.uploadDoc.bind(this);
+    this.handleRemoveAchievement = this.handleRemoveAchievement.bind(this);
+    this.handleAchievement = this.handleAchievement.bind(this);
+    this.onChangeInstitution = this.onChangeInstitution.bind(this);
 
     this.state = {
       /*Viewer mode State*/
@@ -58,8 +61,8 @@ class DocMode extends Component {
       highlighted: false,
       docdesc: "",
       achievement: false,
-      acinst: "Institution name",
-      acdate: "Date of Achievement",
+      acinst: "",
+      acdate: "",
 
        /*All Tags Created*/
       allTags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership", "Extra1", "Extra2", "Extra3"],
@@ -118,6 +121,14 @@ class DocMode extends Component {
     this.setState({checkDelete: false, docEditor: false, docViewer: false});
   }
 
+  handleAchievement =()=>{
+    this.setState({achievement: true})
+  }
+
+  handleRemoveAchievement =()=>{
+    this.setState({achievement: false})
+  }
+
   handleUploadMode =()=>{
     var tempName= this.props.doc.doc.name;
     const timeNow = new Date().toLocaleDateString()
@@ -169,6 +180,12 @@ class DocMode extends Component {
     });
   }
 
+  onChangeInstitution(e){
+    this.setState({
+      acinst: e.target.value
+    })
+  }
+
   render(){
     var tags = this.state.tags;
 
@@ -217,7 +234,8 @@ class DocMode extends Component {
                   <Modal.Title className = "doc-highlight">
                     <InputGroup size ="lg">
                       <FormControl
-                        placeholder = {this.state.docname}
+                        defaultValue = {this.state.docname}
+                        placeholder = "Name"
                         aria-label= "name"
                         onChange = {this.onChangeName}/>
                       <InputGroup.Append>
@@ -287,14 +305,12 @@ class DocMode extends Component {
                               onChange={this.onChangeDescripton}/>
                         </Row>
                         <Row>
-                            {this.state.achievement ?
-                              (<h4>Achievement Details</h4>):
-                              (<h4 style = {{color: "rgba(200,200,200,0.6)", textDecoration: "line-through"}}>
-                                  Achievement Details
-                               </h4>)
-                            }
-
-                            {/* If the field is not an achievemnt change the opacity of h4*/}
+                          {this.state.achievement ? (
+                            <Button variant='outline-warning' onClick={this.handleRemoveAchievement} style={{marginRight: "1vmax"}}> Remove  </Button>
+                          ):(
+                            <Button variant='outline-success' onClick={this.handleAchievement} style={{marginRight: "1vmax"}}> Add </Button>
+                          )}
+                          <h4>Achievement Details</h4>
                         </Row>
                         {/* only show this row when document is an achievement is checked out */}
                         <Collapse in={this.state.achievement}>
@@ -302,7 +318,8 @@ class DocMode extends Component {
                             <FormControl
                               placeholder = "Issuing Institution"
                               defaultValue = {this.state.acinst}
-                              style ={{marginBottom: "0.6vmax"}}/>
+                              style ={{marginBottom: "0.6vmax"}}
+                              onChange = {this.onChangeInstitution}/>
                               <FormControl
                                 placeholder = "Date"
                                 defaultValue = {this.state.acdate}/>
