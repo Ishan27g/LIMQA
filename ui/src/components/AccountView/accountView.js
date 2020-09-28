@@ -18,6 +18,9 @@ import FormControl from 'react-bootstrap/FormControl';
 
 import profile from '../../Image/profile.png';
 
+import {pathForRequest} from '../http.js';
+let http = pathForRequest();
+
 class AccountView extends Component {
   constructor(props){
     super(props);
@@ -56,14 +59,14 @@ class AccountView extends Component {
   }
 
   componentDidMount(){
-    const check = 'http://localhost:8080/api/users/check';
+    const check = http+'/api/users/check';
     axios.get(check, { withCredentials: true })
     .then(response => {
       console.log(response.data.userid)
       this.setState({
         userid: response.data.userid
       })
-      const accurl = 'http://localhost:8080/api/accSetting/'+ this.state.userid;
+      const accurl = http+'/api/accSetting/'+ this.state.userid;
       axios.get(accurl, { withCredentials: true })
       .then(res => {
         this.setState({
@@ -130,7 +133,7 @@ class AccountView extends Component {
     form.append('InstagramName', 'Instagram');
     form.append('Instagramurl', this.state.UpdateInstagram);
     form.append('Username', this.state.updateName);
-    const updateUrl = 'http://localhost:8080/api/accSetting/'+ this.state.userid;
+    const updateUrl = http+'/api/accSetting/'+ this.state.userid;
     axios.put(updateUrl, form, { withCredentials: true })
     .then(res => {
       console.log("update successfully", res.data);

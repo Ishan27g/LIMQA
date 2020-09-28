@@ -23,8 +23,10 @@ import DocViewer from './components/documentViewer/docViewer.js';
 
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
-
 import loginButton from './Image/loginButton.svg';
+
+import {pathForRequest} from './components/http.js';
+let http = pathForRequest();
 
 class App extends Component{
   constructor(props){
@@ -52,7 +54,7 @@ class App extends Component{
   }
 
   componentDidMount(){
-    const check = 'http://localhost:8080/api/users/check';
+    const check = http+'/api/users/check';
     axios.get(check, { withCredentials: true })
       .then(response => {
         if (response.data.logIn){
@@ -112,8 +114,8 @@ class App extends Component{
 
       }
       else{
-          const url = 'http://localhost:8080/api/users/login';
-          const check = 'http://localhost:8080/api/users/check';
+          const url = http+'/api/users/login';
+          const check = http+'/api/users/check';
           axios.post(url,obj, { withCredentials: true })
           .then(response => {
               if (response.data.success){
@@ -140,7 +142,7 @@ class App extends Component{
   }
 
   handlesignup(){
-    const signurl = 'http://localhost:8080/api/users/signup';
+    const signurl = http+'/api/users/signup';
     const user = {
       email: 'test@test.com'
     };
