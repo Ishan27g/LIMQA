@@ -59,7 +59,6 @@ class ManagePage extends Component {
         this.uploadProfileImage = this.uploadProfileImage.bind(this);
         this.uploadCoverImage = this.uploadCoverImage.bind(this);
         this.onChangeDocUpload = this.onChangeDocUpload.bind(this);
-        this.uploadDoc = this.uploadDoc.bind(this);
         this.openDocView = this.openDocView.bind(this);
     }
 
@@ -126,8 +125,8 @@ class ManagePage extends Component {
       this.setState({
         updateProfile: e.target.files[0]
       }, ()=>{
-        if(this.state.updateDoc !== null){
-          this.docView.current.handleUploadMode();
+        if(this.state.updateProfile !== null){
+          this.uploadProfileImage()
         }
       });
     }
@@ -151,9 +150,13 @@ class ManagePage extends Component {
     }
 
     onChangeCoverImage(e){
-      console.log(e.target.files[0]);
+      console.log(e.target.files);
       this.setState({
         updateCover: e.target.files[0]
+      }, ()=>{
+        if(this.state.uploadCoverImage !== null){
+          this.uploadCoverImage();
+        }
       });
     }
 
@@ -230,14 +233,10 @@ class ManagePage extends Component {
         updateDoc: e.target.files[0],
         docPath: URL.createObjectURL(e.target.files[0])
       }, ()=>{
-        console.log(this.state.updateDoc);
+        if(this.state.updateDoc !== null){
+          this.docView.current.handleUploadMode();
+        }
       });
-    }
-
-    uploadDoc(){
-      if(this.state.updateDoc !== null){
-        console.log("yep")
-      }
     }
 
     openDocView = () =>{
@@ -285,7 +284,7 @@ class ManagePage extends Component {
              style={{display: "none"}}
              onChange={this.onChangeCoverImage}
              ref={coverInput=>this.coverInput=coverInput}
-             multiple/>
+             multiple="multiple"/>
             <label className="imageUpload">
               <Image 
                src = {uploadIcon}
@@ -294,7 +293,6 @@ class ManagePage extends Component {
                onClick = {() => this.coverInput.click()} />
               <br/>Upload Cover Images
               </label>
-              <Button variant="info" onClick={this.uploadCoverImage} block>Upload Cover Image</Button>
           </Carousel.Item>
           </Carousel>
         </div>
@@ -315,8 +313,7 @@ class ManagePage extends Component {
                            style={{display: 'none'}}
                            ref={profileInput=>this.profileInput=profileInput} />
                       <Col>
-                        <Button variant="info" onClick={() => this.profileInput.click()}>Select photo</Button> {' '}
-                        <Button variant="info" onClick={this.uploadProfileImage}>Upload photo</Button>                  
+                        <Button variant="info" onClick={() => this.profileInput.click()}>Select photo</Button> {' '}             
                       </Col>
                       </Col>
                       <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
@@ -353,7 +350,6 @@ class ManagePage extends Component {
                          src={uploadDocuments} 
                          style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}
                          onClick = {() => this.docInput.click()}/>
-                        <Button variant="info" onClick={this.uploadDoc} block>Upload doc</Button>
                       </Col >
                       
                       <Col xs={6} md={8}>
