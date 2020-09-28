@@ -294,11 +294,11 @@ const uploadFiles = async (req, res, next) => {
     return next(error);
   }
 
-  const { highlighted, description, achivement, institution, dateAchieved} = req.body;
+  const { name, highlighted, description, achivement, institution, dateAchieved} = req.body;
   
 
   const CreatedFile = new File({
-    name: req.file.originalname,
+    name,
     description,
     path: req.file.path,
     owner: userId,
@@ -310,18 +310,36 @@ const uploadFiles = async (req, res, next) => {
   })
 
 const work = new Tag({
-    name: "Work-Experience",
-    color: "red"
+  name: "Work-Experience",
+  color: "red"
 });
 
 const Academic = new Tag({
-    name: "Academic",
-    color: "blue"
-})
+  name: "Academic",
+  color: "blue"
+});
+
+const volunteering = new Tag({
+  name: "Volunteering",
+  color: "green"
+});
+
+const Leadership = new Tag({
+  name: "Leadership",
+  color: "brown"
+});
+
+const Curricular = new Tag({
+  name: "Extra-Curricular",
+  color: "yellow"
+});
 
 try{
     await work.save();
     await Academic.save();
+    await volunteering.save();
+    await Leadership.save();
+    await Curricular.save();
 } catch (err) {
     console.log(err);
     const error = new HttpError (
@@ -333,6 +351,9 @@ try{
     await CreatedFile.save();
     await CreatedFile.tags.push(work);
     await CreatedFile.tags.push(Academic);
+    await CreatedFile.tags.push(volunteering);
+    await CreatedFile.tags.push(Leadership);
+    await CreatedFile.tags.push(Curricular);
     await CreatedFile.save();
     
     await user.documents.push(CreatedFile);
