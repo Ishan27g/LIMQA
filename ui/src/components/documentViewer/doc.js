@@ -55,7 +55,7 @@ class DocMode extends Component {
       uploadMode: false,
       docViewer: false,
       /*Document Properties*/
-      docname: "Document Name",
+      docname: "Untitled",
       docdate: "Document Date",
       tags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership"],
       highlighted: false,
