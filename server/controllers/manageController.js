@@ -12,7 +12,7 @@ const Tag = require('../models/tag');
 
 const { db, updateOne } = require('../models/user');
 const { fields } = require('../middlerware/file-upload');
-const tag = require('../models/tag');
+const file = require('../models/file');
 
 
 const getBioinfo = async (req, res, next) => {
@@ -404,6 +404,45 @@ const getFiles = async (req, res, next) => {
 
 }
 
+const getOneFile = async (req, res, next) => {
+  let document;
+  try {
+    document = await File.findById(req.params.documentId).populate('tags');
+    
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+  res.json({
+    document: document.toObject({getters: true})
+  });
+
+}
+ 
+
+const deleteFile = async (req, res, next) => {
+  let userId;
+  let FileId;
+  let result;
+  userId = req.params.uid;
+  FileId = req.params.documentId;
+  
+  console.log(FileId);
+  console.log(req.params);
+
+  User.findOneAndRemove({_id: FileId}, (err) => {
+    if(err) {
+      console.log(err);
+      return res.status(500).send();
+    }
+    return res.status(200).send();
+  });
+  
+
+  
+}
+
+
 
 exports.getBioinfo = getBioinfo;
 exports.updateBioinfo = updateBioinfo;
@@ -411,3 +450,5 @@ exports.getAcc = getAcc;
 exports.updateAcc = updateAcc;
 exports.uploadFiles = uploadFiles;
 exports.getFiles = getFiles;
+exports.deleteFile = deleteFile;
+exports.getOneFile = getOneFile;
