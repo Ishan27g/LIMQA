@@ -189,14 +189,10 @@ class App extends Component{
                 </NavDropdown>
                 </Nav>
                 <Nav>
-                  <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-dark">Search</Button>
-                  </Form>
                   {this.state.login ?
                     (
                     <DropdownButton id="manage-dropdown" title="Manage"
-                                        variant = "outline-dark" className ="ml-2 mr-2">
+                                        variant = "outline-dark" className =" mr-2">
                       <Dropdown.Item href="/View">Account</Dropdown.Item>
                       <Dropdown.Item href="/manage">Manage Documents</Dropdown.Item>
                       <Dropdown.Divider />
@@ -208,6 +204,11 @@ class App extends Component{
                     <img alt="Login" src = {loginButton}/>
                    </Button>)
                   }
+                  <Form inline>
+                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                    <Button variant="outline-dark">Search</Button>
+                  </Form>
+
                 </Nav>
             </Navbar.Collapse>
           </Navbar>
@@ -281,11 +282,11 @@ class App extends Component{
                 QR code
           </Button>
           <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
-            <Modal.Body>
+            <Modal.Body className ="qr-code">
               <Image src={QRcode} rounded  />
             </Modal.Body>
             <Modal.Footer>
-            <Button variant="outline-dark" onClick={this.handleQRClose}>
+            <Button block variant="outline-dark" onClick={this.handleQRClose}>
               Close
             </Button>
             </Modal.Footer>

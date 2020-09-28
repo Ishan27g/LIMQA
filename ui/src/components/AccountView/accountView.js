@@ -138,7 +138,7 @@ class AccountView extends Component {
         mobile: res.data.user.mobile,
         updateMobile: this.state.updateMobile,
         officeAddress: this.state.UpdateOfficeAddress,
-        name: this.state.name,
+        name: this.state.updateName,
         linkedin: this.state.updateLinkedin,
         instagram:this.state.UpdateInstagram,
         facebook: this.state.UpdateFacebook,
@@ -266,13 +266,13 @@ class AccountView extends Component {
               {this.state.editVersion ? (
                 <div className = "edit-set">
                   <Container>
-  
+
                     <Row className = "edit-header">
                       <h1>ACCOUNT SETTINGS</h1>
                     </Row>
-  
+
                     <Row className = "edit-info justify-content-md-center">
-  
+
                       <Col className = "edit-image">
                         <Container>
                           <Row className = "edit-image-display">
@@ -291,7 +291,8 @@ class AccountView extends Component {
                         <Row md="auto" className = "edit-username">
                           <InputGroup size ="lg">
                             <FormControl
-                              placeHolder = {this.state.name}
+                              placeholder = "Username"
+                              defaultValue = {this.state.name}
                               aria-label= "username"
                               aria-describedby="basic-addon1"
                               onChange={this.onChangeName}/>
@@ -303,7 +304,8 @@ class AccountView extends Component {
                         <Row md="auto" className = "edit-email">
                           <InputGroup size ="lg">
                             <FormControl
-                              placeHolder = {this.state.email}
+                              placeholder = "email"
+                              defaultValue = {this.state.email}
                               aria-label="email"
                               aria-describedby="basic-addon1"
                               onChange={this.onChangeEmail}/>
@@ -313,7 +315,7 @@ class AccountView extends Component {
                           </InputGroup>
                         </Row>
                       </Col>
-  
+
                       <Col className = "edit-set-save">
                         <Row className = "edit-edit-button">
                           <Button variant="outline-dark" onClick={this.updateChanges}>Save Changes</Button>
@@ -322,7 +324,7 @@ class AccountView extends Component {
                           <label>Update Password</label>
                         </Row>
                       </Col>
-  
+
                     </Row>
                       <Row className = "edit-social-header">
                         <h2> Social Media Profiles</h2>
@@ -333,7 +335,8 @@ class AccountView extends Component {
                             <ListGroup.Item>
                                 <h4>Linkedin</h4>
                                 <FormControl
-                                  placeHolder = {this.state.linkedin}
+                                  placeholder = "URL"
+                                  defaultValue = {this.state.linkedin}
                                   aria-label= "linkedin-url"
                                   aria-describedby="basic-addon1"
                                   onChange={this.onChangeLinkedin}/>
@@ -341,7 +344,8 @@ class AccountView extends Component {
                             <ListGroup.Item>
                                 <h4>Instagram</h4>
                                   <FormControl
-                                    placeHolder = {this.state.instagram}
+                                    placeholder = "URL"
+                                    defaultValue = {this.state.instagram}
                                     aria-label= "instagram-url"
                                     aria-describedby="basic-addon1"
                                     onChange={this.onChangeInstagram}/>
@@ -349,7 +353,8 @@ class AccountView extends Component {
                             <ListGroup.Item>
                                 <h4>Facebook</h4>
                                   <FormControl
-                                    placeHolder = {this.state.facebook}
+                                    placeholder = "URL"
+                                    defaultValue = {this.state.facebook}
                                     aria-label= "facebook-url"
                                     aria-describedby="basic-addon1"
                                     onChange={this.onChangeFacebook}/>
@@ -364,35 +369,27 @@ class AccountView extends Component {
                           <ListGroup.Item>
                             <h4>Office Address</h4>
                               <FormControl
-                                placeHolder = {this.state.officeAddress}
+                                placeholder = "Unit, Street, Suburb, City"
+                                defaultValue = {this.state.officeAddress}
                                 aria-label= "off-address"
                                 aria-describedby="basic-addon1"
                                 onChange={this.onChangeOfficeAddress}/>
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <h4>Mobile</h4>
-                            <InputGroup>
-                              <InputGroup.Prepend>
-                                <FormControl as="select" id ="country-code">
-                                  <option>+1</option>
-                                  <option>+2</option>
-                                  <option>+3</option>
-                                  <option>+4</option>
-                                  <option>+5</option>
-                                </FormControl>
-                              </InputGroup.Prepend>
                               <FormControl
-                                placeHolder = {this.state.mobile}
+                                placeholder = "+61 (420) 111111"
+                                defaultValue = {this.state.mobile}
                                 aria-label= "linkedin-url"
                                 aria-describedby="basic-addon1"
                                 onChange={this.onChangeMobile}/>
-                            </InputGroup>
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <h4>Supplymentary E-mail</h4>
                               <InputGroup>
                                 <FormControl
-                                  placeHolder = {this.state.SupplymentaryEmail}
+                                  placeholder = "email"
+                                  defaultValue = {this.state.SupplymentaryEmail}
                                   aria-label="email"
                                   aria-describedby="basic-addon1"
                                   onChange={this.onChangeSupplymentaryEmail}/>
@@ -469,7 +466,7 @@ class AccountView extends Component {
                           <p>&nbsp;&nbsp;<span><label>{this.state.officeAddress}</label></span></p>
                       </ListGroup.Item>
                       <ListGroup.Item>
-                          <h4>MObile</h4>
+                          <h4>Mobile</h4>
                           <p>&nbsp;&nbsp;<span><label>{this.state.mobile}</label></span></p>
                       </ListGroup.Item>
                       <ListGroup.Item>

@@ -57,9 +57,9 @@
 
 .edit-basic-info{
   margin-right: 1vmax;
-  margin-top: 0vmax;
+  margin-top: -0.5vmax;
   margin-bottom: 0vmax;
-  margin-left: -7vmin;
+  margin-left: -6vmin;
   width: 70%;
 }
 .edit-image > .container{

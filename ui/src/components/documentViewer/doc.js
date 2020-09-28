@@ -56,7 +56,7 @@ class DocMode extends Component {
       docdate: "Document Date",
       tags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership"],
       highlighted: false,
-      docdesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magnaaliqua. Id eu nisl nunc mi ipsum faucibus. Augue maursisaugue neque gravida.",
+      docdesc: "",
       achievement: false,
       acinst: "Institution name",
       acdate: "Date of Achievement",
@@ -281,7 +281,8 @@ class DocMode extends Component {
                             <FormControl
                               as = "textarea"
                               rows = "4"
-                              placeholder = {this.state.docdesc}
+                              placeholder = "About the Document"
+                              defaultValue = {this.state.docdesc}
                               aria-label= "description"
                               onChange={this.onChangeDescripton}/>
                         </Row>
@@ -319,7 +320,7 @@ class DocMode extends Component {
                   ): (
                     <Button variant = "outline-dark" onClick ={this.handleSaveChanges}>Save Changes</Button>
                   )}
-                  
+
                 </Modal.Footer>
               </Modal>
 
