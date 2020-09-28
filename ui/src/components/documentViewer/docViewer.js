@@ -9,12 +9,17 @@ import Image from 'react-bootstrap/Image';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
+import FileViewer from "react-file-viewer";
 import Collapse from 'react-bootstrap/Collapse';
 
 import Tag from './../Tags/Tag.js';
-import DocEditor from './docEditor.js';
 import doc from '../../Image/documents.png';
 
+const onError = () =>{
+  return(
+    <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
+  )
+}
 
 class DocViewer extends Component {
   constructor(props){
@@ -28,7 +33,7 @@ class DocViewer extends Component {
     this.handleAbruptLeave = this.handleAbruptLeave.bind(this);
 
      this.state = {
-       docViewer: true,
+       docViewer: false,
        docEditor: false,
        checkEdit: false,
        docname: "Document Name",
@@ -66,9 +71,10 @@ class DocViewer extends Component {
   }
   /* Leaves abruptly w/o saving Changes */
   handleAbruptLeave = () => {
-
     this.setState({docEditor:false, docViewer: false, checkEdit: false});
   }
+
+
 
   render() {
     var tags = this.state.tags;
@@ -103,7 +109,10 @@ class DocViewer extends Component {
               <Row>
                 <Col className = "docview-image" xs ={5} md = {5}>
                   {/*Change Image Src to document preview */}
+                  <FileViewer fileType={this.props.doc.type} filePath={this.props.doc.path} onError={onError} />
+                  {/*
                   <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
+                  */}
                 </Col>
                 <Col className = "docview-properties">
                   <Row>

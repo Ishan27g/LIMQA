@@ -18,15 +18,18 @@ import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
 import docIcon from '../../Image/documents.png';
+import Docview from '../documentViewer/doc.js';
 
 class Home extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
+        this.docView = React.createRef();
         this.state = {
             bioinfo: '',
             profilePage: '',
             documents: '',
             cover:[sampleImage1, sampleImage2, sampleImage3],
+            docShow: false
         }
     }
 
@@ -37,11 +40,8 @@ class Home extends Component {
                 bioinfo: res.data.users[0].bioinfo
             })
             if (!res.data.users[0].bioinfo || this.state.bioinfo.length < 1){
-                this.setState({
-                    bioinfo: 'this person have no bioinfo yet'
-                })
+                this.setState({ bioinfo: 'this person have no bioinfo yet' });
             }
-            console.log(res.data.users[0].photos)
         })
         .catch(function(error) {
             console.log(error);
@@ -50,26 +50,26 @@ class Home extends Component {
         const imgUrl = 'http://localhost:8080/api/users/coverImages';
         axios.get(imgUrl, { withCredentials: true })
         .then(res =>{
-            var i;
-            const tempCover = [];
-            for (i=0; i<res.data.coverImages.coverImages.length; i++){
-            tempCover.push('http://localhost:8080/api/users/coverImages/'+i)
+            if (res.data.coverImages.coverImages[0] !== ""){
+                var i;
+                const tempCover = [];
+                for (i=0; i<res.data.coverImages.coverImages.length; i++){
+                tempCover.push('http://localhost:8080/api/users/coverImages/'+i)
+                }
+                this.setState({
+                    cover: tempCover
+                });
             }
-            this.setState({
-            cover: tempCover
-            })
-
-            if (this.state.cover.length < 1){
-            this.setState({
-                cover: [sampleImage1, sampleImage2, sampleImage3]
-            })
-            }
-
         })
         .catch(function(error) {
             console.log(error);
         })
     };
+
+    openDocView = () =>{
+        this.docView.current.handleViewerShow();
+    }
+  
 
     render(){
         var coverImg = this.state.cover;
@@ -79,17 +79,19 @@ class Home extends Component {
                     <CoverImage note={cover} />
                 </Carousel.Item>
             )
-        })
+        });
+
+        var doc = {path:'', docType: ''};
 
         return(
           <body>
             <div class = "cover-image">
-              <Carousel>
+                <Carousel>
                     {coverImage}
                 </Carousel>
-              </div>
+            </div>
 
-              <div class = "basic-info">
+            <div class = "basic-info">
                 <Container fluid = {true}>
                     <Row>
                       <Col>
@@ -109,10 +111,12 @@ class Home extends Component {
                         </Col>
                     </Row>
                 </Container>
-              </div>
+            </div>
 
-              <div class = "highlighted-documents">
-                <Row>
+            <Docview doc={doc} ref={this.docView}/>
+
+            <div class = "highlighted-documents">
+                <Row style = {{marginBottom: "3vmax"}}>
                   <Col>
                     <h3> Highlighted Documents </h3>
                   </Col>
@@ -123,19 +127,19 @@ class Home extends Component {
                     <Card>
                         <Card.Img src={docIcon} />
                         <Card.Body>
-                        <Card.Title> Card Title</Card.Title>
+                        <Card.Title onClick={this.openDocView}> Card Title</Card.Title>
                         </Card.Body>
                     </Card>
                     <Card>
                         <Card.Img src={docIcon} />
                         <Card.Body bsPrefix = "card-body">
-                        <Card.Title>Card title</Card.Title>
+                        <Card.Title onClick={this.openDocView}>Card title</Card.Title>
                         </Card.Body>
                     </Card>
                     <Card>
                         <Card.Img src={docIcon} />
                         <Card.Body>
-                        <Card.Title>Card title</Card.Title>
+                        <Card.Title onClick={this.openDocView}>Card title</Card.Title>
                         </Card.Body>
                     </Card>
                     </CardDeck>
@@ -145,19 +149,19 @@ class Home extends Component {
                     <Card>
                         <Card.Img variant="top" src={docIcon} />
                         <Card.Body>
-                        <Card.Title>Card title</Card.Title>
+                        <Card.Title onClick={this.openDocView}>Card title</Card.Title>
                         </Card.Body>
                     </Card>
                     <Card>
                         <Card.Img variant="top" src={docIcon} />
                         <Card.Body>
-                        <Card.Title>Card title</Card.Title>
+                        <Card.Title onClick={this.openDocView}>Card title</Card.Title>
                         </Card.Body>
                     </Card>
                     <Card>
                         <Card.Img variant="top" src={docIcon} />
                         <Card.Body>
-                        <Card.Title>Card title</Card.Title>
+                        <Card.Title onClick={this.openDocView}>Card title</Card.Title>
                         </Card.Body>
                     </Card>
                     </CardDeck>
@@ -167,26 +171,26 @@ class Home extends Component {
                     <Card >
                         <Card.Img variant="top" src={docIcon} />
                         <Card.Body>
-                        <Card.Title>Card title</Card.Title>
+                        <Card.Title onClick={() => this.clickDoc()}>Card title</Card.Title>
                         </Card.Body>
                     </Card>
                     <Card>
                         <Card.Img variant="top" src={docIcon} />
                         <Card.Body>
-                        <Card.Title>Card title</Card.Title>
+                        <Card.Title onClick={() => this.clickDoc()}>Card title</Card.Title>
                         </Card.Body>
                     </Card>
                     <Card>
                         <Card.Img variant="top" src={docIcon} />
                         <Card.Body>
-                        <Card.Title>Card title</Card.Title>
+                        <Card.Title onClick={() => this.clickDoc()}>Card title</Card.Title>
                         </Card.Body>
                     </Card>
                     </CardDeck>
                     </Carousel.Item>
                 </Carousel>
-              </div>
-            </body>
+            </div>
+        </body>
         )
     }
 }

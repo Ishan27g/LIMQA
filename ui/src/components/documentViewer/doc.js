@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../App.css";
 import "./docViewer.css";
+import "./docEditor.css";
 
+import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
@@ -37,29 +39,32 @@ class DocMode extends Component {
     this.handleHighlight = this.handleHighlight.bind(this);
     this.handleCheckDelete = this.handleCheckDelete.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.onChangeDescripton = this.onChangeDescripton.bind(this);
+    this.onChangeName = this.onChangeDescripton.bind(this);
+    this.uploadDoc = this.uploadDoc.bind(this);
 
-     this.state = {
-       /*Viewer mode State*/
-
-       docEditor: true,
-       checkEdit: false,
-       checkDelete: false,
-       addTags: false,
-       uploadMode: false,
-
-       /*Document Properties*/
-       docname: "Document Name",
-       docdate: "Document Date",
-       tags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership"],
-       highlighted: false,
-       docdesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magnaaliqua. Id eu nisl nunc mi ipsum faucibus. Augue maursisaugue neque gravida.",
-       achievement: false,
-       acinst: "Institution name",
-       acdate: "Date of Achievement",
+    this.state = {
+      /*Viewer mode State*/
+      docEditor: false,
+      checkEdit: false,
+      checkDelete: false,
+      addTags: false,
+      uploadMode: false,
+      docViewer: false,
+      /*Document Properties*/
+      docname: "Document Name",
+      docdate: "Document Date",
+      tags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership"],
+      highlighted: false,
+      docdesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magnaaliqua. Id eu nisl nunc mi ipsum faucibus. Augue maursisaugue neque gravida.",
+      achievement: false,
+      acinst: "Institution name",
+      acdate: "Date of Achievement",
 
        /*All Tags Created*/
-       allTags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership", "Extra1", "Extra2", "Extra3"]
-     }
+      allTags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership", "Extra1", "Extra2", "Extra3"],
+    }
+
   }
 
   handleViewerShow = () => {
@@ -77,7 +82,7 @@ class DocMode extends Component {
   }
   /*Goes into Edit Mode*/
   handleViewerEdit = () => {
-    this.setState({ docViewer: false , docEditor: true});
+    this.setState({ docViewer: true , docEditor: true});
 
   }
   /* Save Changes before going back to Viewer Mode*/
@@ -113,6 +118,51 @@ class DocMode extends Component {
     this.setState({checkDelete: false, docEditor: false, docViewer: false});
   }
 
+  handleUploadMode =()=>{
+    var tempName= this.props.doc.doc.name;
+    const timeNow = new Date().toLocaleDateString()
+    this.setState({
+      uploadMode: true,
+      docEditor: true,
+      docViewer: true,
+      docname: tempName,
+      docdate: timeNow
+    }, ()=>{
+      console.log(typeof(this.state.docdate))
+    })
+  }
+
+  uploadDoc(){
+    const docForm = new FormData();
+    docForm.append('highlighted', this.state.highlighted);
+    docForm.append('description', this.state.docdesc);
+    docForm.append('achivement', this.state.achievement);
+    docForm.append('document', this.props.doc.doc);
+    docForm.append('institution', this.state.acinst);
+    docForm.append('dateAchieved', this.state.docdate);
+    console.log(docForm);
+    const postDoc = 'http://localhost:8080/api/documents/' + this.props.doc.id;
+    axios.post(postDoc, docForm, { withCredentials: true } )
+    .then(res=>{
+      console.log(res);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+
+  }
+
+  onChangeDescripton(e){
+    this.setState({
+      docdesc: e.target.value
+    });
+  }
+
+  onChangeName(e){
+    this.setState({
+      docname: e.target.value
+    });
+  }
 
   render(){
     var tags = this.state.tags;
@@ -146,7 +196,7 @@ class DocMode extends Component {
             </InputGroup>
         )
     })
-
+    //console.log(this.props.doc)
     return(
       <div>
         { this.state.docEditor || this.state.uploadMode ?
@@ -163,7 +213,8 @@ class DocMode extends Component {
                     <InputGroup size ="lg">
                       <FormControl
                         placeholder = "Name"
-                        defaultValue = {this.state.docname}/>
+                        defaultValue = {this.state.docname}
+                        onChange={this.onChangeName}/>
                       <InputGroup.Append>
                         {this.state.highlighted?
                           (<Button variant= "warning" onClick = {this.handleRemoveHighlight}>
@@ -194,7 +245,8 @@ class DocMode extends Component {
                             (
                               <Button
                               block
-                              variant = "outline-primary">
+                              variant = "outline-primary"
+                              onClick = {this.uploadDoc}>
                               Upload Document
                             </Button>
                           ):
@@ -225,7 +277,8 @@ class DocMode extends Component {
                               as = "textarea"
                               rows = "4"
                               placeholder = "About the Document"
-                              defaultValue = {this.state.docdesc}/>
+                              defaultValue = {this.state.docdesc}
+                              onChange={this.onChangeDescripton}/>
                         </Row>
                         <Row>
                             {this.state.achievement ?
@@ -256,7 +309,12 @@ class DocMode extends Component {
                 </Modal.Body>
                 <Modal.Footer className = "docedit-footer">
                   <Button variant = "outline-dark" onClick ={this.handleEditorClose} >Close</Button>
-                  <Button variant = "outline-dark" onClick ={this.handleSaveChanges}>Save Changes</Button>
+                  {this.state.uploadMode? (
+                    <div></div>
+                  ): (
+                    <Button variant = "outline-dark" onClick ={this.handleSaveChanges}>Save Changes</Button>
+                  )}
+                  
                 </Modal.Footer>
               </Modal>
 

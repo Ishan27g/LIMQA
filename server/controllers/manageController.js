@@ -7,8 +7,12 @@ const normalizeEmail = require('normalize-email');
 const validator = require("email-validator");
 const  User = require('../models/user');
 const Social = require('../models/social');
-const social = require('../models/social');
-const { db } = require('../models/user');
+const File = require('../models/file');
+const Tag = require('../models/tag');
+
+const { db, updateOne } = require('../models/user');
+const { fields } = require('../middlerware/file-upload');
+const tag = require('../models/tag');
 
 
 const getBioinfo = async (req, res, next) => {
@@ -72,7 +76,6 @@ const getAcc = async (req, res, next) => {
     return next(error);
   }
 
-  // if (!places || places.length === 0) {
   if (!user || user.social.length === 0) {
     return next(
       new HttpError('Could not find social links for the provided user id.', 404)
@@ -142,7 +145,7 @@ const updateAcc  = async (req, res, next) => {
   user.officeAddress = req.body.Address;
   
   
-  if (normalizeEmail(req.body.Email) !== user.email) {
+  if ( normalizeEmail(req.body.Email) !== user.email) {
     let email;
     email = req.body.Email;
     email = normalizeEmail(email);
@@ -175,7 +178,7 @@ const updateAcc  = async (req, res, next) => {
   
     
   
-  if (normalizeEmail(req.body.Semail) !== user.semail) {
+  if ( normalizeEmail(req.body.Semail) !== user.semail ) {
     let Semail;
     Semail = req.body.Semail;
     Semail = normalizeEmail(Semail);
@@ -275,7 +278,115 @@ const updateAcc  = async (req, res, next) => {
 };
 
 
+const uploadFiles = async (req, res, next) => {
+  let userId;
+  userId = req.params.uid;
+
+  let user;
+  try {
+    user = await User.findById(userId);
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError (
+      "Something went wrong, could not find user.",
+      500
+    );
+    return next(error);
+  }
+
+  const { highlighted, description, achivement, institution, dateAchieved} = req.body;
+  
+
+  const CreatedFile = new File({
+    name: req.file.originalname,
+    description,
+    path: req.file.path,
+    owner: userId,
+    highlighted,
+    achivement,
+    institution,
+    dateAchieved,
+    tags:[]
+  })
+
+const work = new Tag({
+    name: "Work-Experience",
+    color: "red"
+});
+
+const Academic = new Tag({
+    name: "Academic",
+    color: "blue"
+})
+
+try{
+    await work.save();
+    await Academic.save();
+} catch (err) {
+    console.log(err);
+    const error = new HttpError (
+        "created tags failed",
+        500
+    );
+};
+  try {
+    await CreatedFile.save();
+    await CreatedFile.tags.push(work);
+    await CreatedFile.tags.push(Academic);
+    await CreatedFile.save();
+    
+    await user.documents.push(CreatedFile);
+
+    await user.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'creating file failed, please try again.'
+    );
+    return next(error);
+  }
+
+  res.status(201).json({user: user.toObject({ getters : true})});
+  
+}
+
+const getFiles = async (req, res, next) => {
+  let userId;
+  userId = req.params.uid;
+
+  let user;
+  try {
+    user = await User.findById(userId).populate(
+      {path: 'documents',
+        populate: {
+          path: 'tags',
+          model: 'Tag'
+        }
+      });
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError (
+      "Something went wrong, could not find user.",
+      500
+    );
+    return next(error);
+  }
+  if (!user || user.documents.length === 0) {
+    return next(
+      new HttpError('Could not find documents for the provided user id.', 404)
+    );
+  }
+
+  res.json({
+    documents: user.documents.toObject({ getters: true })
+  });
+
+}
+
+
 exports.getBioinfo = getBioinfo;
 exports.updateBioinfo = updateBioinfo;
 exports.getAcc = getAcc;
 exports.updateAcc = updateAcc;
+exports.uploadFiles = uploadFiles;
+exports.getFiles = getFiles;

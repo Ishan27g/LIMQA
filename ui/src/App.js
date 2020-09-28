@@ -19,9 +19,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import Home from './components/Home/Home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import AccountView from './components/AccountView/accountView.js';
-import DocMode from './components/documentViewer/doc.js';
 import DocViewer from './components/documentViewer/docViewer.js';
-import DocEditor from './components/documentViewer/docEditor.js';
 
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
@@ -270,7 +268,7 @@ class App extends Component{
           </Modal>
           {<BrowserRouter>
             <Switch>
-              <Route path="/" component={DocEditor} exact/>
+              <Route path="/" component={Home} exact/>
               <Route path="/d" component={DocViewer} />
               <Route path="/manage" component={ManagePage}/>
               <Route path="/view" component={AccountView}/>
