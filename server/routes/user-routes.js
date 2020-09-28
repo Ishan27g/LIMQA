@@ -27,7 +27,7 @@ router.post('/login', check('email').normalizeEmail(), userController.login);
 
 router.get('/logout', (req, res) => {
     req.logout();
-    res.redirect('/users/login');
+    res.send({ success : true, message : 'logged out' }); 
 })
 // this route send the login status back to front end.
 router.get('/check', userController.check);
