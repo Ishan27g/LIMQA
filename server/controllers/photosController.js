@@ -4,7 +4,6 @@ const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
 const {validationResult } = require("express-validator");
 const  Photos = require('../models/photos');
-const  User = require('../models/user');
 
 const getBgImage = async (req, res, next) => {
     let existingPhoto
@@ -40,7 +39,42 @@ const getBgImage = async (req, res, next) => {
         return next(error);
     }
   };
-
+  const delBgImage = async (req, res, next) => {
+    let existingPhoto
+    try {
+        existingPhoto = await Photos.findOne({ email: req.user.email})
+    } catch (err) {
+        const error = new HttpError(
+        'Photos not found.',
+        500
+        );
+        return next(error);
+    }
+    if(existingPhoto) {
+        var bgImage = existingPhoto.toObject({getters: true})
+        bgImage = `rm ${bgImage.bgImage}`
+        console.log(bgImage)
+        exec(bgImage, (error, stdout, stderr) => {
+            if (error) {
+                console.log(`error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.log(`stderr: ${stderr}`);
+            }
+        });
+        const update = {bgImage : ""}
+        await existingPhoto.updateOne(update);
+        res.status(201).json({bgImage:false});
+    }   
+    else{
+        const error = new HttpError(
+            'User not found.'+req.user.email,
+            500
+            );
+        return next(error);
+    }
+  };
 const addBgImage = async (req, res, next) =>{
     let existingPhoto
     try {
@@ -127,6 +161,54 @@ const getCoverImagesById = async (req, res, next) =>{
         }
        
         });
+    }   
+    else{
+        const error = new HttpError(
+            'User not found.' ,
+            500
+            );
+        return next(error);
+    }
+}
+
+const delCoverImagesById = async (req, res, next) =>{
+    let existingPhoto
+    try {
+        existingPhoto = await Photos.findOne({ email: req.user.email})
+    } catch (err) {
+        const error = new HttpError(
+        'Photos not found.',
+        500
+        );
+        return next(error);
+    }
+    if(existingPhoto) {
+        const id = req.params.id;
+        var coverImages = existingPhoto.toObject({getters: true})
+        var path = [];
+        for (i = 0; i < coverImages.coverImages.length; i++) {
+            if(i != id){
+                path.push(coverImages.coverImages[id]);
+                console.log('File : ' + i + coverImages.coverImages[id])
+            }
+        }
+        coverImages = coverImages.coverImages[id]
+        coverImages = `rm ${coverImages}`
+        console.log(coverImages)
+        exec(coverImages, (error, stdout, stderr) => {
+            if (error) {
+                console.log(`error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.log(`stderr: ${stderr}`);
+            }
+        });
+        console.log(path)
+
+        const update = {coverImages : path}
+        await existingPhoto.updateOne(update);
+        res.status(201).json({coverImages:false});
     }   
     else{
         const error = new HttpError(
@@ -230,12 +312,52 @@ const addProfilePhoto = async (req, res, next) =>{
         return next(error);
     }
 }
+const deleteProfilePhoto = async (req, res, next) =>{
+    let existingPhoto
+    try {
+        existingPhoto = await Photos.findOne({ email: req.user.email})
+    } catch (err) {
+        const error = new HttpError(
+            'Photos not found.',
+             500
+        );
+        return next(error);
+    }
+    if(existingPhoto) {
+        var path = existingPhoto.toObject({getters: true})
+        path = `rm ${path.profilePhoto}`
+        console.log(path)
+        
+        exec(path, (error, stdout, stderr) => {
+            if (error) {
+                console.log(`error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.log(`stderr: ${stderr}`);
+            }
+        });
+        
+        const update = {profilePhoto : ""}
+        await existingPhoto.updateOne(update);
+        res.status(201).json({profilePhoto:false});
+    }else{
+        const error = new HttpError(
+            'profile photo not deleted.',
+            500
+            );
+        return next(error);
+    }
+}
 
 
 exports.getProfilePhoto = getProfilePhoto;
 exports.addProfilePhoto = addProfilePhoto;
+exports.deleteProfilePhoto = deleteProfilePhoto;
 exports.getCoverImages = getCoverImages;
 exports.addCoverImages = addCoverImages;
 exports.getBgImage = getBgImage;
 exports.addBgImage = addBgImage;
+exports.delBgImage = delBgImage;
 exports.getCoverImagesById = getCoverImagesById;
+exports.delCoverImagesById = delCoverImagesById;
