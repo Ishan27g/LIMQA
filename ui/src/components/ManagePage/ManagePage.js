@@ -69,7 +69,6 @@ class ManagePage extends Component {
           const docUrl = 'http://localhost:8080/api/documents/' + this.state.userid;
           axios.get(docUrl, { withCredentials: true })
           .then(res=>{
-            console.log(res.data);
             this.setState({
               documents: res.data.documents
             })

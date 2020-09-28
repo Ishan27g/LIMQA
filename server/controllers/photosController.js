@@ -204,7 +204,7 @@ const getProfilePhoto = async (req, res, next) => {
 const addProfilePhoto = async (req, res, next) =>{
     let existingPhoto
     try {
-        existingPhoto = await Photos.findOne({ id: req.user.email})
+        existingPhoto = await Photos.findOne({ email: req.user.email})
     } catch (err) {
         const error = new HttpError(
             'Photos not found.',

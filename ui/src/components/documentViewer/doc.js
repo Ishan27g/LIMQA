@@ -40,7 +40,7 @@ class DocMode extends Component {
     this.handleCheckDelete = this.handleCheckDelete.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.onChangeDescripton = this.onChangeDescripton.bind(this);
-    this.onChangeName = this.onChangeDescripton.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
     this.uploadDoc = this.uploadDoc.bind(this);
 
     this.state = {
@@ -127,19 +127,19 @@ class DocMode extends Component {
       docViewer: true,
       docname: tempName,
       docdate: timeNow
-    }, ()=>{
-      console.log(typeof(this.state.docdate))
     })
   }
 
   uploadDoc(){
     const docForm = new FormData();
+    console.log(this.state.docname);
     docForm.append('highlighted', this.state.highlighted);
     docForm.append('description', this.state.docdesc);
     docForm.append('achivement', this.state.achievement);
     docForm.append('document', this.props.doc.doc);
     docForm.append('institution', this.state.acinst);
     docForm.append('dateAchieved', this.state.docdate);
+    docForm.append('name', this.state.docname);
     console.log(docForm);
     const postDoc = 'http://localhost:8080/api/documents/' + this.props.doc.id;
     axios.post(postDoc, docForm, { withCredentials: true } )
@@ -212,9 +212,9 @@ class DocMode extends Component {
                   <Modal.Title className = "doc-highlight">
                     <InputGroup size ="lg">
                       <FormControl
-                        placeholder = "Name"
-                        defaultValue = {this.state.docname}
-                        onChange={this.onChangeName}/>
+                        placeholder = {this.state.docname}
+                        aria-label= "name"
+                        onChange = {this.onChangeName}/>
                       <InputGroup.Append>
                         {this.state.highlighted?
                           (<Button variant= "warning" onClick = {this.handleRemoveHighlight}>
@@ -276,8 +276,8 @@ class DocMode extends Component {
                             <FormControl
                               as = "textarea"
                               rows = "4"
-                              placeholder = "About the Document"
-                              defaultValue = {this.state.docdesc}
+                              placeholder = {this.state.docdesc}
+                              aria-label= "description"
                               onChange={this.onChangeDescripton}/>
                         </Row>
                         <Row>
