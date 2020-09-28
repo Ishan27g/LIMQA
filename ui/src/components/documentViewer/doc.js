@@ -16,10 +16,11 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
 import DocEditor from './docEditor.js';
-
 import doc from '../../Image/documents.png';
-
 import Tag from './../Tags/Tag.js';
+import {pathForRequest} from '../http.js';
+
+let http = pathForRequest();
 
 class DocMode extends Component {
   constructor(props){
@@ -152,7 +153,7 @@ class DocMode extends Component {
     docForm.append('dateAchieved', this.state.docdate);
     docForm.append('name', this.state.docname);
     console.log(docForm);
-    const postDoc = 'http://localhost:8080/api/documents/' + this.props.doc.id;
+    const postDoc = http+'/api/documents/' + this.props.doc.id;
     axios.post(postDoc, docForm, { withCredentials: true } )
     .then(res=>{
       console.log(res);

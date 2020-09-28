@@ -18,6 +18,9 @@ import FormControl from 'react-bootstrap/FormControl';
 
 import profile from '../../Image/profile.png';
 
+import {pathForRequest} from '../http.js';
+let http = pathForRequest();
+
 class AccountView extends Component {
   constructor(props){
     super(props);
@@ -36,7 +39,7 @@ class AccountView extends Component {
       media: [],
       updateEmail: '',
       updateName: '',
-      updateLinkedin: '',
+      UpdateLinkedin: '',
       UpdateInstagram: '',
       UpdateFacebook: '',
       UpdateOfficeAddress: '',
@@ -56,14 +59,14 @@ class AccountView extends Component {
   }
 
   componentDidMount(){
-    const check = 'http://localhost:8080/api/users/check';
+    const check = http+'/api/users/check';
     axios.get(check, { withCredentials: true })
     .then(response => {
       console.log(response.data.userid)
       this.setState({
         userid: response.data.userid
       })
-      const accurl = 'http://localhost:8080/api/accSetting/'+ this.state.userid;
+      const accurl = http+'/api/accSetting/'+ this.state.userid;
       axios.get(accurl, { withCredentials: true })
       .then(res => {
         this.setState({
@@ -116,32 +119,45 @@ class AccountView extends Component {
   }
 
   updateChanges = () => {
+    console.log(this.state.linkedin);
+    console.log(this.state.UpdateLinkedin);
     var form = new FormData();
     form.append('Email', this.state.updateEmail);
     form.append('Mobile', this.state.updateMobile);
     form.append('Semail', this.state.UpdataSupplymentaryEmail);
     form.append('Address', this.state.UpdateOfficeAddress);
     form.append('LinkedinName', 'Linkedin');
-    form.append('Linkedinurl', this.state.updateLinkedin);
+    form.append('Linkedinurl', this.state.UpdateLinkedin);
     form.append('FacebookName', 'Facebook');
     form.append('Facebookurl', this.state.UpdateFacebook);
     form.append('InstagramName', 'Instagram');
     form.append('Instagramurl', this.state.UpdateInstagram);
     form.append('Username', this.state.updateName);
-    const updateUrl = 'http://localhost:8080/api/accSetting/'+ this.state.userid;
+    const updateUrl = http+'/api/accSetting/'+ this.state.userid;
     axios.put(updateUrl, form, { withCredentials: true })
     .then(res => {
       console.log("update successfully", res.data);
+      var tempemail= this.state.updateEmail;
+      var tempSupplymentaryEmail= this.state.UpdataSupplymentaryEmail;
+      var tempmobile= this.state.updateMobile;
+      var tempofficeAddress= this.state.UpdateOfficeAddress;
+      var tempname= this.state.updateName;
+      var templinkedin = this.state.UpdateLinkedin;
+      console.log(templinkedin);
+      var tempinstagram =this.state.UpdateInstagram;
+      var tempfacebook = this.state.UpdateFacebook;
+
       this.setState({
-        email: this.state.updateEmail,
-        SupplymentaryEmail: this.state.UpdataSupplymentaryEmail,
-        mobile: res.data.user.updataMobile,
-        updateMobile: this.state.updateMobile,
-        officeAddress: this.state.UpdateOfficeAddress,
-        name: this.state.updateName,
-        linkedin: this.state.updateLinkedin,
-        instagram:this.state.UpdateInstagram,
-        facebook: this.state.UpdateFacebook,
+        email: tempemail,
+        SupplymentaryEmail: tempSupplymentaryEmail,
+        mobile: tempmobile,
+        officeAddress: tempofficeAddress,
+        name: tempname,
+        linkedin: templinkedin,
+        instagram:tempinstagram,
+        facebook: tempfacebook,
+      }, ()=>{
+        console.log(this.state.linkedin)
       })
     })
     .catch(function(error) {
@@ -190,11 +206,14 @@ class AccountView extends Component {
   }
 
   onChangeLinkedin(e){
+    console.log(e.target.value);
     if (e.target.value.length > 0){
+      console.log("up to line 208");
       this.setState({
-        updateLinkedin: e.target.value
+        UpdateLinkedin: e.target.value
       });
     }else{
+      console.log("up to line 213");
       var lin = this.state.linkedin;
       this.setState({
         UpdateLinkedin: lin
@@ -242,6 +261,7 @@ class AccountView extends Component {
   }
 
   onChangeMobile(e){
+    console.log(e.target.value);
     if (e.target.value.length > 0){
       this.setState({
         updateMobile: e.target.value

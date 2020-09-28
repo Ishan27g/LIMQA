@@ -19,6 +19,9 @@ import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
 import docIcon from '../../Image/documents.png';
 import Docview from '../documentViewer/doc.js';
+import {pathForRequest} from '../http.js';
+
+let http = pathForRequest();
 
 class Home extends Component {
     constructor(props){
@@ -34,7 +37,8 @@ class Home extends Component {
     }
 
     componentDidMount(){
-        axios.get('http://localhost:8080/api/users')
+        console.log(http)
+        axios.get(http+'/api/users')
         .then(res =>{
             this.setState({
                 bioinfo: res.data.users[0].bioinfo
@@ -47,14 +51,14 @@ class Home extends Component {
             console.log(error);
         })
 
-        const imgUrl = 'http://localhost:8080/api/users/coverImages';
+        const imgUrl = http+'/api/users/coverImages';
         axios.get(imgUrl, { withCredentials: true })
         .then(res =>{
             if (res.data.coverImages.coverImages[0] !== ""){
                 var i;
                 const tempCover = [];
                 for (i=0; i<res.data.coverImages.coverImages.length; i++){
-                tempCover.push('http://localhost:8080/api/users/coverImages/'+i)
+                tempCover.push(http+'/api/users/coverImages/'+i)
                 }
                 this.setState({
                     cover: tempCover
@@ -101,7 +105,7 @@ class Home extends Component {
 
                     <Row style = {{marginTop: "2vmax"}} >
                         <Col style = {{textAlign: "center"}}>
-                        <Image src={'http://localhost:8080/api/users/profilePhoto'} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
+                        <Image src={http+'/api/users/profilePhoto'} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
                         </Col>
                         <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
 
