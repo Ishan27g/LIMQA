@@ -110,7 +110,7 @@ setTimeout(connect, 3000);
 function connect(){
     mongoose
     //.connect('mongodb+srv://qunzhi:test123@cluster0.7wtff.mongodb.net/e-portfolio?retryWrites=true&w=majority')
-        .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+        .connect(url, { useNewUrlParser: true, useUnifiedTopology: true , useFindAndModify: false})
     .then(() => {
         console.log("Connected to mongoDB")
         app.listen(PORT, () => {

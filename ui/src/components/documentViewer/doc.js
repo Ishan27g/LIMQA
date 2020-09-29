@@ -9,17 +9,16 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
 import InputGroup from 'react-bootstrap/InputGroup';
-import List from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
-import DocEditor from './docEditor.js';
-
 import doc from '../../Image/documents.png';
-
 import Tag from './../Tags/Tag.js';
+import {pathForRequest} from '../http.js';
+
+let http = pathForRequest();
 
 class DocMode extends Component {
   constructor(props){
@@ -152,7 +151,7 @@ class DocMode extends Component {
     docForm.append('dateAchieved', this.state.docdate);
     docForm.append('name', this.state.docname);
     console.log(docForm);
-    const postDoc = 'http://localhost:8080/api/documents/' + this.props.doc.id;
+    const postDoc = http+'/api/documents/' + this.props.doc.id;
     axios.post(postDoc, docForm, { withCredentials: true } )
     .then(res=>{
       console.log(res);

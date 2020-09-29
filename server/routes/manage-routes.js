@@ -16,4 +16,10 @@ router.put('/accSetting/:uid', ensureAuthenticated, fileUpload.single('profileim
 router.post('/documents/:uid', ensureAuthenticated, fileUpload.single("document"), manageController.uploadFiles);
 
 router.get('/documents/:uid', ensureAuthenticated, manageController.getFiles);
+
+router.get('/OneDocument/:documentId', manageController.getOneFile);
+
+router.delete('/documents/:uid/:documentId', ensureAuthenticated, manageController.deleteFile);
+
+router.put('/editDocument/:documentId', ensureAuthenticated, manageController.editFile);
 module.exports = router;
