@@ -80,7 +80,7 @@ class ManagePage extends Component {
       })
       .catch(function(error) {
         console.log(error);
-    })
+      })
     
       const biourl = http+'/api/bioinfo';
       axios.get(biourl, { withCredentials: true })
@@ -189,7 +189,7 @@ class ManagePage extends Component {
     handleSubmiteBio = () => {
       const obj = {
         bioinfo: this.state.updateBio
-    };
+      };
       axios.put(http+'/api/bioinfo/'+this.state.userid, obj, { withCredentials: true })
       .then(res =>{
         const tempBio = this.state.updateBio;
@@ -248,16 +248,15 @@ class ManagePage extends Component {
       //const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
       var documents = this.state.documents;
       let docCards = documents.map(card =>{
-        return(
+        return( 
           <Col sm='4'>
             <div>
               <Card className='documentsCard' >
                 <Card.Img variant='top' src={docImage}/>
                 <Card.Body>
-                <Card.Title onClick={this.openDocView}>
-                  {card.name}
-                </Card.Title>
+                  <Button variant="secondary" href={"/documents/" + card._id} block>{card.name}</Button>
                 </Card.Body>
+                  
               </Card>
             </div>
           </Col>

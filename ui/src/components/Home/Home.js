@@ -6,19 +6,20 @@ import './Home.css';
 import axios from "axios";
 import Carousel from "react-bootstrap/Carousel";
 import Image from 'react-bootstrap/Image';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import CardDeck from 'react-bootstrap/CardDeck';
 import CoverImage from '../CoverImage/coverImage.js';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
 
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
 import docIcon from '../../Image/documents.png';
-import Docview from '../documentViewer/doc.js';
+
 import {pathForRequest} from '../http.js';
 
 let http = pathForRequest();
@@ -32,19 +33,31 @@ class Home extends Component {
             profilePage: '',
             documents: '',
             cover:[sampleImage1, sampleImage2, sampleImage3],
-            docShow: false
+            docShow: false,
+            documents: [],
+            docname:"",
         }
     }
 
     componentDidMount(){
-        console.log(http)
         axios.get(http+'/api/users')
         .then(res =>{
             this.setState({
-                bioinfo: res.data.users[0].bioinfo
+                bioinfo: res.data.users[0].bioinfo,
+                documents: res.data.users[0].documents
             })
             if (!res.data.users[0].bioinfo || this.state.bioinfo.length < 1){
                 this.setState({ bioinfo: 'this person have no bioinfo yet' });
+            }
+            if(res.data.users[0].documents.length>0){
+                const getDoc = http+'/api/OneDocument/'+res.data.users[0].documents[0];
+                axios.get(getDoc)
+                .then(res=>{
+                    console.log(res.data.document);
+                    this.setState({
+                        docname: res.data.document.name
+                    })
+                })
             }
         })
         .catch(function(error) {
@@ -69,10 +82,6 @@ class Home extends Component {
             console.log(error);
         })
     };
-
-    openDocView = () =>{
-        this.docView.current.handleViewerShow();
-    }
   
 
     render(){
@@ -84,8 +93,6 @@ class Home extends Component {
                 </Carousel.Item>
             )
         });
-
-        var doc = {path:'', docType: ''};
 
         return(
           <body>
@@ -117,82 +124,98 @@ class Home extends Component {
                 </Container>
             </div>
 
-            <Docview doc={doc} ref={this.docView}/>
-
             <div class = "highlighted-documents">
                 <Row style = {{marginBottom: "3vmax"}}>
                   <Col>
                     <h3> Highlighted Documents </h3>
                   </Col>
                 </Row>
-                <Carousel indicators ={false}>
-                    <Carousel.Item>
-                    <CardDeck>
-                    <Card>
-                        <Card.Img src={docIcon} />
-                        <Card.Body>
-                        <Card.Title onClick={this.openDocView}> Card Title</Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img src={docIcon} />
-                        <Card.Body bsPrefix = "card-body">
-                        <Card.Title onClick={this.openDocView}>Card title</Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img src={docIcon} />
-                        <Card.Body>
-                        <Card.Title onClick={this.openDocView}>Card title</Card.Title>
-                        </Card.Body>
-                    </Card>
-                    </CardDeck>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                    <CardDeck>
-                    <Card>
-                        <Card.Img variant="top" src={docIcon} />
-                        <Card.Body>
-                        <Card.Title onClick={this.openDocView}>Card title</Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img variant="top" src={docIcon} />
-                        <Card.Body>
-                        <Card.Title onClick={this.openDocView}>Card title</Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img variant="top" src={docIcon} />
-                        <Card.Body>
-                        <Card.Title onClick={this.openDocView}>Card title</Card.Title>
-                        </Card.Body>
-                    </Card>
-                    </CardDeck>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                    <CardDeck>
-                    <Card >
-                        <Card.Img variant="top" src={docIcon} />
-                        <Card.Body>
-                        <Card.Title onClick={() => this.clickDoc()}>Card title</Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img variant="top" src={docIcon} />
-                        <Card.Body>
-                        <Card.Title onClick={() => this.clickDoc()}>Card title</Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img variant="top" src={docIcon} />
-                        <Card.Body>
-                        <Card.Title onClick={() => this.clickDoc()}>Card title</Card.Title>
-                        </Card.Body>
-                    </Card>
-                    </CardDeck>
-                    </Carousel.Item>
-                </Carousel>
+                    {this.state.documents.length<1 ? (
+                        <Carousel indicators ={false}>
+                        <Carousel.Item>
+                            <img
+                            className="d-block w-100"
+                            src={sampleImage1}
+                            alt="First slide"
+                            />
+                            <Carousel.Caption>
+                            <h3>No documents</h3>
+                            <p>This user hasn't upload anydocuments yet</p>
+                            </Carousel.Caption>
+                        </Carousel.Item>
+                        </Carousel>
+                    ):(
+                        <Carousel indicators ={false}>
+                        <Carousel.Item>
+                        <CardDeck>
+                        <Card>
+                            <Card.Img src={docIcon} />
+                            <Card.Body>
+                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
+                            </Card.Body>
+                        </Card>
+                        <Card>
+                            <Card.Img src={docIcon} />
+                            <Card.Body bsPrefix = "card-body">
+                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
+                            </Card.Body>
+                        </Card>
+                        <Card>
+                            <Card.Img src={docIcon} />
+                            <Card.Body>
+                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
+                            </Card.Body>
+                        </Card>
+                        </CardDeck>
+                        </Carousel.Item>
+                        <Carousel.Item>
+                        <CardDeck>
+                        <Card>
+                            <Card.Img variant="top" src={docIcon} />
+                            <Card.Body>
+                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
+                            </Card.Body>
+                        </Card>
+                        <Card>
+                            <Card.Img variant="top" src={docIcon} />
+                            <Card.Body>
+                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
+                            </Card.Body>
+                        </Card>
+                        <Card>
+                            <Card.Img variant="top" src={docIcon} />
+                            <Card.Body>
+                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
+                            </Card.Body>
+                        </Card>
+                        </CardDeck>
+                        </Carousel.Item>
+                        <Carousel.Item>
+                        <CardDeck>
+                        <Card >
+                            <Card.Img variant="top" src={docIcon} />
+                            <Card.Body>
+                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
+                            </Card.Body>
+                        </Card>
+                        <Card>
+                            <Card.Img variant="top" src={docIcon} />
+                            <Card.Body>
+                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
+                            </Card.Body>
+                        </Card>
+                        <Card>
+                            <Card.Img variant="top" src={docIcon} />
+                            <Card.Body>
+                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
+                            </Card.Body>
+                        </Card>
+                        </CardDeck>
+                        </Carousel.Item>
+                        </Carousel>
+                    )}
+                    
+                    
             </div>
         </body>
         )
