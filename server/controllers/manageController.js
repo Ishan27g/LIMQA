@@ -488,8 +488,7 @@ const deleteFile = async (req, res, next) => {
 }
 
 res.json({success: true});
-
-  
+ 
 }
 
 

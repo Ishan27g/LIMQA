@@ -61,11 +61,6 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-  let i =0;
-  var path = [];
-  for (i = 0; i < req.files.length; i++) {
-    path.push(req.files[i].path);
-  }
 
   let hashedPassword;
   try {

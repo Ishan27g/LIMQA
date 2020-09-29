@@ -8,8 +8,6 @@ const router = express.Router();
 const { check } = require('express-validator');
 // middle ware for documents uploads.
 const fileUpload = require("../middlerware/file-upload");
-// middle ware for checking is user is logged in or not.
-const { ensureAuthenticated } = require('../middlerware/auth');
 
 router.get('/', userController.getUsers);
 
@@ -21,7 +19,7 @@ router.post('/signup', fileUpload.array('documents',10), [
     check("name").not().isEmpty(),
     check("email").normalizeEmail().isEmail(),
     check("password").not().isEmpty(), 
-    check("password").isLength({ min: 6 }), ] , userController.signup);
+    check("password").matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/, "i") ] , userController.signup);
 
 router.post('/login', check('email').normalizeEmail(), userController.login);
 
@@ -32,6 +30,5 @@ router.get('/logout', (req, res) => {
 // this route send the login status back to front end.
 router.get('/check', userController.check);
 
-router.get('/manage', ensureAuthenticated, (req, res) => res.send('manage'));
 
 module.exports = router;
