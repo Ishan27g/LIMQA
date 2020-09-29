@@ -20,6 +20,7 @@ import Home from './components/Home/Home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import AccountView from './components/AccountView/accountView.js';
 import DocViewer from './components/documentViewer/docViewer.js';
+import Register from './components/SignUp/register.js';
 
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
@@ -271,6 +272,7 @@ class App extends Component{
             <Switch>
               <Route path="/" component={Home} exact/>
               <Route path="/d" component={DocViewer} />
+              <Route path="/signup" component={Register}/>
               <Route path="/manage" component={ManagePage}/>
               <Route path="/view" component={AccountView}/>
             </Switch>

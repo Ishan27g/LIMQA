@@ -1,0 +1,20 @@
+.register{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: white;
+  margin-top: 70px;
+  margin-bottom: 10px;
+  width: 40vmax;
+  padding: 1.5vmax;
+}
+.register-form > h3{
+  text-align: center;
+  font-size: 1.75em;
+  color: black;
+  margin-bottom: 2vmax;
+}
+.register-form > .form-group {
+  display: flex;
+  align-items: center;
+}
