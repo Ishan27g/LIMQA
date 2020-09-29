@@ -42,7 +42,7 @@ const signup = async (req, res, next) => {
       console.log(error);
       return next(new HttpError("Invalid inputs passed, please check your data.", 422));
   }
-  const { name, email, password, bioinfo, semail} = req.body;
+  const { name, email, password} = req.body;
 
   let existingUser
   try {
@@ -75,9 +75,9 @@ const signup = async (req, res, next) => {
     const error = new HttpError("Could not create user, please try again.", 500);
     return next(error);
   }
-  
+
   /*const cretedSocial = new Social({
-    name = 
+    name =
   })*/
   const createdPhotos = new Photos({
     email : email,
@@ -100,10 +100,10 @@ const signup = async (req, res, next) => {
     email,
     documents: [],
     password: hashedPassword,
-    social: [], 
-    bioinfo,
-    semail,
-    photos: createdPhotos, 
+    social: [],
+    bioinfo: "",
+    semail: "",
+    photos: createdPhotos,
     officeAddress: "",
     mobile: ""
   });
@@ -158,9 +158,9 @@ const login = (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if(err) {
       return next(err);
-    } 
+    }
     if( ! user) {
-      return res.send({ success : false, message : 'authentication failed' }); 
+      return res.send({ success : false, message : 'authentication failed' });
     }
 
     req.login(user, loginErr => {

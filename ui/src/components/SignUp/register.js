@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import './register.css'
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
@@ -6,7 +7,12 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+
+import {pathForRequest} from '../http.js';
+let http = pathForRequest();
+
 class Register extends Component{
+
 
   constructor(props){
     super(props);
@@ -22,6 +28,8 @@ class Register extends Component{
         password: '',
         repassword: '',
         alertPassword: false,
+        checkregister: false,
+
     }
   }
   onChangeUsername(e){
@@ -50,7 +58,19 @@ class Register extends Component{
   /*Change true Condition to pass Ahead After Check 1*/
   handleRegister () {
     if (this.state.repassword == this.state.password ){
-      this.setState({alertPassword: false});
+        const signurl = http+'/api/users/signup';
+        const user = {
+          name: this.state.username,
+          email: this.state.email,
+          password: this.state.password
+
+        };
+        axios.post(signurl,user, { withCredentials: true })
+        .then(response => {
+          console.log(response)
+        })
+        // wait backend to implement failure login response
+
     } else {
       this.setState({alertPassword: true});
     }
