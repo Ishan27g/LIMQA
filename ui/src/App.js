@@ -28,6 +28,7 @@ import QRcode from './Image/QRcode.png';
 import loginButton from './Image/loginButton.svg';
 
 import {pathForRequest} from './components/http.js';
+
 let http = pathForRequest();
 
 class App extends Component{
@@ -87,13 +88,12 @@ class App extends Component{
   }
 
   handleLogout(){
-    console.log("up to here")
     axios.get(http+'/api/users/logout', { withCredentials: true })
     .then(res=>{
       console.log(res);
       this.setState({
         login: false,
-      })
+      });
     })
     .catch(function(error) {
       console.log(error);
@@ -291,10 +291,11 @@ class App extends Component{
             <Route path="/" component={Home} exact/>
               <Route path="/d" component={DocViewer} />
               <Route path="/documents/:id" component={singleDoc}/>
+              {this.state.login? (<Route path="/manage" component={ManagePage}/>):(<Route path="/manage" component={NotFound}/>)}
+            
+              <Route path="/view" component={AccountView}/>
               <Route path="/notfound" component={NotFound} />
               <Route render={() => <Redirect to={{pathname: "/notfound"}} />} />
-              {this.state.login ?(<Route path="/manage" component={ManagePage}/>):(null)}
-              {this.state.login ?(<Route path="/view" component={AccountView}/>):(null)}
             </Switch>
           </BrowserRouter>}
         </header>
