@@ -32,7 +32,6 @@ router.get('/logout', (req, res) => {
 // this route send the login status back to front end.
 router.get('/check', userController.check);
 
-
 router.get('/manage', ensureAuthenticated, (req, res) => res.send('manage'));
 
 module.exports = router;
