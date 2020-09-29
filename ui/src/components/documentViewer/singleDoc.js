@@ -73,12 +73,9 @@ class singleDoc extends Component {
     }
 
     componentDidMount(){
-        console.log(this.state.docId)
         const getDoc = http+'/api/OneDocument/'+this.state.docId;
         axios.get(getDoc)
         .then(res=>{
-            console.log(res.data.document.tags);
-
             this.setState({
                 docname: res.data.document.name,
                 docdate: res.data.document.dateCreated,

@@ -31,7 +31,6 @@ class Home extends Component {
         this.state = {
             bioinfo: '',
             profilePage: '',
-            documents: '',
             cover:[sampleImage1, sampleImage2, sampleImage3],
             docShow: false,
             documents: [],

@@ -3,7 +3,7 @@ import axios from 'axios';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
@@ -21,6 +21,7 @@ import ManagePage from './components/ManagePage/ManagePage.js';
 import AccountView from './components/AccountView/accountView.js';
 import DocViewer from './components/documentViewer/docViewer.js';
 import singleDoc from './components/documentViewer/singleDoc.js';
+import NotFound from './components/NotFound.js';
 
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
@@ -40,6 +41,7 @@ class App extends Component{
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.Adminlogin = this.Adminlogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
 
     this.state ={
         loginButton: false,
@@ -82,6 +84,20 @@ class App extends Component{
 
   handleQRClose = () => {
     this.setState({ QRButton: false });
+  }
+
+  handleLogout(){
+    console.log("up to here")
+    axios.get(http+'/api/users/logout', { withCredentials: true })
+    .then(res=>{
+      console.log(res);
+      this.setState({
+        login: false,
+      })
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
   }
 
   onChangeEmail(e){
@@ -199,7 +215,7 @@ class App extends Component{
                       <Dropdown.Item href="/View">Account</Dropdown.Item>
                       <Dropdown.Item href="/manage">Manage Documents</Dropdown.Item>
                       <Dropdown.Divider />
-                      <Dropdown.Item href="">Log Out</Dropdown.Item>
+                      <Dropdown.Item onClick={this.handleLogout}>Log Out</Dropdown.Item>
                     </DropdownButton>
                     )
                   :
@@ -272,11 +288,13 @@ class App extends Component{
           </Modal>
           {<BrowserRouter>
             <Switch>
-              <Route path="/" component={Home} exact/>
+            <Route path="/" component={Home} exact/>
               <Route path="/d" component={DocViewer} />
-              <Route path="/manage" component={ManagePage}/>
-              <Route path="/view" component={AccountView}/>
               <Route path="/documents/:id" component={singleDoc}/>
+              <Route path="/notfound" component={NotFound} />
+              <Route render={() => <Redirect to={{pathname: "/notfound"}} />} />
+              {this.state.login ?(<Route path="/manage" component={ManagePage}/>):(null)}
+              {this.state.login ?(<Route path="/view" component={AccountView}/>):(null)}
             </Switch>
           </BrowserRouter>}
         </header>
