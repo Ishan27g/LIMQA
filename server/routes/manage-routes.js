@@ -20,4 +20,6 @@ router.get('/documents/:uid', ensureAuthenticated, manageController.getFiles);
 router.get('/OneDocument/:documentId', ensureAuthenticated, manageController.getOneFile);
 
 router.delete('/documents/:uid/:documentId', ensureAuthenticated, manageController.deleteFile);
+
+router.put('/editDocument/:documentId', ensureAuthenticated, manageController.editFile);
 module.exports = router;
