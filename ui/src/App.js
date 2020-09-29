@@ -280,7 +280,7 @@ class App extends Component{
             </Switch>
           </BrowserRouter>}
         </header>
-
+        <div id="main-wrapper">
         <footer>
           <Button size="lg" block variant="outline-dark" onClick={this.handleQRShow} style = {{float: "right", verticalAlign:"bottom"}}>
                 QR code
@@ -296,6 +296,7 @@ class App extends Component{
             </Modal.Footer>
           </Modal>
         </footer>
+        </div>
       </div>
     );
   }

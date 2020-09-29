@@ -26,3 +26,12 @@ footer > .modal-body{
   display: flex;
   justify-content: center;
 }
+
+#main-wrapper {
+  position: relative;
+}
+
+footer {
+  position: absolute;
+  width: 100%;
+}
