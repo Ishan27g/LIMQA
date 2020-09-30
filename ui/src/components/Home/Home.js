@@ -31,7 +31,6 @@ class Home extends Component {
         this.state = {
             bioinfo: '',
             profilePage: '',
-            documents: '',
             cover:[sampleImage1, sampleImage2, sampleImage3],
             docShow: false,
             documents: [],
@@ -46,10 +45,10 @@ class Home extends Component {
                 bioinfo: res.data.users[0].bioinfo,
                 documents: res.data.users[0].documents
             })
-            if (!res.data.users[0].bioinfo || this.state.bioinfo.length < 1){
+            if (!res.data.users[0].bioinfo || this.state.bioinfo === ""){
                 this.setState({ bioinfo: 'this person have no bioinfo yet' });
             }
-            if(res.data.users[0].documents.length>0){
+            if(res.data.users[0].documents[0] !== ""){
                 const getDoc = http+'/api/OneDocument/'+res.data.users[0].documents[0];
                 axios.get(getDoc)
                 .then(res=>{
