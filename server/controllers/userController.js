@@ -2,7 +2,7 @@
 const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
 const {validationResult } = require("express-validator");
-const  User = require('../models/user');
+const User = require('../models/user');
 const Social = require('../models/social');
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
@@ -69,10 +69,6 @@ const signup = async (req, res, next) => {
     const error = new HttpError("Could not create user, please try again.", 500);
     return next(error);
   }
-  
-  /*const cretedSocial = new Social({
-    name = 
-  })*/
 
   const createdUser = new User({
     name,
@@ -91,7 +87,8 @@ const signup = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     const error = new HttpError(
-      'creating user failed, please try again.'
+      'creating user failed, please try again.',
+      500
     );
     return next(error);
   }

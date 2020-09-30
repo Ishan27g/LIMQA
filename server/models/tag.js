@@ -1,7 +1,5 @@
 // user Schema
 const mongoose = require('mongoose');
-const HttpError = require('./http-error');
-const { nextTick } = require('process');
 const Schema = mongoose.Schema;
 
 const tagSchema = new Schema({
