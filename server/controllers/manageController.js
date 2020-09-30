@@ -11,8 +11,7 @@ const File = require('../models/file');
 const Tag = require('../models/tag');
 
 const { db, updateOne } = require('../models/user');
-const { fields } = require('../middlerware/file-upload');
-const file = require('../models/file');
+
 
 
 const getBioinfo = async (req, res, next) => {
@@ -63,7 +62,6 @@ const updateBioinfo  = async (req, res, next) => {
 
 const getAcc = async (req, res, next) => {
   const userId = req.params.uid;
-
 
   let user;
   try {
@@ -423,7 +421,7 @@ const getOneFile = async (req, res, next) => {
 
 }
 
-
+// edit document properties 
 const editFile = async (req, res, next) => {
   const { name, highlighted, description, achivement, institution, dateAchieved} = req.body;
   //const updateFile= {name, highlighted, description, achivement, institution, dateAchieved};
@@ -439,6 +437,11 @@ const editFile = async (req, res, next) => {
       );
     return next(error);
   }
+
+  if(!document) {
+    return res.send("document doesn't exist in database");
+  }
+
   document.name = name;
   document.highlighted = highlighted;
   document.description = description;
@@ -446,9 +449,7 @@ const editFile = async (req, res, next) => {
   document.institution = institution;
   document.dateAchieved = dateAchieved;
 
-  try {
-
-      
+  try {   
       await document.save();
     } catch (err) {        
       console.log(err);
@@ -463,11 +464,8 @@ const editFile = async (req, res, next) => {
 
 }
 
-
-
-
  
-
+// delete file and ObjectId from relevent object
 const deleteFile = async (req, res, next) => {
 
   try {
@@ -480,13 +478,17 @@ const deleteFile = async (req, res, next) => {
         { "documents": req.params.documentId },
         { "$pull": { "documents": req.params.documentId } }
     )
-
-    res.json(document)
 } catch(err) {
     console.log(err);
+    const error = new HttpError(
+      "Cannot find file, please try again later.",
+      500
+    );
+    return next(error);
 }
 
-  
+res.json({success: true});
+ 
 }
 
 

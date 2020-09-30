@@ -14,7 +14,7 @@ router.post('/signup', fileUpload.array('files',10), [
     check("name").not().isEmpty(),
     check("email").normalizeEmail().isEmail(),
     check("password").not().isEmpty(), 
-    check("password").isLength({ min: 6 }), ] , userController.signup);
+    check("password").matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/, "i") ] , userController.signup);
 
 router.post('/login', check('email').normalizeEmail(),userController.login);
 
@@ -30,8 +30,5 @@ router.get('/check', userController.check);
 router.post('/coverImages', fileUpload.array('files',5), photoController.addCoverImages);
 router.get('/coverImages', photoController.getCoverImages);
 router.get('/coverImages/:id', photoController.getCoverImagesById);
-
-router.post('/bgImage', fileUpload.single('file'), photoController.addBgImage);
-router.get('/bgImage', photoController.getBgImage);
 
 module.exports = router;
