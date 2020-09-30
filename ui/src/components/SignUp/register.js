@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import './register.css'
+import './register.css';
+
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
@@ -8,6 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import Collapse from 'react-bootstrap/Collapse';
+
 import {pathForRequest} from '../http.js';
 let http = pathForRequest();
 
@@ -19,53 +21,62 @@ class Register extends Component{
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
-    this.onChangeRePassword = this. onChangeRePassword.bind(this);
+    this.onChangeRePassword = this.onChangeRePassword.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
 
     this.state ={
+        /*User Values to Post*/
         username: '',
         email: '',
         password: '',
         repassword: '',
+
+        /*Alerts to Prevent Posting*/
         alertPassword: false,
         alertRePassword: false,
-        alertUsername: "",
-        alertEmail: "",
-        checkregister: false,
+        alertUsername: false,
+        alertEmail: false,
 
+        /*Signup steps to check progress in SignUp*/
+        step: 1
     }
   }
   onChangeUsername(e){
     this.setState({
       username: e.target.value,
+      alertUsername: false
     });
   }
   onChangeEmail(e){
     this.setState({
       email: e.target.value,
+      alertEmail: false
     });
   }
 
   onChangePassword(e){
     this.setState({
       password: e.target.value,
-
+      alertPassword: false
     });
   }
 
   onChangeRePassword(e){
     this.setState({
       repassword: e.target.value,
+      alertRePassword: false
     });
   }
 
   /*Change true Condition to pass Ahead After Check 1*/
   handleRegister () {
-    const check_pass_match = (this.state.repassword == this.state.password);
-    const check_empty_username = (this.state.Username == "");
-    const check_email = (this.state.Email)
-    if (check_pass_match){
-        this.setState({alertPassword: false});
+    const check_pass_match = (this.state.repassword === this.state.password);
+    const check_empty_username = !(this.state.username === "");
+    const check_password = true;
+    const check_email = true;
+    if (check_pass_match && check_empty_username && check_password && check_email){
+
+
         const signurl = http+'/api/users/signup';
         const user = {
           username: this.state.username,
@@ -81,8 +92,15 @@ class Register extends Component{
         .catch(function(error) {
             console.log(error);
         })
+        this.setState({stepRegister: true});
     } else {
-      this.setState({alertRePassword: true});
+      this.setState(
+        {
+          alertRePassword: (!check_pass_match),
+          alertPassword: (!check_password),
+          alertEmail: (!check_email),
+          alertUsername: (!check_empty_username),
+        });
     }
   }
   render(){
@@ -99,12 +117,12 @@ class Register extends Component{
               <Form.Control placeholder="Enter Username" onChange={this.onChangeUsername} />
               </Col>
             </Form.Group>
-            {this.state.alertRePassword?
+            {this.state.alertUsername?
             (<Collapse>
               <Row>
                 <Col sm = {{span: 8, offset: 3}}>
                     <Alert variant={'danger'}>
-                      {this.state.alertUsername}
+                      Invalid Username!
                     </Alert>
                 </Col>
               </Row>
@@ -120,12 +138,12 @@ class Register extends Component{
               <Form.Control type="email" placeholder="Enter email" onChange={this.onChangeEmail} />
               </Col>
             </Form.Group>
-            {this.state.alertRePassword?
+            {this.state.alertEmail?
             (<Collapse>
               <Row>
                 <Col sm = {{span: 8, offset: 3}}>
                     <Alert variant={'danger'}>
-                      {this.state.alertEmail}
+                      Invalid Email!
                     </Alert>
                 </Col>
               </Row>
@@ -141,7 +159,7 @@ class Register extends Component{
               <Form.Control type="password" placeholder="Requirements length 6 with a capital letter & number" onChange={this.onChangePassword}/>
               </Col>
             </Form.Group>
-            {this.state.alertRePassword?
+            {this.state.alertPassword?
             (<Collapse>
               <Row>
                 <Col sm = {{span: 8, offset: 3}}>

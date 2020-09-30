@@ -22,6 +22,7 @@ import AccountView from './components/AccountView/accountView.js';
 import DocViewer from './components/documentViewer/docViewer.js';
 import singleDoc from './components/documentViewer/singleDoc.js';
 import Register from './components/SignUp/register.js';
+import SignUp from './components/SignUp/signUp.js';
 
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
@@ -275,7 +276,8 @@ class App extends Component{
             <Switch>
               <Route path="/" component={Home} exact/>
               <Route path="/d" component={DocViewer} />
-              <Route path="/signup" component={Register}/>
+              <Route path="/signup" component={SignUp}/>
+              <Route path="/register" component={SignUp}/>
               <Route path="/manage" component={ManagePage}/>
               <Route path="/view" component={AccountView}/>
               <Route path="/documents/:id" component={singleDoc}/>
