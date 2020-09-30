@@ -28,7 +28,7 @@ router.put('/editDocument/:documentId', ensureAuthenticated, manageController.ed
 // social links related routes below.
 router.get('/social/:uid', ensureAuthenticated, manageController.getSocialLinks);
 
-router.get('/social/:socialId', ensureAuthenticated, manageController.getOneSocialLink);
+router.get('/social/onelink/:socialId', ensureAuthenticated, manageController.getOneSocialLink);
 
 router.post('/social/:uid', ensureAuthenticated, manageController.createSocialLink);
 

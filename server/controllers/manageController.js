@@ -11,7 +11,6 @@ const File = require('../models/file');
 const Tag = require('../models/tag');
 
 const { db, updateOne } = require('../models/user');
-const social = require('../models/social');
 
 
 
@@ -468,7 +467,7 @@ const editFile = async (req, res, next) => {
 const deleteFile = async (req, res, next) => {
 
   try {
-    const document = await File.findOneAndRemove(
+    await File.findOneAndRemove(
         { _id:  req.params.documentId}, 
         { new: true }
     )
@@ -543,7 +542,7 @@ const createSocialLink = async (req, res, next) => {
   const { socialName, url } = req.body; 
   let existingUrl;
   try {
-    existingUrl = await Social.find({url:url});
+    existingUrl = await Social.findOne({url:url});
   }catch (err) {
     console.log(err);
     const error = new HttpError(
@@ -609,7 +608,7 @@ const createSocialLink = async (req, res, next) => {
 };
 
 const updateSocialLink = async (req, res, next) => {
-  const { name, url } = req.body;
+  const { socialName, url } = req.body;
 
   let social;
   try {
@@ -628,7 +627,7 @@ const updateSocialLink = async (req, res, next) => {
     return res.send("Social link doesn't exist in database");
   }
 
-  social.name = name;
+  social.name = socialName;
   social.url = url;
 
   try {   
@@ -648,7 +647,7 @@ const updateSocialLink = async (req, res, next) => {
 const deleteSocialLink = async (req, res, next) => {
 
   try {
-    const social = await Social.findOneAndRemove(
+    await Social.findOneAndRemove(
         { _id:  req.params.socialId}, 
         { new: true }
     )
