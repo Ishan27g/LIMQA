@@ -53,6 +53,7 @@ class DocMode extends Component {
       addTags: false,
       uploadMode: false,
       docViewer: false,
+
       /*Document Properties*/
       docname: "Untitled",
       docdate: "Document Date",

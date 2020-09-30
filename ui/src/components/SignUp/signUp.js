@@ -1,29 +1,32 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import Register from './register.js';
 
+import Register from './register.js';
+import AccDemo from './accSettingsDemo.js';
 
 class SignUp extends Component{
   constructor(props){
     super(props);
 
     this.state = {
-
-      step: 1
-
+      step: 2
     }
   }
-  render() {
-    const signup = () => {
-          switch(this.step) {
 
-            case "one":   return {Register};
-            default:      return <h1>No project match</h1>
-          }
-        }
+  renderSignup(step) {
+    switch(step) {
+
+      case 1: return <Register/>;
+      case 2: return <AccDemo/>;
+      default: return <h1>No project match</h1>;
+    }
+  }
+
+  render() {
+
     return(
       <div>
-      (signup())
+        {this.renderSignup(this.state.step)}
       </div>
   )
   }

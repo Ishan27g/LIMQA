@@ -22,8 +22,8 @@ import AccountView from './components/AccountView/accountView.js';
 import DocViewer from './components/documentViewer/docViewer.js';
 import singleDoc from './components/documentViewer/singleDoc.js';
 import NotFound from './components/NotFound.js';
-import Register from './components/SignUp/register.js';
 import SignUp from './components/SignUp/signUp.js';
+import Register from './components/SignUp/signUp.js';
 
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
@@ -294,9 +294,9 @@ class App extends Component{
               <Route path="/d" component={DocViewer} />
               <Route path="/documents/:id" component={singleDoc}/>
               {this.state.login? (<Route path="/manage" component={ManagePage}/>):(<Route path="/manage" component={NotFound}/>)}
-            
+
               <Route path="/signup" component={SignUp}/>
-              <Route path="/register" component={SignUp}/>
+              <Route path="/register" component={Register}/>
               <Route path="/view" component={AccountView}/>
               <Route path="/notfound" component={NotFound} />
               <Route render={() => <Redirect to={{pathname: "/notfound"}} />} />
@@ -305,9 +305,11 @@ class App extends Component{
         </header>
         <div id="main-wrapper">
         <footer>
-          <Button size="lg" block variant="outline-dark" onClick={this.handleQRShow} style = {{float: "right", verticalAlign:"bottom"}}>
-                QR code
-          </Button>
+          <Navbar bg = "light" variant = "light" expand = "lg" sticky ="bottom">
+            <Button size="lg" block variant="outline-dark" onClick={this.handleQRShow} style = {{float: "right", verticalAlign:"bottom"}}>
+                  QR code
+            </Button>
+          </Navbar>
           <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
             <Modal.Body className ="qr-code">
               <Image src={QRcode} rounded  />
