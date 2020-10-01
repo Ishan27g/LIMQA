@@ -1,0 +1,92 @@
+
+.docedit {
+  max-width: 75%;
+  margin-top: 2vmax;
+}
+
+.docedit-header > .modal-title {
+  font-size: 2em;
+}
+
+.doc-highlight{
+  font-size: 1.3em;
+  display: flex;
+  justify-content:  flex-start;
+}
+.docedit-header > h6 {
+  text-transform: uppercase;
+  font-size: 0.85em;
+}
+
+.docedit-header > h6 > span {
+  text-transform: none;
+  font-size: 1.35em;
+}
+
+.docedit-header > .modal-title > h4{
+  font-size: 1.5em;
+  padding: 5px;
+}
+
+.docview-image{
+  padding: 2vmax;
+}
+
+.docedit-properties, .doc-achievement{
+  display: block;
+  align-items: top;
+  justify-content: flex-start;
+}
+.docedit-properties > .row {
+  margin: 1vmax;
+
+}
+.docedit-properties > .doc-tags ,
+.docedit-properties > .doc-achievement,
+.docedit-properties > .doc-description{
+  margin-left: 2vmax;
+  margin-top: 1vmax;
+  background-color: rgba(200,200,200,0.2);
+  border-radius: 10px;
+  padding: 1vmax;
+}
+.select-tags{
+  margin-top: 1vmax;
+  display:flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.select-tags > .input-group-append{
+  margin-left: 1vmax;
+}
+.doc-tags > h4 > .btn{
+  margin-left: 0.8vmax;
+  margin-right: 0.8vmax;
+
+}
+.docedit-properties > .doc-tags {
+padding-bottom: 1vmax; /* orignal padding - bottom margin of badge*/
+}
+
+.doc-description{
+  height: 10vmax;
+}
+
+.docedit-footer{
+  display: flex;
+  justify-content: space-between;
+}
+
+.docedit,
+  .docedit-header,
+    .doc-highlighted,
+  .docedit-body,
+    .docview-image,
+      .docedit-properties,
+      .docedit-properties > .row ,
+      .docedit-properties > .row > .col,
+  .docedit-footer
+
+{
+
+}

@@ -57,9 +57,9 @@
 
 .edit-basic-info{
   margin-right: 1vmax;
-  margin-top: 0vmax;
+  margin-top: -0.5vmax;
   margin-bottom: 0vmax;
-  margin-left: -7vmin;
+  margin-left: -6vmin;
   width: 70%;
 }
 .edit-image > .container{
@@ -99,7 +99,13 @@
 .edit-image-label > label:hover{
   text-decoration: underline;
 }
-.edit-social-header > h2, .edit-contact-header > h2{
+.edit-social-header > .col{
+  display: flex;
+  align-items: flex-end;
+  border: 1px solid red;
+}
+
+.edit-social-header > .col > h2, .edit-contact-header > h2{
   font-family: serif;
   font-size: 1.75em;
   color: black;
