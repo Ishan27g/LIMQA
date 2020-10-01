@@ -1,28 +1,25 @@
-// set up user routes for use signup, login, and logout.
-// signup api: /api/users/signup
-// login api: /api/users/login
 const express = require('express');
 const userController = require("../controllers/userController");
+const photoController = require("../controllers/photosController");
 const router = express.Router();
-// middle ware for input value check.
 const { check } = require('express-validator');
-// middle ware for documents uploads.
 const fileUpload = require("../middlerware/file-upload");
+
 
 router.get('/', userController.getUsers);
 
-/*
-    put the fileupload middle ware here to receive the documents sent with request.
-    check middle ware is used to validate if the user inputs meets our requirements.
-*/
-router.post('/signup', fileUpload.array('documents',10), [
+router.get('/check', userController.check);
+
+router.post('/signup', fileUpload.array('files',10), [
     check("name").not().isEmpty(),
     check("email").normalizeEmail().isEmail(),
     check("password").not().isEmpty(), 
     check("password").matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/, "i") ] , userController.signup);
 
-router.post('/login', check('email').normalizeEmail(), userController.login);
+router.post('/login', check('email').normalizeEmail(),userController.login);
 
+router.post('/profilePhoto', fileUpload.single('file'), photoController.addProfilePhoto);
+router.get('/profilePhoto', photoController.getProfilePhoto);
 router.get('/logout', (req, res) => {
     req.logout();
     res.send({ success : true, message : 'logged out' }); 
@@ -30,5 +27,11 @@ router.get('/logout', (req, res) => {
 // this route send the login status back to front end.
 router.get('/check', userController.check);
 
+router.post('/coverImages', fileUpload.array('files',5), photoController.addCoverImages);
+router.get('/coverImages', photoController.getCoverImages);
+router.get('/coverImages/:id', photoController.getCoverImagesById);
+
+router.post('/bgImage', fileUpload.single('file'), photoController.addBgImage);
+router.get('/bgImage', photoController.getBgImage);
 
 module.exports = router;

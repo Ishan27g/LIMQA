@@ -18,11 +18,15 @@ import FormControl from 'react-bootstrap/FormControl';
 
 import profile from '../../Image/profile.png';
 
+import {pathForRequest} from '../http.js';
+let http = pathForRequest();
+
 class AccountView extends Component {
   constructor(props){
     super(props);
     this.state = {
       editVersion: false,
+      profileImage: '',
       email: '',
       name: '',
       linkedin: '',
@@ -30,8 +34,17 @@ class AccountView extends Component {
       facebook: '',
       officeAddress: '',
       SupplymentaryEmail: '',
-      profileImage: '',
-      mobile: Number
+      mobile: '',
+      userid: '',
+      media: [],
+      updateEmail: '',
+      updateName: '',
+      UpdateLinkedin: '',
+      UpdateInstagram: '',
+      UpdateFacebook: '',
+      UpdateOfficeAddress: '',
+      UpdataSupplymentaryEmail: '',
+      updataMobile: ''
     }
     this.handleEditingOpen = this.handleEditingOpen.bind(this);
     this.updateChanges = this.updateChanges.bind(this);
@@ -46,7 +59,59 @@ class AccountView extends Component {
   }
 
   componentDidMount(){
-    // wait for back end for routes
+    const check = http+'/api/users/check';
+    axios.get(check, { withCredentials: true })
+    .then(response => {
+      console.log(response.data.userid)
+      this.setState({
+        userid: response.data.userid
+      })
+      const accurl = http+'/api/accSetting/'+ this.state.userid;
+      axios.get(accurl, { withCredentials: true })
+      .then(res => {
+        this.setState({
+          email: res.data.user.email,
+          updateEmail: res.data.user.email,
+          SupplymentaryEmail: res.data.user.semail,
+          UpdataSupplymentaryEmail: res.data.user.semail,
+          mobile: res.data.user.mobile,
+          updateMobile: res.data.user.mobile,
+          officeAddress: res.data.user.officeAddress,
+          UpdateOfficeAddress: res.data.user.officeAddress,
+          name: res.data.user.name,
+          updateName: res.data.user.name,
+          media: res.data.user.social
+        })
+        var i
+        for(i=0; i<this.state.media.length; i++){
+          if (this.state.media[i].name === 'Facebook'){
+            this.setState({
+              facebook: this.state.media[i].url,
+              UpdateFacebook: this.state.media[i].url
+            })
+          }
+          if (this.state.media[i].name === 'Instagram'){
+            this.setState({
+              instagram: this.state.media[i].url,
+              UpdateInstagram: this.state.media[i].url
+            })
+          }
+          if (this.state.media[i].name === 'Linkedin'){
+            this.setState({
+              linkedin: this.state.media[i].url,
+              UpdateLinkedin: this.state.media[i].url
+            })
+          }
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
+
   };
 
   handleEditingOpen = () => {
@@ -54,50 +119,159 @@ class AccountView extends Component {
   }
 
   updateChanges = () => {
+    console.log(this.state.linkedin);
+    console.log(this.state.UpdateLinkedin);
+    var form = new FormData();
+    form.append('Email', this.state.updateEmail);
+    form.append('Mobile', this.state.updateMobile);
+    form.append('Semail', this.state.UpdataSupplymentaryEmail);
+    form.append('Address', this.state.UpdateOfficeAddress);
+    form.append('LinkedinName', 'Linkedin');
+    form.append('Linkedinurl', this.state.UpdateLinkedin);
+    form.append('FacebookName', 'Facebook');
+    form.append('Facebookurl', this.state.UpdateFacebook);
+    form.append('InstagramName', 'Instagram');
+    form.append('Instagramurl', this.state.UpdateInstagram);
+    form.append('Username', this.state.updateName);
+    const updateUrl = http+'/api/accSetting/'+ this.state.userid;
+    axios.put(updateUrl, form, { withCredentials: true })
+    .then(res => {
+      console.log("update successfully", res.data);
+      var tempemail= this.state.updateEmail;
+      var tempSupplymentaryEmail= this.state.UpdataSupplymentaryEmail;
+      var tempmobile= this.state.updateMobile;
+      var tempofficeAddress= this.state.UpdateOfficeAddress;
+      var tempname= this.state.updateName;
+      var templinkedin = this.state.UpdateLinkedin;
+      console.log(templinkedin);
+      var tempinstagram =this.state.UpdateInstagram;
+      var tempfacebook = this.state.UpdateFacebook;
 
+      this.setState({
+        email: tempemail,
+        SupplymentaryEmail: tempSupplymentaryEmail,
+        mobile: tempmobile,
+        officeAddress: tempofficeAddress,
+        name: tempname,
+        linkedin: templinkedin,
+        instagram:tempinstagram,
+        facebook: tempfacebook,
+      }, ()=>{
+        console.log(this.state.linkedin)
+      })
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
     this.setState({ editVersion: false });
   }
 
   onChangeEmail(e){
-    this.setState({
-      email: e.target.value
-    });
+    if (e.target.value.length > 0){
+      this.setState({
+        updateEmail: e.target.value
+      });
+    }else{
+      var email = this.state.email;
+      this.setState({
+        updateEmail: email
+      });
+    }
   }
 
   onChangeName(e){
-    this.setState({
-      name: e.target.value
-    });
+    if (e.target.value.length > 0){
+      this.setState({
+        updateName: e.target.value
+      });
+    }else{
+      var name = this.state.name;
+      this.setState({
+        updateName: name
+      });
+    }
   }
 
   onChangeInstagram(e){
-    this.setState({
-      instagram: e.target.value
-    });
+    if (e.target.value.length > 0){
+      this.setState({
+        UpdateInstagram: e.target.value
+      });
+    }else{
+      var ins = this.state.instagram;
+      this.setState({
+        UpdateInstagram: ins
+      });
+    }
   }
 
   onChangeLinkedin(e){
-    this.setState({
-      linkedin: e.target.value
-    });
+    console.log(e.target.value);
+    if (e.target.value.length > 0){
+      console.log("up to line 208");
+      this.setState({
+        UpdateLinkedin: e.target.value
+      });
+    }else{
+      console.log("up to line 213");
+      var lin = this.state.linkedin;
+      this.setState({
+        UpdateLinkedin: lin
+      });
+    }
   }
 
   onChangeFacebook(e){
-    this.setState({
-      facebook: e.target.value
-    });
+    if (e.target.value.length > 0){
+      this.setState({
+        UpdateFacebook: e.target.value
+      });
+    }else{
+      var face = this.state.facebook;
+      this.setState({
+        UpdateFacebook: face
+      });
+    }
   }
 
   onChangeOfficeAddress(e){
-    this.setState({
-      officeAddress: e.target.value
-    });
+    if (e.target.value.length > 0){
+      this.setState({
+        UpdateOfficeAddress: e.target.value
+      });
+    }else{
+      var add = this.state.officeAddress;
+      this.setState({
+        UpdateOfficeAddress: add
+      });
+    }
   }
 
   onChangeSupplymentaryEmail(e){
-    this.setState({
-      SupplymentaryEmail: e.target.value
-    });
+    if (e.target.value.length > 0){
+      this.setState({
+        UpdataSupplymentaryEmail: e.target.value
+      });
+    }else{
+      var smail = this.state.SupplymentaryEmail;
+      this.setState({
+        UpdataSupplymentaryEmail: smail
+      });
+    }
+  }
+
+  onChangeMobile(e){
+    console.log(e.target.value);
+    if (e.target.value.length > 0){
+      this.setState({
+        updateMobile: e.target.value
+      });
+    }else{
+      var phone = this.state.mobile;
+      this.setState({
+        updateMobile: phone
+      });
+    }
   }
 
   onChangeProfileImage(e){
@@ -106,26 +280,19 @@ class AccountView extends Component {
     });
   }
 
-  onChangeMobile(e){
-    this.setState({
-      mobile: e.target.value
-    });
-  }
-
-
     render(){
         return(
             <body>
               {this.state.editVersion ? (
                 <div className = "edit-set">
                   <Container>
-  
+
                     <Row className = "edit-header">
                       <h1>ACCOUNT SETTINGS</h1>
                     </Row>
-  
+
                     <Row className = "edit-info justify-content-md-center">
-  
+
                       <Col className = "edit-image">
                         <Container>
                           <Row className = "edit-image-display">
@@ -144,9 +311,9 @@ class AccountView extends Component {
                         <Row md="auto" className = "edit-username">
                           <InputGroup size ="lg">
                             <FormControl
-                              defaultValue={"Abhilash"}
-                              placeHolder = "Username"
-                              aria-label="Username"
+                              placeholder = "Username"
+                              defaultValue = {this.state.name}
+                              aria-label= "username"
                               aria-describedby="basic-addon1"
                               onChange={this.onChangeName}/>
                             <InputGroup.Append>
@@ -157,8 +324,8 @@ class AccountView extends Component {
                         <Row md="auto" className = "edit-email">
                           <InputGroup size ="lg">
                             <FormControl
-                              defaultValue={"email@email.com"}
-                              placeHolder = "xyz@abc.com"
+                              placeholder = "email"
+                              defaultValue = {this.state.email}
                               aria-label="email"
                               aria-describedby="basic-addon1"
                               onChange={this.onChangeEmail}/>
@@ -168,7 +335,7 @@ class AccountView extends Component {
                           </InputGroup>
                         </Row>
                       </Col>
-  
+
                       <Col className = "edit-set-save">
                         <Row className = "edit-edit-button">
                           <Button variant="outline-dark" onClick={this.updateChanges}>Save Changes</Button>
@@ -177,7 +344,7 @@ class AccountView extends Component {
                           <label>Update Password</label>
                         </Row>
                       </Col>
-  
+
                     </Row>
                       <Row className = "edit-social-header">
                         <h2> Social Media Profiles</h2>
@@ -188,8 +355,8 @@ class AccountView extends Component {
                             <ListGroup.Item>
                                 <h4>Linkedin</h4>
                                 <FormControl
-                                  defaultValue={""}
-                                  placeHolder = "Linkedin URL"
+                                  placeholder = "URL"
+                                  defaultValue = {this.state.linkedin}
                                   aria-label= "linkedin-url"
                                   aria-describedby="basic-addon1"
                                   onChange={this.onChangeLinkedin}/>
@@ -197,8 +364,8 @@ class AccountView extends Component {
                             <ListGroup.Item>
                                 <h4>Instagram</h4>
                                   <FormControl
-                                    defaultValue={""}
-                                    placeHolder = "Instagram URL"
+                                    placeholder = "URL"
+                                    defaultValue = {this.state.instagram}
                                     aria-label= "instagram-url"
                                     aria-describedby="basic-addon1"
                                     onChange={this.onChangeInstagram}/>
@@ -206,8 +373,8 @@ class AccountView extends Component {
                             <ListGroup.Item>
                                 <h4>Facebook</h4>
                                   <FormControl
-                                    defaultValue={""}
-                                    placeHolder = "Facebook URL"
+                                    placeholder = "URL"
+                                    defaultValue = {this.state.facebook}
                                     aria-label= "facebook-url"
                                     aria-describedby="basic-addon1"
                                     onChange={this.onChangeFacebook}/>
@@ -222,38 +389,27 @@ class AccountView extends Component {
                           <ListGroup.Item>
                             <h4>Office Address</h4>
                               <FormControl
-                                defaultValue={""}
-                                placeHolder = "Adress"
+                                placeholder = "Unit, Street, Suburb, City"
+                                defaultValue = {this.state.officeAddress}
                                 aria-label= "off-address"
                                 aria-describedby="basic-addon1"
                                 onChange={this.onChangeOfficeAddress}/>
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <h4>Mobile</h4>
-                            <InputGroup>
-                              <InputGroup.Prepend>
-                                <FormControl as="select" id ="country-code">
-                                  <option>+1</option>
-                                  <option>+2</option>
-                                  <option>+3</option>
-                                  <option>+4</option>
-                                  <option>+5</option>
-                                </FormControl>
-                              </InputGroup.Prepend>
                               <FormControl
-                                defaultValue={""}
-                                placeHolder = "mobile number"
+                                placeholder = "+61 (420) 111111"
+                                defaultValue = {this.state.mobile}
                                 aria-label= "linkedin-url"
                                 aria-describedby="basic-addon1"
                                 onChange={this.onChangeMobile}/>
-                            </InputGroup>
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <h4>Supplymentary E-mail</h4>
                               <InputGroup>
                                 <FormControl
-                                  defaultValue={""}
-                                  placeHolder = "xyz@abc.com"
+                                  placeholder = "email"
+                                  defaultValue = {this.state.SupplymentaryEmail}
                                   aria-label="email"
                                   aria-describedby="basic-addon1"
                                   onChange={this.onChangeSupplymentaryEmail}/>
@@ -283,10 +439,10 @@ class AccountView extends Component {
 
                     <Col className = "acc-basic-info">
                       <Row md="auto" className = "acc-username">
-                        <label>Username</label>
+                        <label>{this.state.name}</label>
                       </Row>
                       <Row md="auto" className = "acc-email">
-                        <label>email@email.com </label>
+                      <label>{this.state.email}</label>
                       </Row>
                     </Col>
 
@@ -308,15 +464,15 @@ class AccountView extends Component {
                         <ListGroup  className = "acc-social-list">
                           <ListGroup.Item>
                               <h4>Linkedin</h4>
-                              <p>&nbsp;&nbsp;URL: <span><label>(ADD LINK)</label></span></p>
+                              <p>&nbsp;&nbsp;URL: <span><label>{this.state.linkedin}</label></span></p>
                           </ListGroup.Item>
                           <ListGroup.Item>
                               <h4>Instagram</h4>
-                              <p>&nbsp;&nbsp;URL: <span><label>(ADD LINK)</label></span></p>
+                              <p>&nbsp;&nbsp;URL: <span><label>{this.state.instagram}</label></span></p>
                           </ListGroup.Item>
                           <ListGroup.Item>
                               <h4>Facebook</h4>
-                              <p>&nbsp;&nbsp;URL: <span><label>(ADD LINK)</label></span></p>
+                              <p>&nbsp;&nbsp;URL: <span><label>{this.state.facebook}</label></span></p>
                           </ListGroup.Item>
                         </ListGroup>
                     </Row>
@@ -327,15 +483,15 @@ class AccountView extends Component {
                       <ListGroup className = "acc-contact-list">
                         <ListGroup.Item>
                           <h4>Office Address</h4>
-                          <p>&nbsp;&nbsp;<span><label>(ADD ADDRESS)</label></span></p>
+                          <p>&nbsp;&nbsp;<span><label>{this.state.officeAddress}</label></span></p>
                       </ListGroup.Item>
                       <ListGroup.Item>
-                          <h4>MObile</h4>
-                          <p>&nbsp;&nbsp;<span><label>(ADD NO. with country code)</label></span></p>
+                          <h4>Mobile</h4>
+                          <p>&nbsp;&nbsp;<span><label>{this.state.mobile}</label></span></p>
                       </ListGroup.Item>
                       <ListGroup.Item>
                           <h4>Supplymentary E-mail</h4>
-                          <p>&nbsp;&nbsp;<span><label>(ADD E-MAIL)</label></span></p>
+                            <p>&nbsp;&nbsp;<span><label>{this.state.SupplymentaryEmail}</label></span></p>
                       </ListGroup.Item>
                       </ListGroup>
                   </Row>

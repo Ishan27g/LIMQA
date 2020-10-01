@@ -1,33 +1,52 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../App.css";
 import './Manage.css';
 
-import Container from 'react-bootstrap/Container';
+import axios from "axios";
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import Carousel from "react-bootstrap/Carousel";
-import Image from 'react-bootstrap/Image'
 import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DocCard from '../documentsCard.js';
+import Image from 'react-bootstrap/Image'
+import Row from 'react-bootstrap/Row';
 
+import CoverImage from '../CoverImage/coverImage.js';
+import Docview from '../documentViewer/doc.js';
+
+import docImage from '../../Image/documents.png';
+import profile from '../../Image/profile.png';
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
-import profile from '../../Image/profile.png';
 import uploadIcon from '../../Image/uploadIcon.png';
 import uploadDocuments from '../../Image/uploadDocuments.svg';
 
+import {pathForRequest} from '../http.js';
+let http = pathForRequest();
+
 class ManagePage extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
+        this.docView = React.createRef();
         this.state = {
-            editBio : false,
-            filter : "Title",
-            bioinfo: '',
+          editBio : false,
+          filter : "Title",
+          bio: '',
+          updateBio: '',
+          userid:'',
+          cover: [sampleImage1, sampleImage2, sampleImage3],
+          updateProfile: null,
+          updateCover: null,
+          updateDoc: null,
+          profileImg: http+'/api/users/profilePhoto',
+          docPath: '',
+          doctype: '',
+          documents: [],
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -35,18 +54,153 @@ class ManagePage extends Component {
         this.handleFilterOnTime = this.handleFilterOnTime.bind(this);
         this.handleFilterOnElse = this.handleFilterOnElse.bind(this);
         this.onChangBioInfo = this.onChangBioInfo.bind(this);
+        this.onChangeProfileImage = this.onChangeProfileImage.bind(this);
+        this.onChangeCoverImage = this.onChangeCoverImage.bind(this);
+        this.uploadProfileImage = this.uploadProfileImage.bind(this);
+        this.uploadCoverImage = this.uploadCoverImage.bind(this);
+        this.onChangeDocUpload = this.onChangeDocUpload.bind(this);
+        this.openDocView = this.openDocView.bind(this);
     }
 
     componentDidMount(){
-      // wait for back end for routes
-    };
+      const idurl = http+'/api/users/check';
+      axios.get(idurl, { withCredentials: true })
+      .then(response => {
+        this.setState({
+          userid: response.data.userid
+        }, ()=>{
+          const docUrl = http+'/api/documents/' + this.state.userid;
+          axios.get(docUrl, { withCredentials: true })
+          .then(res=>{
+            this.setState({
+              documents: res.data.documents
+            })
+          })
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
     
+      const biourl = http+'/api/bioinfo';
+      axios.get(biourl, { withCredentials: true })
+      .then(res =>{
+        this.setState({
+          bio: res.data.bioinfo,
+          updateBio: res.data.bioinfo
+        });
+        if (!res.data.bioinfo || this.state.bio.length < 1){
+          this.setState({
+            bio: 'this person have no bioinfo yet',
+            updateBio: 'this person have no bioinfo yet',
+          })
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
+
+      const imgUrl = http+'/api/users/coverImages';
+      axios.get(imgUrl, { withCredentials: true })
+      .then(res =>{
+        
+        if (res.data.coverImages.coverImages[0] !== ""){
+          var i;
+          const tempCover = [];
+          for (i=0; i<res.data.coverImages.coverImages.length; i++){
+          tempCover.push(http+'/api/users/coverImages/'+i)
+          }
+          this.setState({
+            cover: tempCover
+          });
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    };
+
+    onChangeProfileImage(e){
+      console.log(e.target.files[0]);
+      this.setState({
+        updateProfile: e.target.files[0]
+      }, ()=>{
+        if(this.state.updateProfile !== null){
+          this.uploadProfileImage()
+        }
+      });
+    }
+
+    uploadProfileImage(){
+      if (this.state.updateProfile !== null){
+        const proImg = new FormData();
+        proImg.append('file', this.state.updateProfile)
+        axios.post(http+'/api/users/profilePhoto', proImg, { withCredentials: true })
+        .then( res => {
+          console.log(res);
+          const tempProfile = URL.createObjectURL(this.state.updateProfile);
+          this.setState({
+            profileImg: tempProfile
+          }, ()=>{console.log(this.state.profileImg)})
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      };
+    }
+
+    onChangeCoverImage(e){
+      console.log(e.target.files);
+      this.setState({
+        updateCover: e.target.files[0]
+      }, ()=>{
+        if(this.state.uploadCoverImage !== null){
+          this.uploadCoverImage();
+        }
+      });
+    }
+
+    uploadCoverImage(){
+      if (this.state.updateCover !== null){
+        const covImg = new FormData();
+        covImg.append('files', this.state.updateCover)
+        axios.post(http+'/api/users/coverImages', covImg, { withCredentials: true })
+        .then( res => {
+          console.log(res);
+          if(this.state.cover.length<5){
+            var tempCo = this.state.cover;
+            tempCo.push(URL.createObjectURL(this.state.updateCover));
+            this.setState({
+              cover: tempCo
+            })
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      };
+
+    }
+
     handleEditBio = () => {
         this.setState({ editBio: true });
     }
 
     handleSubmiteBio = () => {
-        this.setState({ editBio: false });
+      const obj = {
+        bioinfo: this.state.updateBio
+      };
+      axios.put(http+'/api/bioinfo/'+this.state.userid, obj, { withCredentials: true })
+      .then(res =>{
+        const tempBio = this.state.updateBio;
+        this.setState({
+          bio: tempBio
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+      this.setState({ editBio: false });
     }
 
     handleFilterOnTitle = () => {
@@ -62,67 +216,85 @@ class ManagePage extends Component {
     }
 
     onChangBioInfo(e){
+      if (e.target.value.length > 0){
+        this.setState({
+          updateBio: e.target.value
+        });
+      }else{
+        const info = this.state.bio;
+        this.setState({
+          updateBio: info
+        });
+      }
+    }
+
+    onChangeDocUpload(e){
       this.setState({
-        bioinfo: e.target.value
-      })
+        updateDoc: e.target.files[0],
+        docPath: URL.createObjectURL(e.target.files[0])
+      }, ()=>{
+        if(this.state.updateDoc !== null){
+          this.docView.current.handleUploadMode();
+        }
+      });
+    }
+
+    openDocView = () =>{
+      this.docView.current.handleViewerShow();
     }
 
     render(){
-
-        const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
-        let docCards = documents.map(card =>{
-          return(
-            <Col sm='4'>
-              <DocCard note={card}/>
-            </Col>
-          )
-        })
-
-        return(
-            <body>
-            <div class = "manage-cover-image">
-              <Carousel>
-                  <Carousel.Item>
-                      <img
-                      src= {sampleImage1}
-                      alt="First slide"
-                      />
-                      <Carousel.Caption>
-                      <h3>First slide label</h3>
-                      <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                      </Carousel.Caption>
-                  </Carousel.Item>
-                  <Carousel.Item>
-                      <img
-                      src= {sampleImage2}
-                      alt="Third slide"
-                      />
-
-                      <Carousel.Caption>
-                      <h3>Second slide label</h3>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                      </Carousel.Caption>
-                  </Carousel.Item>
-                  <Carousel.Item>
-                      <img
-                      src= {sampleImage3}
-                      alt="Third slide"
-                      />
-
-                      <Carousel.Caption>
-                      <h3>Third slide label</h3>
-                      <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                      </Carousel.Caption>
-                  </Carousel.Item>
-                  <Carousel.Item>
-                    <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-                    <label for="BtnBrowseHidden" className="imageUpload">
-                      <Image src = {uploadIcon} alt ="Upload Icon" style = {{width: "11vmax", height: "9vmax"}}/>
-                      <br/>Upload Cover Images
-                    </label>
-                  </Carousel.Item>
-              </Carousel>
+      var doc = {doc: this.state.updateDoc, id: this.state.userid};
+      //const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
+      var documents = this.state.documents;
+      let docCards = documents.map(card =>{
+        return( 
+          <Col sm='4'>
+            <div>
+              <Card className='documentsCard' >
+                <Card.Img variant='top' src={docImage}/>
+                <Card.Body>
+                  <Button variant="secondary" href={"/documents/" + card._id} block>{card.name}</Button>
+                </Card.Body>
+                  
+              </Card>
             </div>
+          </Col>
+        )
+      });
+      
+      const coverImg = this.state.cover;
+      let coverImage = coverImg.map(cover =>{
+        return(
+          <Carousel.Item>
+            <CoverImage note={cover} />
+          </Carousel.Item>
+        )
+      });
+
+      return(
+        <body>
+        <div class = "manage-cover-image">
+          <Carousel>
+            {coverImage}
+          <Carousel.Item>
+            <input
+             type="file"
+             style={{display: "none"}}
+             onChange={this.onChangeCoverImage}
+             ref={coverInput=>this.coverInput=coverInput}
+             multiple="multiple"/>
+            <label className="imageUpload">
+              <Image 
+               src = {uploadIcon}
+               alt ="Upload Icon" 
+               style = {{width: "11vmax", height: "9vmax"}}
+               onClick = {() => this.coverInput.click()} />
+              <br/>Upload Cover Images
+              </label>
+          </Carousel.Item>
+          </Carousel>
+        </div>
 
             <div class = "manage-basic-info">
               <Container fluid = {true}>
@@ -133,27 +305,27 @@ class ManagePage extends Component {
                   </Row>
                   <Row style ={{marginTop: "2vmax"}}>
                       <Col style = {{textAlign: "center"}}>
-                          <Image src={profile} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
-                          <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
+                          <Image src={this.state.profileImg} roundedCircle style = {{height: "20vmax", width: "20vmax"}} onError={(e)=>{e.target.onerror = null; e.target.src=profile}}/>
+                          <input 
+                           type="file"
+                           onChange={this.onChangeProfileImage}
+                           style={{display: 'none'}}
+                           ref={profileInput=>this.profileInput=profileInput} />
                       <Col>
+                        <Button variant="info" onClick={() => this.profileInput.click()}>Select photo</Button> {' '}             
                       </Col>
-                        <label htmlFor="BtnBrowseHidden" className="profileUpload">
-                            Upload profile
-                        </label>
                       </Col>
                       <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
                           {this.state.editBio ? (
                               <Form>
-                                  <Form.Label>Enter your bio here</Form.Label>
+                                  <Form.Label>Enter your new bio here</Form.Label>
                                   <Form.Control as="textarea" rows="3" onChange={this.onChangBioInfo}/>
-                                  <Button variant="outline-info" onClick={this.handleSubmiteBio}>submit</Button>
+                                  <Button variant="info" onClick={this.handleSubmiteBio} block>submit</Button>
                               </Form>
                           ):
-                          (<p>Twitter lover. Certified
-                              entrepreneur Tv evangelist.
-                              Hardcore thinker. Professional reader.
-                              Problem solver. Organizer.
-                            </p>)}
+                          (
+                          <p>{this.state.bio}</p>
+                          )}
                           <Button variant="info" onClick={this.handleEditBio} block>Edit</Button>
 
                       </Col>
@@ -161,18 +333,24 @@ class ManagePage extends Component {
                 </Container>
               </div>
 
+              <Docview doc={doc} ref={this.docView}/>
+
               <div class = "document-arena">
                 <h2 style = {{marginBottom: "3vmax"}}>Document Arena</h2>
                 <Container>
                   <Row style ={{}}>
                       <Col style = {{textAlign: "center", marginTop: "15vmax", marginBottom: "10vmax"}}>
-                          <Image src={uploadDocuments} style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}/>
-                          <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-                          <label htmlFor="BtnBrowseHidden" className="docUpload">
-                              Upload Documents
-                          </label>
+                        <input 
+                         type="file" 
+                         style={{display: "none"}} 
+                         onChange={this.onChangeDocUpload}
+                         ref={docInput=>this.docInput=docInput}/>
+                        <Image 
+                         src={uploadDocuments} 
+                         style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}
+                         onClick = {() => this.docInput.click()}/>
                       </Col >
-
+                      
                       <Col xs={6} md={8}>
                       <Container fluid style={{overflow:"scroll", height:'45rem'}}>
                         <Row>

@@ -1,6 +1,7 @@
-FROM node:8
+FROM node:10.16-alpine
 # Create app directory
-WORKDIR /usr/src/app
+RUN mkdir -p /usr/src/uploads
+WORKDIR /usr/src/app/
 # Install app dependencies
 COPY package*.json ./
 

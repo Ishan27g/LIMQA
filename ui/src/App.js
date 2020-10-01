@@ -3,7 +3,7 @@ import axios from 'axios';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
@@ -13,16 +13,24 @@ import Modal from 'react-bootstrap/Modal';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Image from 'react-bootstrap/Image';
 import Alert from 'react-bootstrap/Alert';
-
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+
 import Home from './components/Home/Home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import AccountView from './components/AccountView/accountView.js';
+import DocViewer from './components/documentViewer/docViewer.js';
+import singleDoc from './components/documentViewer/singleDoc.js';
+import NotFound from './components/NotFound.js';
+
 import logo from './Image/logo.png';
 import QRcode from './Image/QRcode.png';
-
 import loginButton from './Image/loginButton.svg';
+
+import {pathForRequest} from './components/http.js';
+
+let http = pathForRequest();
+
 class App extends Component{
   constructor(props){
     super(props);
@@ -34,6 +42,7 @@ class App extends Component{
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.Adminlogin = this.Adminlogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
 
     this.state ={
         loginButton: false,
@@ -49,7 +58,7 @@ class App extends Component{
   }
 
   componentDidMount(){
-    const check = 'http://localhost:8080/api/users/check';
+    const check = http+'/api/users/check';
     axios.get(check, { withCredentials: true })
       .then(response => {
         if (response.data.logIn){
@@ -59,7 +68,7 @@ class App extends Component{
             loginInfo: true
           })
         }
-      })
+    })
   };
 
   handleSignClose = () => {
@@ -76,6 +85,19 @@ class App extends Component{
 
   handleQRClose = () => {
     this.setState({ QRButton: false });
+  }
+
+  handleLogout(){
+    axios.get(http+'/api/users/logout', { withCredentials: true })
+    .then(res=>{
+      console.log(res);
+      this.setState({
+        login: false,
+      });
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
   }
 
   onChangeEmail(e){
@@ -108,27 +130,47 @@ class App extends Component{
           }
 
       }
-      else{ 
-          const url = 'http://localhost:8080/api/users/login';
-          const check = 'http://localhost:8080/api/users/check';
+      else{
+          const url = http+'/api/users/login';
+          const check = http+'/api/users/check';
           axios.post(url,obj, { withCredentials: true })
           .then(response => {
-              axios.get(check, { withCredentials: true })
-              .then(response => {
-                console.log(response.data.logIn);
-                if (response.data.logIn){
-                  this.setState({
-                    loginButton: false,
-                    login: true
-                  })
-                }
-              })
+              if (response.data.success){
+                axios.get(check, { withCredentials: true })
+                .then(response => {
+                  console.log(response.data.logIn);
+                  if (response.data.logIn){
+                    this.setState({
+                      loginButton: false,
+                      login: true
+                    })
+                  }
+                })
+              }else{
+                this.setState({
+                  loginInfo: false
+                })
+              }
           })
-          // wait backend to implement failure login response
           .catch(function(error) {
               console.log(error);
           })
       }
+  }
+
+  handlesignup(){
+    const signurl = http+'/api/users/signup';
+    const user = {
+      email: 'test@test.com'
+    };
+    axios.post(signurl,user, { withCredentials: true })
+    .then(response => {
+
+    })
+    // wait backend to implement failure login response
+    .catch(function(error) {
+        console.log(error);
+    })
   }
 
   handleSignin = () => {
@@ -166,18 +208,14 @@ class App extends Component{
                 </NavDropdown>
                 </Nav>
                 <Nav>
-                  <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-dark">Search</Button>
-                  </Form>
                   {this.state.login ?
                     (
                     <DropdownButton id="manage-dropdown" title="Manage"
-                                        variant = "outline-dark" className ="ml-2 mr-2">
+                                        variant = "outline-dark" className =" mr-2">
                       <Dropdown.Item href="/View">Account</Dropdown.Item>
                       <Dropdown.Item href="/manage">Manage Documents</Dropdown.Item>
                       <Dropdown.Divider />
-                      <Dropdown.Item href="">Log Out</Dropdown.Item>
+                      <Dropdown.Item onClick={this.handleLogout}>Log Out</Dropdown.Item>
                     </DropdownButton>
                     )
                   :
@@ -185,6 +223,11 @@ class App extends Component{
                     <img alt="Login" src = {loginButton}/>
                    </Button>)
                   }
+                  <Form inline>
+                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                    <Button variant="outline-dark">Search</Button>
+                  </Form>
+
                 </Nav>
             </Navbar.Collapse>
           </Navbar>
@@ -204,11 +247,11 @@ class App extends Component{
                 this.state.Alertemail === true ?(
                   <Alert variant={'danger'}>
                     please enter your email!
-                  </Alert>                     
+                  </Alert>
                 ):
                 (
                   <section></section>
-                ) 
+                )
               }
               <Form.Group controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
@@ -218,21 +261,21 @@ class App extends Component{
                 this.state.Alertpassword === true ?(
                   <Alert variant={'danger'}>
                     please enter your password!
-                  </Alert>                     
+                  </Alert>
                 ):
                 (
                   <section></section>
-                ) 
+                )
               }
               {
                 this.state.loginInfo === false ?(
                   <Alert variant={'danger'}>
                     incorrect email or password!
-                  </Alert>                     
+                  </Alert>
                 ):
                 (
                   <section></section>
-                ) 
+                )
               }
             </form>
 
@@ -245,28 +288,34 @@ class App extends Component{
           </Modal>
           {<BrowserRouter>
             <Switch>
-              <Route path="/" component={Home} exact/>
-              <Route path="/manage" component={ManagePage}/>
+            <Route path="/" component={Home} exact/>
+              <Route path="/d" component={DocViewer} />
+              <Route path="/documents/:id" component={singleDoc}/>
+              {this.state.login? (<Route path="/manage" component={ManagePage}/>):(<Route path="/manage" component={NotFound}/>)}
+            
               <Route path="/view" component={AccountView}/>
+              <Route path="/notfound" component={NotFound} />
+              <Route render={() => <Redirect to={{pathname: "/notfound"}} />} />
             </Switch>
           </BrowserRouter>}
         </header>
-
+        <div id="main-wrapper">
         <footer>
           <Button size="lg" block variant="outline-dark" onClick={this.handleQRShow} style = {{float: "right", verticalAlign:"bottom"}}>
                 QR code
           </Button>
           <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
-            <Modal.Body>
+            <Modal.Body className ="qr-code">
               <Image src={QRcode} rounded  />
             </Modal.Body>
             <Modal.Footer>
-            <Button variant="outline-dark" onClick={this.handleQRClose}>
+            <Button block variant="outline-dark" onClick={this.handleQRClose}>
               Close
             </Button>
             </Modal.Footer>
           </Modal>
         </footer>
+        </div>
       </div>
     );
   }

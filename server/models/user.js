@@ -12,8 +12,9 @@ const userSchema = new Schema({
     bioinfo: { type: String, required: true},
     officeAddress: { type: String, required: false},
     mobile: { type: String, required: false},
-    semail: { type: String, required: true, unique: true},
+    photos: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Photos'}]
     tags: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Tag'}]
+    semail: { type: String, required: true, unique: true},
 });
 
 userSchema.plugin(uniqueValidator);
