@@ -76,11 +76,11 @@ class Register extends Component{
     const check_empty_username = !(this.state.username === "");
     const check_password = regex_password.test(this.state.password);
     const check_email = regex_email.test(this.state.email);
-    
+
     if (check_pass_match && check_empty_username && check_password && check_email){
 
 
-        const signurl = http + '/api/users/signup';
+        const signurl = http+'/api/users/signup';
         const user = {
           name: this.state.username,
           email: this.state.email,
@@ -90,13 +90,13 @@ class Register extends Component{
         .then(response => {
           console.log(response)
           this.setState({stepRegister: true});
-          window.location.href='/'
+          window.location.href='/';
         })
         // wait backend to implement failure login response
         .catch(function(error) {
             console.log(error);
         })
-
+        
     } else {
       this.setState(
         {

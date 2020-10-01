@@ -97,7 +97,7 @@ const signup = async (req, res, next) => {
     password: hashedPassword,
     social: [],
     bioinfo: "",
-    semail: "",
+    semail: email,
     photos: createdPhotos,
     officeAddress: "",
     mobile: ""

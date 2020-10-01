@@ -48,7 +48,7 @@ class App extends Component{
 
     this.state ={
         loginButton: false,
-        login: true,
+        login: false,
         QRButton: false,
         Alertemail: false,
         Alertpassword: false,

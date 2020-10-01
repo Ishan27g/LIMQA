@@ -12,7 +12,7 @@ const userSchema = new Schema({
     bioinfo: { type: String, required: false},
     officeAddress: { type: String, required: false},
     mobile: { type: String, required: false},
-    semail: { type: String, required: false, unique: true},
+    semail: { type: String, required: false},
     photos: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Photos'}]
 });
 
