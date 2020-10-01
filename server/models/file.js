@@ -6,7 +6,7 @@ const fileSchema = new Schema({
     name: {type : String, required: true},              // file name
     description: {type : String, required: true},   
     path: {type : String, required: true}, 
-    owner:  {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},     
+    owner: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},     
     dateCreated: {type : Date, default: Date.now},
     dateModified: {type : Date},
     highlighted: {type: Boolean, required: true},

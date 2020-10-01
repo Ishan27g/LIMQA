@@ -1,9 +1,10 @@
 // this middle ware uses multer for file uploads feature.
 const multer = require('multer');
+const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
 // file types that we receive.
 const MIME_TYPE_MAP = {
-    'application/pdf': 'pdf',
+    'application/pdf' : 'pdf',
     'text/plain': 'txt',
     'image/png': 'png',
     'image/jpeg': 'jpeg',
@@ -28,7 +29,7 @@ const fileUpload = multer({
   }),
   fileFilter: (req, file, cb) => {
     const isValid = !! MIME_TYPE_MAP[file.mimetype];  
-    let error = isValid ? null : new Error('Invalid file type!');
+    let error = isValid ? null : new Error('Invalid type!');
     cb(error, isValid);
   }
 });
