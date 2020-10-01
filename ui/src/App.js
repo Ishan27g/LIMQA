@@ -22,9 +22,11 @@ import AccountView from './components/AccountView/accountView.js';
 import DocViewer from './components/documentViewer/docViewer.js';
 import singleDoc from './components/documentViewer/singleDoc.js';
 import NotFound from './components/NotFound.js';
+import SignUp from './components/SignUp/signUp.js';
+import Register from './components/SignUp/register.js';
 
 import logo from './Image/logo.png';
-import QRcode from './Image/QRcode.png';
+import QRcode from './Image/QRcode.jpeg';
 import loginButton from './Image/loginButton.svg';
 
 import {pathForRequest} from './components/http.js';
@@ -146,7 +148,7 @@ class App extends Component{
                     })
                   }
                 })
-              }else{
+              } else {
                 this.setState({
                   loginInfo: false
                 })
@@ -284,6 +286,9 @@ class App extends Component{
               <Button size="lg" block variant="primary" onClick={this.Adminlogin}>
                 Login
               </Button>
+              <Button size="lg" block variant="primary" onClick={event =>  window.location.href='/register'}>
+                Register
+              </Button>
             </Modal.Footer>
           </Modal>
           {<BrowserRouter>
@@ -292,7 +297,8 @@ class App extends Component{
               <Route path="/d" component={DocViewer} />
               <Route path="/documents/:id" component={singleDoc}/>
               {this.state.login? (<Route path="/manage" component={ManagePage}/>):(<Route path="/manage" component={NotFound}/>)}
-            
+              {this.state.register?(<Route path="/register" component={Register}/>):(<Route path="/register" component={Register}/>)}
+              <Route path="/signup" component={SignUp}/>
               <Route path="/view" component={AccountView}/>
               <Route path="/notfound" component={NotFound} />
               <Route render={() => <Redirect to={{pathname: "/notfound"}} />} />
@@ -301,12 +307,14 @@ class App extends Component{
         </header>
         <div id="main-wrapper">
         <footer>
-          <Button size="lg" block variant="outline-dark" onClick={this.handleQRShow} style = {{float: "right", verticalAlign:"bottom"}}>
-                QR code
-          </Button>
+          <Navbar bg = "light" variant = "light" expand = "lg" sticky ="bottom">
+            <Button size="lg" block variant="outline-dark" onClick={this.handleQRShow} style = {{float: "right", verticalAlign:"bottom"}}>
+                  QR code
+            </Button>
+          </Navbar>
           <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
             <Modal.Body className ="qr-code">
-              <Image src={QRcode} rounded  />
+              <Image src={QRcode} rounded style ={{width: "15vmax", height: "15vmax"}} />
             </Modal.Body>
             <Modal.Footer>
             <Button block variant="outline-dark" onClick={this.handleQRClose}>
