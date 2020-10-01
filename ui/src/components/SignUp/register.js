@@ -76,27 +76,27 @@ class Register extends Component{
     const check_empty_username = !(this.state.username === "");
     const check_password = regex_password.test(this.state.password);
     const check_email = regex_email.test(this.state.email);
-    console.log(check_password);
-    console.log(check_email);
+    
     if (check_pass_match && check_empty_username && check_password && check_email){
 
 
-        const signurl = http+'/api/users/signup';
+        const signurl = http + '/api/users/signup';
         const user = {
-          username: this.state.username,
+          name: this.state.username,
           email: this.state.email,
           password: this.state.password,
         };
         axios.post(signurl,user, { withCredentials: true })
         .then(response => {
           console.log(response)
-
+          this.setState({stepRegister: true});
+          window.location.href='/'
         })
         // wait backend to implement failure login response
         .catch(function(error) {
             console.log(error);
         })
-        this.setState({stepRegister: true});
+
     } else {
       this.setState(
         {

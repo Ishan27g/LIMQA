@@ -14,6 +14,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
+import Alert from 'react-bootstrap/Alert';
 import doc from '../../Image/documents.png';
 import Tag from './../Tags/Tag.js';
 import {pathForRequest} from '../http.js';
@@ -53,6 +54,7 @@ class DocMode extends Component {
       addTags: false,
       uploadMode: false,
       docViewer: false,
+      alertDescription: false,
 
       /*Document Properties*/
       docname: "Untitled",
@@ -142,35 +144,41 @@ class DocMode extends Component {
   }
 
   uploadDoc(){
-    const docForm = new FormData();
-    console.log(this.state.docname);
-    docForm.append('highlighted', this.state.highlighted);
-    docForm.append('description', this.state.docdesc);
-    docForm.append('achivement', this.state.achievement);
-    docForm.append('document', this.props.doc.doc);
-    docForm.append('institution', this.state.acinst);
-    docForm.append('dateAchieved', this.state.docdate);
-    docForm.append('name', this.state.docname);
-    console.log(docForm);
-    const postDoc = http+'/api/documents/' + this.props.doc.id;
-    axios.post(postDoc, docForm, { withCredentials: true } )
-    .then(res=>{
-      console.log(res);
-      this.setState({
-        docViewer: false,
-        DocEditor: false,
-        uploadMode: false
+
+    if(!(this.state.docdesc === "")){
+      const docForm = new FormData();
+      console.log(this.state.docname);
+      docForm.append('highlighted', this.state.highlighted);
+      docForm.append('description', this.state.docdesc);
+      docForm.append('achivement', this.state.achievement);
+      docForm.append('document', this.props.doc.doc);
+      docForm.append('institution', this.state.acinst);
+      docForm.append('dateAchieved', this.state.docdate);
+      docForm.append('name', this.state.docname);
+      console.log(docForm);
+      const postDoc = http+'/api/documents/' + this.props.doc.id;
+      axios.post(postDoc, docForm, { withCredentials: true } )
+      .then(res=>{
+        console.log(res);
+        this.setState({
+          docViewer: false,
+          DocEditor: false,
+          uploadMode: false
+        })
       })
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
+      .catch(function(error) {
+        console.log(error);
+      });
+  } else {
+    this.setState({alertDescription: true});
+  }
 
   }
 
   onChangeDescripton(e){
     this.setState({
-      docdesc: e.target.value
+      docdesc: e.target.value,
+      alertDescription: false
     });
   }
 
@@ -304,6 +312,19 @@ class DocMode extends Component {
                               aria-label= "description"
                               onChange={this.onChangeDescripton}/>
                         </Row>
+                        {this.state.alertDescription?
+                        (
+                          <Row>
+                            <Col>
+                                <Alert variant={'danger'}>
+                                  Talk About Your Document!
+                                </Alert>
+                            </Col>
+                          </Row>
+                        ):(
+                          <div></div>
+                        )
+                        }
                         <Row>
                           {this.state.achievement ? (
                             <Button variant='outline-warning' onClick={this.handleRemoveAchievement} style={{marginRight: "1vmax"}}> Remove  </Button>
