@@ -358,37 +358,52 @@ const uploadFiles = async (req, res, next) => {
     tags:[]
   })
 
-const work = new Tag({
-  name: "Work-Experience",
-  color: "red"
-});
+  try {
+    await CreatedFile.save();
+    await user.documents.push(CreatedFile);
 
-const Academic = new Tag({
-  name: "Academic",
-  color: "blue"
-});
+    await user.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'creating file failed, please try again.'
+    );
+    return next(error);
+  }
+  
+  const work = new Tag({
+    name: "Work-Experience",
+    color: "red",
+    files: []
+  });
+  
+  /* 
+  const Academic = new Tag({
+    name: "Academic",
+    color: "blue"
+  });
 
-const volunteering = new Tag({
-  name: "Volunteering",
-  color: "green"
-});
+  const volunteering = new Tag({
+    name: "Volunteering",
+    color: "green"
+  });
 
-const Leadership = new Tag({
-  name: "Leadership",
-  color: "brown"
-});
+  const Leadership = new Tag({
+    name: "Leadership",
+    color: "brown"
+  });
 
-const Curricular = new Tag({
-  name: "Extra-Curricular",
-  color: "yellow"
-});
+  const Curricular = new Tag({
+    name: "Extra-Curricular",
+    color: "yellow"
+  }); */
 
 try{
     await work.save();
-    await Academic.save();
+    /*await Academic.save();
     await volunteering.save();
     await Leadership.save();
-    await Curricular.save();
+    await Curricular.save();*/
 } catch (err) {
     console.log(err);
     const error = new HttpError (
@@ -397,17 +412,14 @@ try{
     );
 };
   try {
-    await CreatedFile.save();
     await CreatedFile.tags.push(work);
-    await CreatedFile.tags.push(Academic);
+    await work.files.push(CreatedFile);
+    /*await CreatedFile.tags.push(Academic);
     await CreatedFile.tags.push(volunteering);
     await CreatedFile.tags.push(Leadership);
-    await CreatedFile.tags.push(Curricular);
+    await CreatedFile.tags.push(Curricular);*/
     await CreatedFile.save();
-    
-    await user.documents.push(CreatedFile);
-
-    await user.save();
+    await work.save();
   } catch (err) {
     console.log(err);
     const error = new HttpError(
@@ -669,17 +681,58 @@ res.json({success: true});
  
 };
 
+const getTags = async (req, res, next) => {
+    let userId = req.params.uid;
+    let tags;
+  try {
+    tags = await User.findById(userId).populate({path: 'tags'});
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError (
+      "Something went wrong, could not find user.",
+      500
+    );
+    return next(error);
+  }
+  if (!tags || tags.tags.length === 0) {
+    return next(
+      new HttpError('Could not find tags for the provided user id.', 404)
+    );
+  }
+
+  res.json({
+    tags: tags.tags.toObject({getters:true})
+  });
+};
+
 const createTag = async (req, res, next) => {
+  let user;
+  try{
+    user = await User.findById(req.params.uid);
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError
+    ("Find user failed.",
+    500)
+    return next(error);
+  }
+
   const {tagname, color} = req.body;
 
   const CreatedTag = new Tag({
     name: tagname,
-    color
+    color,
+    files: [],
+    owner: req.params.uid
   }); 
 
   try{
     
     await CreatedTag.save();
+
+    await user.tags.push(CreatedTag);
+
+    await user.save();
 
   } catch (err) {
     console.log(err);
@@ -690,9 +743,9 @@ const createTag = async (req, res, next) => {
     return next(error);
   };
 
-
-
-
+  res.json({
+    success : true
+  });
 
 };
 
@@ -705,9 +758,12 @@ exports.getFiles = getFiles;
 exports.deleteFile = deleteFile;
 exports.getOneFile = getOneFile;
 exports.editFile = editFile;
-exports.createTag = createTag;
+
 exports.getSocialLinks = getSocialLinks;
 exports.getOneSocialLink = getOneSocialLink;
 exports.createSocialLink = createSocialLink;
 exports.updateSocialLink = updateSocialLink;
 exports.deleteSocialLink = deleteSocialLink;
+
+exports.getTags = getTags;
+exports.createTag = createTag;
