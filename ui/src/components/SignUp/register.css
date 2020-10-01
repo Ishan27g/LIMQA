@@ -1,10 +1,14 @@
+.page-fill{
+  height: 87vmin;
+  width: 100%;
+}
 .register{
   display: flex;
   justify-content: center;
   align-items: flex-start;
   background-color: white;
   margin-top: 70px;
-  margin-bottom: 10px;
+  margin-bottom: 2vmax;
   width: 40vmax;
   padding: 1.5vmax;
 }
@@ -19,7 +23,6 @@
   align-items: center;
   justify-content: center;
 }
-
 .register-form > .row  {
   display: flex;
   justify-content: flex-start;

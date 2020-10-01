@@ -13,8 +13,8 @@ router.get('/check', userController.check);
 router.post('/signup', fileUpload.array('files',10), [
     check("name").not().isEmpty(),
     check("email").normalizeEmail().isEmail(),
-    check("password").not().isEmpty(), 
-    check("password").matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/, "i") ] , userController.signup);
+    check("password").not().isEmpty(),
+    check("password").matches(/	^(?=.*[0-9]+.*)(?=.*[A-Z]+.*)[0-9a-zA-Z]{6,}$/, "i") ] , userController.signup);
 
 router.post('/login', check('email').normalizeEmail(),userController.login);
 
@@ -22,7 +22,7 @@ router.post('/profilePhoto', fileUpload.single('file'), photoController.addProfi
 router.get('/profilePhoto', photoController.getProfilePhoto);
 router.get('/logout', (req, res) => {
     req.logout();
-    res.send({ success : true, message : 'logged out' }); 
+    res.send({ success : true, message : 'logged out' });
 })
 // this route send the login status back to front end.
 router.get('/check', userController.check);
