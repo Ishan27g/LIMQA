@@ -31,4 +31,7 @@ router.post('/coverImages', fileUpload.array('files',5), photoController.addCove
 router.get('/coverImages', photoController.getCoverImages);
 router.get('/coverImages/:id', photoController.getCoverImagesById);
 
+router.post('/bgImage', fileUpload.single('file'), photoController.addBgImage);
+router.get('/bgImage', photoController.getBgImage);
+
 module.exports = router;

@@ -2,8 +2,9 @@
 const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
 const {validationResult } = require("express-validator");
-const  User = require('../models/user');
+const User = require('../models/user');
 const Social = require('../models/social');
+const Tag = require('../models/tag');
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const Photos = require('../models/photos');
@@ -100,7 +101,8 @@ const signup = async (req, res, next) => {
     semail: email,
     photos: createdPhotos,
     officeAddress: "",
-    mobile: ""
+    mobile: "",
+    tags: []
   });
 
   try {
@@ -108,7 +110,8 @@ const signup = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     const error = new HttpError(
-      'creating user failed, please try again.'
+      'creating user failed, please try again.',
+      500
     );
     return next(error);
   }
@@ -130,14 +133,63 @@ const signup = async (req, res, next) => {
     owner: createdUser.id
   })
 
+  const work = new Tag({
+    name: "Work-Experience",
+    color: "red",
+    files: [],
+    owner: createdUser.id
+  });
+   
+  const Academic = new Tag({
+    name: "Academic",
+    color: "blue",
+    files: [],
+    owner: createdUser.id
+  });
+
+  const volunteering = new Tag({
+    name: "Volunteering",
+    color: "green",
+    files: [],
+    owner: createdUser.id
+  });
+
+  const Leadership = new Tag({
+    name: "Leadership",
+    color: "brown",
+    files: [],
+    owner: createdUser.id
+  });
+
+  const Curricular = new Tag({
+    name: "Extra-Curricular",
+    color: "yellow",
+    files: [],
+    owner: createdUser.id
+  }); 
+
   try {
+    // save default links
     await CreatedLinkedin.save();
     await CreatedInstagram.save();
     await CreatedFacebook.save();
+    // save default tags
+    await work.save();
+    await Academic.save();
+    await volunteering.save();
+    await Leadership.save();
+    await Curricular.save();
 
     await createdUser.social.push(CreatedLinkedin);
     await createdUser.social.push(CreatedFacebook);
     await createdUser.social.push(CreatedInstagram);
+
+    await createdUser.tags.push(work);
+    await createdUser.tags.push(Academic);
+    await createdUser.tags.push(volunteering);
+    await createdUser.tags.push(Leadership);
+    await createdUser.tags.push(Curricular);
+    
     await createdUser.save();
   } catch (err) {
     console.log(err);

@@ -14,6 +14,7 @@ const userSchema = new Schema({
     mobile: { type: String, required: false},
     semail: { type: String, required: false},
     photos: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Photos'}]
+    tags: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Tag'}]
 });
 
 userSchema.plugin(uniqueValidator);
