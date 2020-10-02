@@ -10,6 +10,7 @@ const Social = require('../models/social');
 const File = require('../models/file');
 const Tag = require('../models/tag');
 
+
 const { db, updateOne } = require('../models/user');
 const { fields } = require('../middlerware/file-upload');
 const tag = require('../models/tag');
@@ -403,8 +404,6 @@ const getFiles = async (req, res, next) => {
   });
 
 }
-
-
 exports.getBioinfo = getBioinfo;
 exports.updateBioinfo = updateBioinfo;
 exports.getAcc = getAcc;
