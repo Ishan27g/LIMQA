@@ -347,8 +347,7 @@ class AccountView extends Component {
 
                     </Row>
                       <Row className = "edit-social-header">
-                        <h2> Social Media Profiles</h2>
-                          <FontAwesomeIcon icon={['fab', 'google']} color="green"/>
+                        <h2 style ={{color: "black"}}> Social Media Profiles</h2>
                       </Row>
                       <Row className = "edit-social justify-content-left-center">
                           <ListGroup  className = "edit-social-list">

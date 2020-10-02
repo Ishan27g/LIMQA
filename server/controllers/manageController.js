@@ -11,8 +11,7 @@ const File = require('../models/file');
 const Tag = require('../models/tag');
 
 const { db, updateOne } = require('../models/user');
-const { fields } = require('../middlerware/file-upload');
-const file = require('../models/file');
+
 
 
 const getBioinfo = async (req, res, next) => {
@@ -64,7 +63,6 @@ const updateBioinfo  = async (req, res, next) => {
 const getAcc = async (req, res, next) => {
   const userId = req.params.uid;
 
-
   let user;
   try {
     user = await User.findById(userId).populate('social');
@@ -87,7 +85,6 @@ const getAcc = async (req, res, next) => {
   });
 };
 
-
 const updateAcc  = async (req, res, next) => {
 
   let userId;
@@ -106,6 +103,7 @@ const updateAcc  = async (req, res, next) => {
   
   // get the social objects in socials
   let socials = [];
+  let names = [];
   let media;
   let ins;
   let linkedin;
@@ -128,6 +126,7 @@ const updateAcc  = async (req, res, next) => {
         );
       }
       console.log("media is "+ media);
+      names.push(media.name);
       if (media.name === "Instagram" ) {
         ins = media;
       }
@@ -139,6 +138,7 @@ const updateAcc  = async (req, res, next) => {
       }
     }
   } 
+  console.log(names);
   
   user.mobile = req.body.Mobile;
   user.name = req.body.Username;
@@ -175,9 +175,7 @@ const updateAcc  = async (req, res, next) => {
       return next(new HttpError("Invalid email, please check your data.", 422));
     }
   }
-  
-    
-  
+   
   if ( normalizeEmail(req.body.Semail) !== user.semail ) {
     let Semail;
     Semail = req.body.Semail;
@@ -277,6 +275,57 @@ const updateAcc  = async (req, res, next) => {
   res.status(200).json({ user: user.toObject({ getters: true }) } );
 };
 
+const getFiles = async (req, res, next) => {
+  let userId;
+  userId = req.params.uid;
+
+  let user;
+  try {
+    user = await User.findById(userId).populate(
+      {path: 'documents',
+        populate: {
+          path: 'tags',
+          model: 'Tag'
+        }
+      });
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError (
+      "Something went wrong, could not find user.",
+      500
+    );
+    return next(error);
+  }
+  if (!user || user.documents.length === 0) {
+    return next(
+      new HttpError('Could not find documents for the provided user id.', 404)
+    );
+  }
+
+  res.json({
+    documents: user.documents.toObject({ getters: true })
+  });
+
+};
+
+const getOneFile = async (req, res, next) => {
+  let document;
+  try {
+    document = await File.findById(req.params.documentId).populate('tags');
+    
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+
+  if(!document) {
+    return res.send("document doesn't exist in database");
+  }
+  res.json({
+    document: document.toObject({getters: true})
+  });
+
+};
 
 const uploadFiles = async (req, res, next) => {
   let userId;
@@ -369,64 +418,12 @@ try{
 
   res.status(201).json({user: user.toObject({ getters : true})});
   
-}
+};
 
-const getFiles = async (req, res, next) => {
-  let userId;
-  userId = req.params.uid;
-
-  let user;
-  try {
-    user = await User.findById(userId).populate(
-      {path: 'documents',
-        populate: {
-          path: 'tags',
-          model: 'Tag'
-        }
-      });
-  } catch (err) {
-    console.log(err);
-    const error = new HttpError (
-      "Something went wrong, could not find user.",
-      500
-    );
-    return next(error);
-  }
-  if (!user || user.documents.length === 0) {
-    return next(
-      new HttpError('Could not find documents for the provided user id.', 404)
-    );
-  }
-
-  res.json({
-    documents: user.documents.toObject({ getters: true })
-  });
-
-}
-
-const getOneFile = async (req, res, next) => {
-  let document;
-  try {
-    document = await File.findById(req.params.documentId).populate('tags');
-    
-  } catch (err) {
-    console.log(err);
-    return next(err);
-  }
-
-  if(!document) {
-    return res.send("document doesn't exist in database");
-  }
-  res.json({
-    document: document.toObject({getters: true})
-  });
-
-}
-
-
+// edit document properties 
 const editFile = async (req, res, next) => {
   const { name, highlighted, description, achivement, institution, dateAchieved} = req.body;
-  //const updateFile= {name, highlighted, description, achivement, institution, dateAchieved};
+
   let document;
   try {
     document = await File.findById(req.params.documentId);
@@ -439,6 +436,11 @@ const editFile = async (req, res, next) => {
       );
     return next(error);
   }
+
+  if(!document) {
+    return res.send("document doesn't exist in database");
+  }
+
   document.name = name;
   document.highlighted = highlighted;
   document.description = description;
@@ -446,9 +448,7 @@ const editFile = async (req, res, next) => {
   document.institution = institution;
   document.dateAchieved = dateAchieved;
 
-  try {
-
-      
+  try {   
       await document.save();
     } catch (err) {        
       console.log(err);
@@ -461,14 +461,13 @@ const editFile = async (req, res, next) => {
 
     res.send({ success : true, message : 'file edit succeed' }); 
 
-}
+};
 
- 
-
+// delete file and ObjectId from relevent object
 const deleteFile = async (req, res, next) => {
 
   try {
-    const document = await File.findOneAndRemove(
+    await File.findOneAndRemove(
         { _id:  req.params.documentId}, 
         { new: true }
     )
@@ -477,15 +476,198 @@ const deleteFile = async (req, res, next) => {
         { "documents": req.params.documentId },
         { "$pull": { "documents": req.params.documentId } }
     )
-
-    res.json(document)
 } catch(err) {
     console.log(err);
+    const error = new HttpError(
+      "Cannot find file, please try again later.",
+      500
+    );
+    return next(error);
 }
 
-  
+res.json({success: true});
+ 
+};
+
+const getSocialLinks = async (req, res, next) => {
+  let userId = req.params.uid;
+  let socialLinks;
+  try {
+    socialLinks = await User.findById(userId).populate({path: 'social'});
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError (
+      "Something went wrong, could not find user.",
+      500
+    );
+    return next(error);
+  }
+  if (!socialLinks || socialLinks.social.length === 0) {
+    return next(
+      new HttpError('Could not find social links for the provided user id.', 404)
+    );
+  }
+
+  res.json({
+    socials: socialLinks.social.toObject({getters:true})
+  });
+
+};
+
+const getOneSocialLink = async (req, res, next) => {
+  let socialId = req.params.socialId;
+  let socialLink;
+  try{
+    socialLink = await Social.findById(socialId);
+  }catch(err) {
+    console.log(err);
+    const error = new HttpError(
+      "Find social link failed.",
+      500
+    )
+    return next(error);
+  }
+
+
+  if(! socialLink) {
+    return next(new HttpError("Cannot find social link for provided Id.", 422));
+  }
+
+  res.json({social: socialLink.toObject({getters : true})});
+
+
 }
 
+const createSocialLink = async (req, res, next) => {
+  const { socialName, url } = req.body; 
+  let existingUrl;
+  try {
+    existingUrl = await Social.findOne({url:url});
+  }catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Fail to find social link, please try again.",
+      500
+    )
+    return next(error);
+  };
+
+  if(existingUrl) {
+    const error = new HttpError (
+      'Socil link exists already, please enter new url',
+      422
+    );
+    return next(error);
+  }
+
+  let user;
+  try {
+    user = await User.findById(req.params.uid);
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError (
+      "Something went wrong, could not find user.",
+      500
+    );
+    return next(error);
+  }
+
+  if(!user) {
+    const error = new HttpError (
+      'Cannot find user',
+      422
+    );
+    return next(error);   
+  }
+
+  const CreatedSocial = new Social({
+    name: socialName,
+    url: url,
+    owner: req.params.uid
+  })
+
+  try {
+    await CreatedSocial.save();
+
+    await user.social.push(CreatedSocial);
+
+    await user.save();
+  } catch(err) {
+    console.log(err);
+    const error = new HttpError(
+      "Cannot save social link to user, please try again.",
+      500
+      )
+      return next(error);
+  };
+
+  res.send({
+    success: true
+  });
+
+};
+
+const updateSocialLink = async (req, res, next) => {
+  const { socialName, url } = req.body;
+
+  let social;
+  try {
+    social = await Social.findById(req.params.socialId);
+    
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Find social Failed.",
+      500
+      );
+    return next(error);
+  }
+
+  if(!social) {
+    return res.send("Social link doesn't exist in database");
+  }
+
+  social.name = socialName;
+  social.url = url;
+
+  try {   
+      await social.save();
+    } catch (err) {        
+      console.log(err);
+      const error = new HttpError(
+        "Cannot update social link.",
+        500        
+      )
+        return next(error);
+    };
+
+    res.send({ success : true, message : 'social link updates succeed' }); 
+};
+
+const deleteSocialLink = async (req, res, next) => {
+
+  try {
+    await Social.findOneAndRemove(
+        { _id:  req.params.socialId}, 
+        { new: true }
+    )
+
+    await User.updateOne(
+        { "social": req.params.socialId },
+        { "$pull": { "social": req.params.socialId } }
+    )
+} catch(err) {
+    console.log(err);
+    const error = new HttpError(
+      "Cannot find social link, please try again later.",
+      500
+    );
+    return next(error);
+}
+
+res.json({success: true});
+ 
+};
 
 
 exports.getBioinfo = getBioinfo;
@@ -497,3 +679,8 @@ exports.getFiles = getFiles;
 exports.deleteFile = deleteFile;
 exports.getOneFile = getOneFile;
 exports.editFile = editFile;
+exports.getSocialLinks = getSocialLinks;
+exports.getOneSocialLink = getOneSocialLink;
+exports.createSocialLink = createSocialLink;
+exports.updateSocialLink = updateSocialLink;
+exports.deleteSocialLink = deleteSocialLink;

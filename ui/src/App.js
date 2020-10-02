@@ -92,6 +92,7 @@ class App extends Component{
   handleLogout(){
     axios.get(http+'/api/users/logout', { withCredentials: true })
     .then(res=>{
+      window.location.href='/';
       console.log(res);
       this.setState({
         login: false,
@@ -299,7 +300,7 @@ class App extends Component{
               {this.state.login? (<Route path="/manage" component={ManagePage}/>):(<Route path="/manage" component={NotFound}/>)}
               {this.state.register?(<Route path="/register" component={Register}/>):(<Route path="/register" component={Register}/>)}
               <Route path="/signup" component={SignUp}/>
-              <Route path="/view" component={AccountView}/>
+              {this.state.login? (<Route path="/view" component={AccountView}/>):(<Route path="/view" component={NotFound}/>)}
               <Route path="/notfound" component={NotFound} />
               <Route render={() => <Redirect to={{pathname: "/notfound"}} />} />
             </Switch>
