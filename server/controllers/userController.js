@@ -42,7 +42,7 @@ const signup = async (req, res, next) => {
       console.log(error);
       return next(new HttpError("Invalid inputs passed, please check your data.", 422));
   }
-  const { name, email, password, bioinfo, semail} = req.body;
+  const { name, email, password} = req.body;
 
   let existingUser
   try {
@@ -61,11 +61,6 @@ const signup = async (req, res, next) => {
       422
     );
     return next(error);
-  }
-  let i =0;
-  var path = [];
-  for (i = 0; i < req.files.length; i++) {
-    path.push(req.files[i].path);
   }
 
   let hashedPassword;
@@ -101,8 +96,8 @@ const signup = async (req, res, next) => {
     documents: [],
     password: hashedPassword,
     social: [], 
-    bioinfo,
-    semail,
+    bioinfo: "This is bioinfo message",
+    semail: "stest@test.com",
     photos: createdPhotos, 
     officeAddress: "",
     mobile: ""

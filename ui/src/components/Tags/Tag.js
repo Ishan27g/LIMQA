@@ -3,14 +3,14 @@ import React, {Component} from 'react';
 import Badge from 'react-bootstrap/Badge';
 
 
-class CoverImage extends Component{
+class Tag extends Component{
     render(){
         return (
                 <Badge variant = "primary">
-                {this.props.note}
+                  {this.props.note}
                 </Badge>
         )
     }
 }
 
-export default CoverImage;
+export default Tag;
