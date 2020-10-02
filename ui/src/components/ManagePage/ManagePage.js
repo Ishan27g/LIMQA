@@ -36,7 +36,7 @@ class ManagePage extends Component {
         this.state = {
           editBio : false,
           filter : "Title",
-          bio: '',
+          bio: 'tester',
           updateBio: '',
           userid:'',
           cover: [sampleImage1, sampleImage2, sampleImage3],
@@ -44,6 +44,7 @@ class ManagePage extends Component {
           updateCover: null,
           updateDoc: null,
           profileImg: http+'/api/users/profilePhoto',
+          bgImg: http+'/api/users/backgroundPhoto',
           docPath: '',
           doctype: '',
           documents: [],
@@ -81,7 +82,7 @@ class ManagePage extends Component {
       .catch(function(error) {
         console.log(error);
       })
-    
+
       const biourl = http+'/api/bioinfo';
       axios.get(biourl, { withCredentials: true })
       .then(res =>{
@@ -103,7 +104,7 @@ class ManagePage extends Component {
       const imgUrl = http+'/api/users/coverImages';
       axios.get(imgUrl, { withCredentials: true })
       .then(res =>{
-        
+
         if (res.data.coverImages.coverImages[0] !== ""){
           var i;
           const tempCover = [];
@@ -248,7 +249,7 @@ class ManagePage extends Component {
       //const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
       var documents = this.state.documents;
       let docCards = documents.map(card =>{
-        return( 
+        return(
           <Col sm='4'>
             <div>
               <Card className='documentsCard' >
@@ -256,13 +257,13 @@ class ManagePage extends Component {
                 <Card.Body>
                   <Button variant="secondary" href={"/documents/" + card._id} block>{card.name}</Button>
                 </Card.Body>
-                  
+
               </Card>
             </div>
           </Col>
         )
       });
-      
+
       const coverImg = this.state.cover;
       let coverImage = coverImg.map(cover =>{
         return(
@@ -285,9 +286,9 @@ class ManagePage extends Component {
              ref={coverInput=>this.coverInput=coverInput}
              multiple="multiple"/>
             <label className="imageUpload">
-              <Image 
+              <Image
                src = {uploadIcon}
-               alt ="Upload Icon" 
+               alt ="Upload Icon"
                style = {{width: "11vmax", height: "9vmax"}}
                onClick = {() => this.coverInput.click()} />
               <br/>Upload Cover Images
@@ -306,27 +307,30 @@ class ManagePage extends Component {
                   <Row style ={{marginTop: "2vmax"}}>
                       <Col style = {{textAlign: "center"}}>
                           <Image src={this.state.profileImg} roundedCircle style = {{height: "20vmax", width: "20vmax"}} onError={(e)=>{e.target.onerror = null; e.target.src=profile}}/>
-                          <input 
+                          <input
                            type="file"
                            onChange={this.onChangeProfileImage}
                            style={{display: 'none'}}
                            ref={profileInput=>this.profileInput=profileInput} />
                       <Col>
-                        <Button variant="info" onClick={() => this.profileInput.click()}>Select photo</Button> {' '}             
+                        <Button variant="info" onClick={() => this.profileInput.click()}>Select photo</Button> {' '}
                       </Col>
                       </Col>
                       <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
                           {this.state.editBio ? (
-                              <Form>
-                                  <Form.Label>Enter your new bio here</Form.Label>
-                                  <Form.Control as="textarea" rows="3" onChange={this.onChangBioInfo}/>
-                                  <Button variant="info" onClick={this.handleSubmiteBio} block>submit</Button>
+                              <Form style ={{textAlign: "center", color: "white"}}>
+                                  <h4>Enter your new bio here</h4>
+                                  <Form.Control as="textarea" rows="12" onChange={this.onChangBioInfo}/>
+                                  <Button variant="info" onClick={this.handleSubmiteBio} block className = "mt-3">Submit</Button>
                               </Form>
                           ):
                           (
-                          <p>{this.state.bio}</p>
+                          <Form>
+                            <p>{this.state.bio}</p>
+                            <Button variant="info" onClick={this.handleEditBio} block>Edit</Button>
+                          </Form>
                           )}
-                          <Button variant="info" onClick={this.handleEditBio} block>Edit</Button>
+
 
                       </Col>
                   </Row>
@@ -340,17 +344,17 @@ class ManagePage extends Component {
                 <Container>
                   <Row style ={{}}>
                       <Col style = {{textAlign: "center", marginTop: "15vmax", marginBottom: "10vmax"}}>
-                        <input 
-                         type="file" 
-                         style={{display: "none"}} 
+                        <input
+                         type="file"
+                         style={{display: "none"}}
                          onChange={this.onChangeDocUpload}
                          ref={docInput=>this.docInput=docInput}/>
-                        <Image 
-                         src={uploadDocuments} 
+                        <Image
+                         src={uploadDocuments}
                          style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}
                          onClick = {() => this.docInput.click()}/>
                       </Col >
-                      
+
                       <Col xs={6} md={8}>
                       <Container fluid style={{overflow:"scroll", height:'45rem'}}>
                         <Row>
@@ -374,8 +378,11 @@ class ManagePage extends Component {
                             {docCards}
                         </Row>
                       </Container>
-
                       </Col>
+                  </Row>
+                  {/*Set Background Image*/}
+                  <Row className = "mt-3">
+                   <Button block variant="info">Select Background Image</Button>
                   </Row>
                 </Container>
               </div>
