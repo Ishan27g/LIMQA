@@ -13,7 +13,6 @@ const Tag = require('../models/tag');
 const { db, updateOne } = require('../models/user');
 
 
-
 const getBioinfo = async (req, res, next) => {
   let user = req.user;
   res.json(

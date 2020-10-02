@@ -296,8 +296,8 @@ class AccountView extends Component {
                       <Col className = "edit-image">
                         <Container>
                           <Row className = "edit-image-display">
-                          <Image src={profile} roundedCircle
-                                  style = {{height: "10vmax", width: "10vmax"}}/>
+                          <Image src={http+'/api/users/profilePhoto'} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "10vmax", width: "10vmax"}}/>
+                     
                           </Row>
                           <Row className = "edit-image-label">
                             <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
@@ -347,7 +347,7 @@ class AccountView extends Component {
 
                     </Row>
                       <Row className = "edit-social-header">
-                        <h2 style ={{color: "black"}}> Social Media Profiles</h2>
+                        <h2 > Social Media Profiles</h2>
                       </Row>
                       <Row className = "edit-social justify-content-left-center">
                           <ListGroup  className = "edit-social-list">
@@ -432,8 +432,8 @@ class AccountView extends Component {
                   <Row className = "acc-info justify-content-md-center">
 
                     <Col className = "acc-image">
-                      <Image src={profile} roundedCircle
-                              style = {{height: "10vmax", width: "10vmax"}}/>
+                     <Image src={http+'/api/users/profilePhoto'} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "10vmax", width: "10vmax"}}/>
+                       
                     </Col>
 
                     <Col className = "acc-basic-info">
