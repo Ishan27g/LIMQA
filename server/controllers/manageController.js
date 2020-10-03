@@ -700,55 +700,6 @@ const getTags = async (req, res, next) => {
     );
   }
 
-  res.json({
-    tags: tags.tags.toObject({getters:true})
-  });
-};
-
-const createTag = async (req, res, next) => {
-  let user;
-  try{
-    user = await User.findById(req.params.uid);
-  } catch (err) {
-    console.log(err);
-    const error = new HttpError
-    ("Find user failed.",
-    500)
-    return next(error);
-  }
-
-  const {tagname, color} = req.body;
-
-  const CreatedTag = new Tag({
-    name: tagname,
-    color,
-    files: [],
-    owner: req.params.uid
-  }); 
-
-  try{
-    
-    await CreatedTag.save();
-
-    await user.tags.push(CreatedTag);
-
-    await user.save();
-
-  } catch (err) {
-    console.log(err);
-    const error = new HttpError(
-      "Create tag failed, please try again.",
-      500
-    )
-    return next(error);
-  };
-
-  res.json({
-    success : true
-  });
-
-};
-
 exports.getBioinfo = getBioinfo;
 exports.updateBioinfo = updateBioinfo;
 exports.getAcc = getAcc;
@@ -758,12 +709,8 @@ exports.getFiles = getFiles;
 exports.deleteFile = deleteFile;
 exports.getOneFile = getOneFile;
 exports.editFile = editFile;
-
 exports.getSocialLinks = getSocialLinks;
 exports.getOneSocialLink = getOneSocialLink;
 exports.createSocialLink = createSocialLink;
 exports.updateSocialLink = updateSocialLink;
 exports.deleteSocialLink = deleteSocialLink;
-
-exports.getTags = getTags;
-exports.createTag = createTag;

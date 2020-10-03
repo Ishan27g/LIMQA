@@ -19,7 +19,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import Home from './components/Home/Home.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import AccountView from './components/AccountView/accountView.js';
-import DocViewer from './components/documentViewer/docViewer.js';
+
 import singleDoc from './components/documentViewer/singleDoc.js';
 import NotFound from './components/NotFound.js';
 import SignUp from './components/SignUp/signUp.js';
@@ -92,6 +92,7 @@ class App extends Component{
   handleLogout(){
     axios.get(http+'/api/users/logout', { withCredentials: true })
     .then(res=>{
+      window.location.href='/';
       console.log(res);
       this.setState({
         login: false,
@@ -294,12 +295,11 @@ class App extends Component{
           {<BrowserRouter>
             <Switch>
             <Route path="/" component={Home} exact/>
-              <Route path="/d" component={DocViewer} />
               <Route path="/documents/:id" component={singleDoc}/>
               {this.state.login? (<Route path="/manage" component={ManagePage}/>):(<Route path="/manage" component={NotFound}/>)}
               {this.state.register?(<Route path="/register" component={Register}/>):(<Route path="/register" component={Register}/>)}
               <Route path="/signup" component={SignUp}/>
-              <Route path="/view" component={AccountView}/>
+              {this.state.login? (<Route path="/view" component={AccountView}/>):(<Route path="/view" component={NotFound}/>)}
               <Route path="/notfound" component={NotFound} />
               <Route render={() => <Redirect to={{pathname: "/notfound"}} />} />
             </Switch>
