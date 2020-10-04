@@ -10,6 +10,7 @@ UPLOADS_DIR=uploads
 sudo ./stopApp.sh
 
 cd $SERVER_DIR
+mkdir $DB_DIR
 if [ ! -d "$DB_DIR$PERSISTENT_DIR" ]; then
     echo -e "${GREEN}"
     echo "Mounting local volume for MongoDB"
