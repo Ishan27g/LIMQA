@@ -7,6 +7,7 @@ const Social = require('../models/social');
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const Photos = require('../models/photos');
+const Tags = require('../models/tag');
 
 
 
@@ -70,25 +71,6 @@ const signup = async (req, res, next) => {
     const error = new HttpError("Could not create user, please try again.", 500);
     return next(error);
   }
-  
-  /*const cretedSocial = new Social({
-    name = 
-  })*/
-  const createdPhotos = new Photos({
-    email : email,
-    profilePhoto: "",
-    coverImages: "",
-    bgImage: ""
-  })
-  try {
-    await createdPhotos.save();
-  } catch (err) {
-    console.log(err);
-    const error = new HttpError(
-      'creating photos failed, please try again.'
-    );
-    return next(error);
-  }
 
   const createdUser = new User({
     name,
@@ -112,7 +94,45 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-
+  /**
+   * create photos object
+   */
+  const createdPhotos = new Photos({
+    email : email,
+    profilePhoto: "",
+    coverImages: "",
+    bgImage: ""
+  })
+  try {
+    await createdPhotos.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'creating photos failed, please try again.'
+    );
+    return next(error);
+  }
+  /**
+   * create tags object
+   */
+  const createdTags = new Tags({
+    name : "",
+    color : "",
+    files : [],
+    owner : createdUser.id
+  })
+  try {
+    await createdTags.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'creating tags failed, please try again.'
+    );
+    return next(error);
+  }
+  /**
+   * create social links object
+   */
   const CreatedLinkedin = new Social( {
     name: "Linkedin",
     url: "http://Linkedin.com",
@@ -129,12 +149,10 @@ const signup = async (req, res, next) => {
     url: "http://Facebook.com",
     owner: createdUser.id
   })
-
   try {
     await CreatedLinkedin.save();
     await CreatedInstagram.save();
     await CreatedFacebook.save();
-
     await createdUser.social.push(CreatedLinkedin);
     await createdUser.social.push(CreatedFacebook);
     await createdUser.social.push(CreatedInstagram);

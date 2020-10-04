@@ -8,6 +8,7 @@ const fileUpload = require("../middlerware/file-upload");
 
 router.get('/', userController.getUsers);
 
+// this route send the login status back to front end.
 router.get('/check', userController.check);
 
 router.post('/signup', fileUpload.array('files',10), [
@@ -17,17 +18,14 @@ router.post('/signup', fileUpload.array('files',10), [
     check("password").isLength({ min: 6 }), ] , userController.signup);
 
 router.post('/login', check('email').normalizeEmail(),userController.login);
-
-router.post('/profilePhoto', fileUpload.single('file'), photoController.addProfilePhoto);
-router.get('/profilePhoto', photoController.getProfilePhoto);
-
 router.get('/logout', (req, res) => {
     req.logout();
     res.send({ success : true, message : 'logged out' }); 
 })
-// this route send the login status back to front end.
-router.get('/check', userController.check);
 
+
+router.post('/profilePhoto', fileUpload.single('file'), photoController.addProfilePhoto);
+router.get('/profilePhoto', photoController.getProfilePhoto);
 router.delete('/profilePhoto', photoController.deleteProfilePhoto);
 
 router.post('/coverImages', fileUpload.array('files',5), photoController.addCoverImages);
