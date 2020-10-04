@@ -104,7 +104,7 @@ const url =`mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}`;
 
 // Use connect method to connect to MongoDB after a safe delay as it takes time to install mongoDB in docker for the first time. Can remove delay after 1st run.
 // no need for delay if running mongoDb locally
-
+console.log("Connecting to MongoDB ...")
 setTimeout(connect, 3000);
 
 function connect(){
