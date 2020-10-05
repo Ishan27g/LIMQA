@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const fileUpload = require("../middlerware/file-upload");
 const { ensureAuthenticated } = require('../middlerware/auth');
 
-router.get('/bioinfo', ensureAuthenticated,  manageController.getBioinfo);
+router.get('/bioinfo/:uid',  manageController.getBioinfo);
 // expect json data send from front-end.
 router.put('/bioinfo/:uid', ensureAuthenticated, [ check("bioinfo").not().isEmpty() ], manageController.updateBioinfo);
 
@@ -16,7 +16,7 @@ router.put('/accSetting/:uid', ensureAuthenticated, fileUpload.single('profileim
 // document related routes below.
 router.post('/documents/:uid', ensureAuthenticated, fileUpload.single("document"), manageController.uploadFiles);
 
-router.get('/documents/:uid', ensureAuthenticated, manageController.getFiles);
+router.get('/documents/:uid', manageController.getFiles);
 
 router.get('/OneDocument/:documentId', manageController.getOneFile);
 
@@ -26,7 +26,7 @@ router.put('/editDocument/:documentId', ensureAuthenticated, manageController.ed
 
 
 // social links related routes below.
-router.get('/social/:uid', ensureAuthenticated, manageController.getSocialLinks);
+router.get('/social/:uid', manageController.getSocialLinks);
 
 router.get('/social/onelink/:socialId', ensureAuthenticated, manageController.getOneSocialLink);
 
