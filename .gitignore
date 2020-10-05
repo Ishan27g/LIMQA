@@ -4,3 +4,4 @@ uploads/
 tester.css
 server/.DS_Store
 ui/.DS_Store
+server/MongoDB/
