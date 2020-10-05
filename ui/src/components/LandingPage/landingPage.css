@@ -1,0 +1,36 @@
+.copyright{
+  color: grey;
+}
+
+
+.app-body {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.landing-header, .user-search{
+  display: flex;
+  justify-content: center;
+
+}
+
+.landing-header {
+   color: white;
+   font-family: serif, cursive;
+   font-size: 3em;
+   margin-bottom: 2vmax;
+}
+
+.user-search-list-item {
+  font-size: 1.35em;
+}
+.user-search-list-item  > span{
+  color: lightgrey;
+  font-size: 0.85em;
+  margin-right: auto;
+}
+.user-search-list-item:hover {
+  color: darkblue;
+}
