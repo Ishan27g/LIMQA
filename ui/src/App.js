@@ -13,12 +13,12 @@ class App extends Component{
 
     this.state = {
       login: false,
-      user_redirect: ""
+      userRedirect: ""
     }
 
   }
   handleLoginStatus = e => this.setState({login: e.target.value});
-  handleRedirect = e => this.setState({user_redirect: e.target.value});
+  handleRedirect = e => this.setState({userRedirect: e.target.value});
 
   render(){
 

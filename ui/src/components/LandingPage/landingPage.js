@@ -12,11 +12,15 @@ import Image from 'react-bootstrap/Image';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
+import Fade from 'react-bootstrap/Fade';
 import ListGroup from 'react-bootstrap/ListGroup';
+import CardColumns from 'react-bootstrap/CardColumns';
+import Carousel from 'react-bootstrap/Carousel';
 
 import Home from '../Home/Home.js';
-
 import UserList from './userList.js';
+import UserCard from './userCard.js';
+
 
 import logo from '../../Image/logo.png';
 import loginButton from '../../Image/loginButton.svg';
@@ -208,7 +212,7 @@ class Landing extends Component{
                   || name.match(regex))
 
         }
-      }).sort((a,b)=> b["name"] - a["name"]).slice(0,);
+      }).sort((a,b)=> b["name"] - a["name"]).slice(0,7);
 
     let showUsers = searchUsers.map( searchedUser => {
       return (
@@ -217,9 +221,32 @@ class Landing extends Component{
           email = {searchedUser.email}
           id = {searchedUser.id}/>
       )
-    })
+    });
+
+    let allUsers = this.state.users.map( cardUser =>{
+      return (
+        <UserCard
+          name = {cardUser.name}
+          email = {cardUser.email}
+          id = {cardUser.id}
+          bioinfo = {cardUser.bioinfo}
+          social = {cardUser.social}/>
+      )
+    });
+
+    var setUsers =[];
+    for(var i= 0; i < allUsers.length; i=i+3){
+      setUsers.push(
+          <CardColumns variant = "flush">{allUsers.slice(i,i+3)}</CardColumns>
+      )
+    }
+
+    let diplaySetUsers = setUsers.map(userDeck => {
+      return(<Carousel.Item>{userDeck}</Carousel.Item>)
+    });
 
     return (
+
       <div>
         <header>
           <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
@@ -287,10 +314,15 @@ class Landing extends Component{
                             onChange = {this.onChangeSearch}
                             placeholder="Search Users"/>
             </Row>
-            <Row>
+            <Row className = "search-field">
             <Collapse in = {this.state.searching}>
               <ListGroup variant = "flush">{showUsers}</ListGroup>
             </Collapse>
+            </Row>
+            <Row className = "user-cards">
+            <Fade in = {!(this.state.searching)}>
+              <Carousel interval = {10000}>{diplaySetUsers}</Carousel>
+            </Fade>
             </Row>
           </Container>
         </body>

@@ -2,7 +2,6 @@
   color: grey;
 }
 
-
 .app-body {
   position: fixed;
   top: 50%;
@@ -20,7 +19,14 @@
    color: white;
    font-family: serif, cursive;
    font-size: 3em;
-   margin-bottom: 2vmax;
+   margin-bottom: 1vmax;
+}
+.search-field, .user-cards{
+  margin-bottom: 1vmax;
+}
+
+.user-cards{
+  margin-top: 1vmax;
 }
 
 .user-search-list-item {
@@ -31,6 +37,11 @@
   font-size: 0.85em;
   margin-right: auto;
 }
+
 .user-search-list-item:hover {
   color: darkblue;
+}
+
+.user-card-item > .card-title:hover{
+  color: lightgrey;
 }

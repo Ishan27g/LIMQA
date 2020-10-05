@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import '../../App.css';
+import './landingPage.css';
 
 import ListGroup from 'react-bootstrap/ListGroup';
 
