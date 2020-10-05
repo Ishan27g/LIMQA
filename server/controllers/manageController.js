@@ -361,31 +361,36 @@ const uploadFiles = async (req, res, next) => {
 const work = new Tag({
   name: "Work-Experience",
   color: "red",
-  owner : userId,
+  files : [],
+  owner : userId
 });
 
 const Academic = new Tag({
   name: "Academic",
   color: "blue",
-  owner : userId,
+  files : [],
+  owner : userId
 });
 
 const volunteering = new Tag({
   name: "Volunteering",
   color: "green",
+  files : [],
   owner : userId,
 });
 
 const Leadership = new Tag({
   name: "Leadership",
   color: "brown",
-  owner : userId,
+  files : [],
+  owner : userId
 });
 
 const Curricular = new Tag({
   name: "Extra-Curricular",
   color: "yellow",
-  owner : userId,
+  files : [],
+  owner : userId
 });
 
 try{
