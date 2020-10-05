@@ -122,6 +122,8 @@ const updateAcc  = async (req, res, next) => {
   let ins;
   let linkedin;
   let facebook;
+  let github;
+  let wechat;
   
   socials = user.social;
 
@@ -149,6 +151,12 @@ const updateAcc  = async (req, res, next) => {
       }
       if (media.name === "Facebook") {
         facebook = media;
+      }
+      if (media.name === "Github") {
+        github = media;
+      }
+      if (media.name === "Wechat") {
+        wechat = media;
       }
     }
   } 
@@ -259,6 +267,30 @@ const updateAcc  = async (req, res, next) => {
         )
         return next(error);
       };
+
+      const updateGithub = {url: req.body.Githuburl};
+      try {
+        await github.updateOne(updateGithub);
+      } catch (err) {        
+        console.log(err);
+        const error = new HttpError(
+          "Cannot update link.",
+          500        
+        )
+          return next(error);
+      };
+
+      const updateWechat = {url: req.body.Wechaturl};
+      try {
+        await wechat.updateOne(updateWechat);
+      } catch (err) {        
+        console.log(err);
+        const error = new HttpError(
+          "Cannot update link.",
+          500        
+        )
+          return next(error);
+      };
  
 
 
@@ -272,19 +304,6 @@ const updateAcc  = async (req, res, next) => {
     );
     return next(error);
   }
-
-  let newsocial;
-  try {
-    newsocial = await Social.find({});
-  } catch (err) {
-    console.log(err);
-    const error = new HttpError (
-      "Something went wrong, could not find social media.",
-      500
-    );
-  }
-  console.log("after update "+ newsocial);
-
 
   res.status(200).json({ user: user.toObject({ getters: true }) } );
 };
