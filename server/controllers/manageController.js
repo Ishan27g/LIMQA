@@ -548,10 +548,13 @@ const getSocialLinks = async (req, res, next) => {
 };
 
 const getOneSocialLink = async (req, res, next) => {
-  let socialId = req.params.socialId;
+  let userId = req.params.uid;
+  let socialName = req.params.name;
+  let user;
   let socialLink;
+
   try{
-    socialLink = await Social.findById(socialId);
+    user = await User.findById(userId).populate("social");
   }catch(err) {
     console.log(err);
     const error = new HttpError(
@@ -562,11 +565,22 @@ const getOneSocialLink = async (req, res, next) => {
   }
 
 
-  if(! socialLink) {
-    return next(new HttpError("Cannot find social link for provided Id.", 422));
+  if(! user) {
+    return next(new HttpError("Cannot find user for provided Id.", 422));
   }
 
-  res.json({social: socialLink.toObject({getters : true})});
+  let i;
+  for (i = 0; i <5; i++) {
+    if(user.social[i].name === socialName) {
+      socialLink = user.social[i].url;
+    }
+  };
+
+  if(typeof socialLink === 'undefined') {
+    return next(new HttpError("Social media name is invalid."))
+  }
+
+  res.json({url: socialLink});
 
 
 }
