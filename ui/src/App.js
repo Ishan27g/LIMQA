@@ -8,35 +8,22 @@ import Landing from './components/LandingPage/landingPage.js';
 import NotFound from './components/NotFound.js';
 
 class App extends Component{
-  constructor(props){
-    super(props);
-
-    this.state = {
-      login: false,
-      userRedirect: ""
-    }
-
-  }
-  handleLoginStatus = e => this.setState({login: e.target.value});
-  handleRedirect = e => this.setState({userRedirect: e.target.value});
 
   render(){
-
 
     return (
       <div>
       {<BrowserRouter>
         <Switch>
-          <Route path="/" render = {() => <Landing onChangeLogin = {this.handleLoginStatus}
-                                                   redirect = {this.handleRedirect}/> } exact/>
-          {this.state.login?
-            (<Route path="/manage" component={ManagePage}/>)
-            :
-            (<Route path="/" exact />)
-            }
+          <Route path="/" component ={Landing} exact/>\
           <Route path="/register" component={Register}/>
           <Route path="/notfound" render = {() => <NotFound link = "/"/> }/>
           <Route render={() => <Redirect to={{pathname: "/notfound"}} />} />
+
+          /*{this.state.login? (
+              <Route path="/manage"
+                      render = {() => <ManagePage id = {this.state.loginid} />}/>)
+            :(<Route path="/manage" component={NotFound}/>)}*/
         </Switch>
       </BrowserRouter>}
       </div>

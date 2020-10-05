@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import './landingPage.css';
 
+
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
@@ -16,6 +17,7 @@ import Fade from 'react-bootstrap/Fade';
 import ListGroup from 'react-bootstrap/ListGroup';
 import CardColumns from 'react-bootstrap/CardColumns';
 import Carousel from 'react-bootstrap/Carousel';
+
 
 import Home from '../Home/Home.js';
 import UserList from './userList.js';
@@ -56,8 +58,8 @@ class Landing extends Component{
 
       /*Login Values*/
       email: "",
-      password: ""
-
+      password: "",
+      loginid: ""
     }
   }
   componentDidMount(){
@@ -113,13 +115,14 @@ class Landing extends Component{
                 axios.get(check, { withCredentials: true })
                 .then(response => {
                   console.log(response.data.logIn);
-                  console.log( "/manage".concat("/", response.data.userid));
+                  console.log(response.data.userid);
                   if (response.data.logIn){
                     this.setState({
                       loginButton: false,
-                      login: true
+                      login: true,
+                      loginid: response.data.userid
                     })
-                    /*window.location.href = "/".concat(response.data.userid,"/manage")*/
+                    window.location.href = "/manage"
                   }
                 })
               } else {
@@ -141,6 +144,7 @@ class Landing extends Component{
       console.log(res);
       this.setState({
         login: false,
+        loginid: ""
       });
     })
     .catch(function(error) {
