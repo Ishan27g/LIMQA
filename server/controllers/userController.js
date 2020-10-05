@@ -13,10 +13,16 @@ const Photos = require('../models/photos');
 const getUsers = async (req, res, next) => {
   let users;
   try {
-    users = await User.find({}).select("-password");
+    users = await User.find({}).select("-password").populate(
+      {path: 'documents',
+        populate: {
+          path: 'tags',
+          model: 'Tag'
+        } 
+      }).populate("social");
   } catch (err) {
     const error = new HttpError(
-      'Fetching users failedm please try again later.',
+      'Fetching users failed please try again later.',
       500
     );
     return next(error);

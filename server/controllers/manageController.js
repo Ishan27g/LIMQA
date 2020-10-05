@@ -14,7 +14,22 @@ const { db, updateOne } = require('../models/user');
 
 
 const getBioinfo = async (req, res, next) => {
-  let user = req.user;
+  let userId = req.params.uid;
+  let user;
+  try {
+    user = await User.findById(userId);
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Fail to find user, please try again.",
+      500
+    );
+    return next(error);
+  }
+
+  if(!user) {
+    return next(new HttpError("Cannot find user for provided userID,"));
+  }
   res.json(
     {bioinfo: user.bioinfo}
   );
