@@ -238,7 +238,9 @@ class ManagePage extends Component {
               <Card className='documentsCard' >
                 <Card.Img variant='top' src={docImage}/>
                 <Card.Body>
-                  <Button variant="secondary" href={"/documents/" + card._id} block>{card.name}</Button>
+                <Card.Title onClick = {event =>  window.location.href = '/documents/'+card._id }>
+                  {card.name}
+                </Card.Title>
                 </Card.Body>
 
               </Card>

@@ -2,14 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import './landingPage.css';
 
-
-import Navbar from 'react-bootstrap/Navbar';
-import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Alert from 'react-bootstrap/Alert';
-import Image from 'react-bootstrap/Image';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';

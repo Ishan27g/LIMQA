@@ -6,6 +6,7 @@ import './Home.css';
 import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import CardColumns from 'react-bootstrap/CardColumns';
 import CardDeck from 'react-bootstrap/CardDeck';
 import Carousel from "react-bootstrap/Carousel";
 import Col from 'react-bootstrap/Col';
@@ -14,7 +15,7 @@ import CoverImage from '../CoverImage/coverImage.js';
 import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
 
-import docIcon from '../../Image/documents.png';
+import docImage from '../../Image/documents.png';
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
@@ -51,8 +52,9 @@ class Home extends Component {
 
         axios.get(http+'/api/documents/'+this.state.userId)
         .then(res =>{
+            console.log(res.data.documents)
             this.setState({
-                documents: res.data,
+                documents: res.data.documents,
             })
         })
         .catch(function(error) {
@@ -88,6 +90,36 @@ class Home extends Component {
                 </Carousel.Item>
             )
         });
+        console.log(this.state.documents)
+        var hDoc = this.state.documents.filter(function(document){
+            return document.highlighted == true;
+        });
+
+        let highlightedDoc = hDoc.map(doc =>{
+            return (
+                <Card className='documentsCard' >
+                    <Card.Img variant='top' src={docImage}/>
+                    <Card.Body>
+                      <Card.Title onClick = {event =>  window.location.href = '/documents/'+ doc._id }>
+                        {doc.name}
+                      </Card.Title>
+                    </Card.Body>
+                </Card>
+            )
+        });
+            
+        var setDoc =[];
+        for(var i= 0; i < highlightedDoc.length; i=i+3){
+            setDoc.push(
+            <CardColumns variant = "flush">{highlightedDoc.slice(i,i+3)}</CardColumns>
+        )
+        }
+
+        let displayHDoc = setDoc.map(docDeck => {
+        return(<Carousel.Item>{docDeck}</Carousel.Item>)
+        });
+
+
 
         return(
           <body>
@@ -125,7 +157,7 @@ class Home extends Component {
                     <h3> Highlighted Documents </h3>
                   </Col>
                 </Row>
-                    {this.state.documents.length<1 ? (
+                    {hDoc.length < 1 ? (
                         <Carousel indicators ={false}>
                         <Carousel.Item>
                             <img
@@ -140,73 +172,8 @@ class Home extends Component {
                         </Carousel.Item>
                         </Carousel>
                     ):(
-                        <Carousel indicators ={false}>
-                        <Carousel.Item>
-                        <CardDeck>
-                        <Card>
-                            <Card.Img src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img src={docIcon} />
-                            <Card.Body bsPrefix = "card-body">
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        </CardDeck>
-                        </Carousel.Item>
-                        <Carousel.Item>
-                        <CardDeck>
-                        <Card>
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        </CardDeck>
-                        </Carousel.Item>
-                        <Carousel.Item>
-                        <CardDeck>
-                        <Card >
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        </CardDeck>
-                        </Carousel.Item>
+                        <Carousel indicators ={false} interval = {10000}>
+                            {displayHDoc}
                         </Carousel>
                     )}
                     
