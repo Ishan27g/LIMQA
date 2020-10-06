@@ -38,7 +38,7 @@ class ManagePage extends Component {
           filter : "Title",
           bio: 'tester',
           updateBio: '',
-          userid:'',
+          userid: this.props.match.params.id,
           cover: [sampleImage1, sampleImage2, sampleImage3],
           updateProfile: null,
           updateCover: null,
@@ -64,26 +64,15 @@ class ManagePage extends Component {
     }
 
     componentDidMount(){
-      const idurl = http+'/api/users/check';
-      axios.get(idurl, { withCredentials: true })
-      .then(response => {
+      const docUrl = http+'/api/documents/' + this.state.userid;
+      axios.get(docUrl, { withCredentials: true })
+      .then(res=>{
         this.setState({
-          userid: response.data.userid
-        }, ()=>{
-          const docUrl = http+'/api/documents/' + this.state.userid;
-          axios.get(docUrl, { withCredentials: true })
-          .then(res=>{
-            this.setState({
-              documents: res.data.documents
-            })
-          })
-        });
-      })
-      .catch(function(error) {
-        console.log(error);
+          documents: res.data.documents
+        })
       })
 
-      const biourl = http+'/api/bioinfo';
+      const biourl = http+'/api/bioinfo' + this.state.userid;
       axios.get(biourl, { withCredentials: true })
       .then(res =>{
         this.setState({

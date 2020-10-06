@@ -59,7 +59,7 @@ class Landing extends Component{
       /*Login Values*/
       email: "",
       password: "",
-      loginid: ""
+      loginid: "",
     }
   }
   componentDidMount(){
@@ -121,8 +121,10 @@ class Landing extends Component{
                       loginButton: false,
                       login: true,
                       loginid: response.data.userid
+                    }, ()=>{
+                      const manageUrl = "/manage"+this.state.loginid;
+                      window.location.href = manageUrl;
                     })
-                    window.location.href = "/manage"
                   }
                 })
               } else {
@@ -250,64 +252,6 @@ class Landing extends Component{
     });
 
     return (
-
-      <div>
-        <header>
-          <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
-            <Navbar.Brand href="/" className = "mr-auto">
-              <Image alt="Logo" src = {logo} style = {{width: "9vmax", height: "2.5vmax"}}/>
-            </Navbar.Brand>
-              <Button
-                variant="primary-info"
-                onClick={this.handleSignShow}
-                className="mr-2">
-                <img alt="Login" src = {loginButton}/>
-              </Button>
-              <Modal show={this.state.loginButton} onHide={this.handleSignClose} >
-                <Modal.Body >
-                  <form>
-                    <h3 className ="text-center font-size-15px" style={{ color: 'black' }}>
-                    Welcome back!
-                    </h3>
-
-                    <Form.Group controlId="formBasicEmail">
-                      <Form.Label>Email address</Form.Label>
-                      <Form.Control type="email" placeholder="Enter email" onChange={this.onChangeEmail} />
-                    </Form.Group>
-                    {
-                      this.state.alertEmail ?(
-                        <Alert variant={'danger'}>
-                          Please enter a valid email!
-                        </Alert>
-                      ) : (<section></section>)
-                    }
-                    <Form.Group controlId="formBasicPassword">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
-                    </Form.Group>
-                    {
-                      (this.state.loginInfo === false) ||
-                          (this.state.alertPassword === true) ?
-                          (
-                        <Alert variant={'danger'}>
-                          incorrect email or password!
-                        </Alert>
-                      ) : (<section></section>)
-                    }
-                  </form>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button size="lg" block variant="primary" onClick={this.Adminlogin}>
-                    Login
-                  </Button>
-                  <Button size="lg" block variant="primary" onClick={event =>  window.location.href='/register'}>
-                    Register
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-          </Navbar>
-        </header>
-
         <body>
           <Container className = "app-body">
             <Row className = "landing-header">
@@ -330,18 +274,6 @@ class Landing extends Component{
             </Row>
           </Container>
         </body>
-
-        <footer>
-        <Navbar
-          bg = "light" variant = "light"
-          expand = "lg" fixed ="bottom"
-          className = "copyright">
-          <Form>
-            <Form.Text> Product of team LiMQA ©</Form.Text>
-          </Form>
-        </Navbar>
-        </footer>
-      </div>
     )
   }
 }
