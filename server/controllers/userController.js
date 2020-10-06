@@ -13,10 +13,16 @@ const Photos = require('../models/photos');
 const getUsers = async (req, res, next) => {
   let users;
   try {
-    users = await User.find({}).select("-password");
+    users = await User.find({}).select("-password").populate(
+      {path: 'documents',
+        populate: {
+          path: 'tags',
+          model: 'Tag'
+        } 
+      }).populate("social");
   } catch (err) {
     const error = new HttpError(
-      'Fetching users failedm please try again later.',
+      'Fetching users failed please try again later.',
       500
     );
     return next(error);
@@ -123,21 +129,37 @@ const signup = async (req, res, next) => {
     name: "Instagram",
     url: "http://Instagram.com",
     owner: createdUser.id
-  })
+  });
   const CreatedFacebook = new Social( {
     name: "Facebook",
     url: "http://Facebook.com",
     owner: createdUser.id
-  })
+  });
+
+  const CreatedGithub = new Social( {
+    name: "Github",
+    url: "http://Github.com",
+    owner: createdUser.id
+  });
+
+  const CreatedWechat = new Social( {
+    name: "Wechat",
+    url: "http://Wechat.com",
+    owner: createdUser.id
+  });
 
   try {
     await CreatedLinkedin.save();
     await CreatedInstagram.save();
     await CreatedFacebook.save();
+    await CreatedGithub.save();
+    await CreatedWechat.save();
 
     await createdUser.social.push(CreatedLinkedin);
     await createdUser.social.push(CreatedFacebook);
     await createdUser.social.push(CreatedInstagram);
+    await createdUser.social.push(CreatedGithub);
+    await createdUser.social.push(CreatedWechat);
     await createdUser.save();
   } catch (err) {
     console.log(err);
