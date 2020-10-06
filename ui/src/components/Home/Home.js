@@ -4,24 +4,23 @@ import "../../App.css";
 import './Home.css';
 
 import axios from "axios";
-import Carousel from "react-bootstrap/Carousel";
-import Image from 'react-bootstrap/Image';
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import CardDeck from 'react-bootstrap/CardDeck';
-import CoverImage from '../CoverImage/coverImage.js';
+import Carousel from "react-bootstrap/Carousel";
 import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
+import CoverImage from '../CoverImage/coverImage.js';
+import Image from 'react-bootstrap/Image';
+import Row from 'react-bootstrap/Row';
 
+import docIcon from '../../Image/documents.png';
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
-import docIcon from '../../Image/documents.png';
 
 import {pathForRequest} from '../http.js';
-
 let http = pathForRequest();
 
 class Home extends Component {
@@ -35,29 +34,26 @@ class Home extends Component {
             docShow: false,
             documents: [],
             docname:"",
+            userId: this.props.match.params.id,
         }
     }
 
     componentDidMount(){
-        axios.get(http+'/api/users')
+        axios.get(http+'/api/bioinfo/'+this.state.userId)
         .then(res =>{
             this.setState({
-                bioinfo: res.data.users[0].bioinfo,
-                documents: res.data.users[0].documents
+                bioinfo: res.data.bioinfo,
             })
-            if (!res.data.users[0].bioinfo || this.state.bioinfo === ""){
-                this.setState({ bioinfo: 'this person have no bioinfo yet' });
-            }
-            if(res.data.users[0].documents[0] !== ""){
-                const getDoc = http+'/api/OneDocument/'+res.data.users[0].documents[0];
-                axios.get(getDoc)
-                .then(res=>{
-                    console.log(res.data.document);
-                    this.setState({
-                        docname: res.data.document.name
-                    })
-                })
-            }
+        })
+        .catch(function(error) {
+            console.log(error);
+        })
+
+        axios.get(http+'/api/documents/'+this.state.userId)
+        .then(res =>{
+            this.setState({
+                documents: res.data,
+            })
         })
         .catch(function(error) {
             console.log(error);

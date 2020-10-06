@@ -1,29 +1,32 @@
 import React, {Component} from 'react';
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import './App.css';
 
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import Alert from 'react-bootstrap/Alert';
 import axios from 'axios';
-import Navbar from 'react-bootstrap/Navbar';
+import Button from 'react-bootstrap/Button';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 import Image from 'react-bootstrap/Image';
 import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import Nav from 'react-bootstrap/Nav';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
-import FormControl from 'react-bootstrap/FormControl';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
-import ManagePage from './components/ManagePage/ManagePage.js';
-import Register from './components/SignUp/register.js';
+import AccountView from './components/AccountView/accountView.js';
 import Landing from './components/LandingPage/landingPage.js';
+import ManagePage from './components/ManagePage/ManagePage.js';
 import NotFound from './components/NotFound.js';
+import Register from './components/SignUp/register.js';
+import singleDoc from './components/documentViewer/singleDoc.js';
 
 import logo from './Image/logo.png';
 import loginButton from './Image/loginButton.svg';
 
 import {pathForRequest} from './components/http.js';
+import Home from './components/Home/Home';
 let http = pathForRequest();
 
 class App extends Component{
@@ -40,17 +43,20 @@ class App extends Component{
     this.handleLogout = this.handleLogout.bind(this);
 
     this.state ={
+        /*App states*/
         loginButton: false,
         login: false,
         QRButton: false,
         Alertemail: false,
         Alertpassword: false,
-        email: '',
-        password: '',
         AlertLogin: '',
         loginInfo: true,
         userId: '',
-        frontPage: true
+
+      /*Login Values*/
+        email: '',
+        password: '',
+
     }
   }
 
@@ -158,20 +164,6 @@ class App extends Component{
       }
   }
 
-  handlesignup(){
-    const signurl = http+'/api/users/signup';
-    const user = {
-      email: 'test@test.com'
-    };
-    axios.post(signurl,user, { withCredentials: true })
-    .then(response => {
-      console.log("signup success");
-    })
-    .catch(function(error) {
-        console.log(error);
-    })
-  }
-
   handleSignin = () => {
     this.setState({ login: true });
     this.setState({ loginButton: false });
@@ -258,14 +250,14 @@ class App extends Component{
                     <Nav.Link href="/">Experience</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
-                      <Nav.Link href="link">Achievements</Nav.Link>
+                      <Nav.Link href="/">Achievements</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
-                      <Nav.Link href="link">Timeline</Nav.Link>
+                      <Nav.Link href="/">Timeline</Nav.Link>
                     </Nav.Item>
                     <NavDropdown title="More" id="collasible-nav-dropdown">
                       <Nav.Item class = "nav-item">
-                        <Nav.Link href="link">Contact me</Nav.Link>
+                        <Nav.Link href="/">Contact me</Nav.Link>
                       </Nav.Item>
                     </NavDropdown>
                     </Nav>
@@ -275,8 +267,8 @@ class App extends Component{
                         <DropdownButton id="manage-dropdown" title="Manage"
                         variant = "outline-dark"
                         className =" mr-2">
-                          <Dropdown.Item href="/View">Account</Dropdown.Item>
-                          <Dropdown.Item href="/manage">Manage Documents</Dropdown.Item>
+                          <Dropdown.Item href={"/view/"+this.state.userId}>Account</Dropdown.Item>
+                          <Dropdown.Item href={"/manage/"+this.state.userId}>Manage Documents</Dropdown.Item>
                           <Dropdown.Divider />
                           <Dropdown.Item onClick={this.handleLogout}>Log Out</Dropdown.Item>
                         </DropdownButton>
@@ -359,9 +351,12 @@ class App extends Component{
           <Switch>
             <Route path="/" component ={Landing} exact/>
             <Route path="/register" component={Register}/>
-            <Route path="/manage/:id" component={ManagePage}/>
+            <Route path="/home/:id" component={Home}/>
+            <Route path="/documents/:id" component={singleDoc}/>
+            {this.state.login? (<Route path="/manage/:id" component={ManagePage}/>):(<Route path="/manage/:id" component={NotFound}/>)}
+            {this.state.login? (<Route path="/view/:id" component={AccountView}/>):(<Route path="/view/:id" component={NotFound}/>)}
             <Route path="/notfound" render = {() => <NotFound link = "/"/> }/>
-            <Route render={() => <Redirect to={{pathname: "/notfound"}} />} />
+            
           </Switch>
         </BrowserRouter>}
 

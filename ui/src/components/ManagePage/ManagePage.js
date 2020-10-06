@@ -72,19 +72,13 @@ class ManagePage extends Component {
         })
       })
 
-      const biourl = http+'/api/bioinfo' + this.state.userid;
+      const biourl = http+'/api/bioinfo/' + this.state.userid;
       axios.get(biourl, { withCredentials: true })
       .then(res =>{
         this.setState({
           bio: res.data.bioinfo,
           updateBio: res.data.bioinfo
-        });
-        if (!res.data.bioinfo || this.state.bio.length < 1){
-          this.setState({
-            bio: 'this person have no bioinfo yet',
-            updateBio: 'this person have no bioinfo yet',
-          })
-        }
+        })
       })
       .catch(function(error) {
         console.log(error);

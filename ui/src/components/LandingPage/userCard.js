@@ -14,7 +14,8 @@ import iconWechat from '../../Image/Wechat.png';
 class UserCard extends Component{
 
     render(){
-        var userLink = `/${this.props.id}`;
+        const userLink = '/home/' + this.props.id;
+        console.log(userLink);
         var socials = this.props.social;
 
         var Linkedin = socials.filter( social =>
@@ -43,7 +44,7 @@ class UserCard extends Component{
                             style = {{width: "10vmax", height: "10vmax", alignSelf: "center"}}/>
 
                   <Card.Title style = {{fontSize: "1.25em", color: "black"}}
-                              onClick = {event =>  window.location.href = {userLink} }>
+                              onClick = {event =>  window.location.href = '/home/'+this.props.id }>
                               {this.props.name}
 
                               <Card.Text style = {{fontSize: "0.5em", color: "grey"}}>

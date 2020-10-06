@@ -18,14 +18,9 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import CardColumns from 'react-bootstrap/CardColumns';
 import Carousel from 'react-bootstrap/Carousel';
 
-
-import Home from '../Home/Home.js';
 import UserList from './userList.js';
 import UserCard from './userCard.js';
 
-
-import logo from '../../Image/logo.png';
-import loginButton from '../../Image/loginButton.svg';
 
 import {pathForRequest} from '../http.js';
 let http = pathForRequest();
@@ -33,23 +28,10 @@ let http = pathForRequest();
 class Landing extends Component{
   constructor(props){
     super(props);
-    this.handleSignClose = this.handleSignClose.bind(this);
-    this.handleSignShow = this.handleSignShow.bind(this);
-    this.handleSignin = this.handleSignin.bind(this);
-    this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.onChangeSearch = this.onChangeSearch.bind(this);
-    this.Adminlogin = this.Adminlogin.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
     this.getUsers = this.getUsers.bind(this);
 
     this.state = {
       /*App states*/
-      loginButton: false,
-      login: false,
-      loginInfo: false,
-      alertEmail: false,
-      alertPassword: false,
       searching: false,
 
       /*User Search*/
@@ -64,128 +46,11 @@ class Landing extends Component{
   }
   componentDidMount(){
     this.getUsers();
-    const check = http+'/api/users/check';
-    axios.get(check, { withCredentials: true })
-      .then(response => {
-        if (response.data.logIn){
-          this.setState({
-            loginButton: false,
-            login: true,
-            loginInfo: true
-          })
-        }
-    })
   };
 
-  handleSignClose = () => {
-    this.setState({ loginButton: false });
-  }
 
-  handleSignShow = () => {
-    this.setState({ loginButton: true });
-  }
-
-  handleSignin = () => {
-    this.setState({ login: true });
-    this.setState({ loginButton: false });
-  }
-
-  Adminlogin(){
-      const obj = {
-          email: this.state.email,
-          password: this.state.password
-      };
-
-      if(!obj.email || !obj.password){
-          console.log("missing email or password!");
-          if(!obj.email){
-              this.setState({alertEmail: true});
-          }
-          if(!obj.password){
-              this.setState({alertPassword: true});
-          }
-
-      }
-      else{
-          const url = http+'/api/users/login';
-          const check = http+'/api/users/check';
-          axios.post(url,obj, { withCredentials: true })
-          .then(response => {
-              if (response.data.success){
-                axios.get(check, { withCredentials: true })
-                .then(response => {
-                  console.log(response.data.logIn);
-                  console.log(response.data.userid);
-                  if (response.data.logIn){
-                    this.setState({
-                      loginButton: false,
-                      login: true,
-                      loginid: response.data.userid
-                    }, ()=>{
-                      const manageUrl = "/manage"+this.state.loginid;
-                      window.location.href = manageUrl;
-                    })
-                  }
-                })
-              } else {
-                this.setState({
-                  loginInfo: false
-                })
-              }
-          })
-          .catch(function(error) {
-              console.log(error);
-          })
-      }
-  }
-
-  handleLogout(){
-    axios.get(http+'/api/users/logout', { withCredentials: true })
-    .then(res=>{
-      window.location.href='/';
-      console.log(res);
-      this.setState({
-        login: false,
-        loginid: ""
-      });
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-  }
-
-  onChangeEmail(e){
-    this.setState({
-      alertEmail: false,
-      email: e.target.value
-    });
-  }
-
-  onChangePassword(e){
-    this.setState({
-      alertPassword: false,
-      password: e.target.value
-    });
-  }
-
-  onChangeSearch(e){
-
-    if (e.target.value === ""){
-      this.setState({
-        search: e.target.value,
-        searching: false
-      });
-    } else {
-      this.setState({
-        search: e.target.value,
-        searching: true
-      });
-    }
-
-
-  }
   getUsers(){
-    axios.get(http + '/api/users',  { withCredentials: true })
+    axios.get(http + '/api/users')
     .then(response => {
       this.setState({users: response.data.users});
     })
