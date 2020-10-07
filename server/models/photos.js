@@ -3,7 +3,7 @@ const uniqueValidator = require("mongoose-unique-validator");
 const Schema = mongoose.Schema;
 
 const photoSchema = new Schema({
-    email: {type : String, required: false},
+    owner: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},     
     profilePhoto: {type : String, required: false},
     coverImages: [{type : String, required: false}],
     bgImage: {type : String, required: false}

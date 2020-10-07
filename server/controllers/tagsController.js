@@ -1,8 +1,5 @@
-const fs = require('fs');
-const { exec } = require('child_process');
 const HttpError = require('../models/http-error');
-const Tags = require('../models/tags');
-const { networkInterfaces } = require('os');
+const Tags = require('../models/tag');
 
 const addTagsForUser = async (req, res, next) => {
     let userId = req.params.uid
@@ -85,3 +82,6 @@ const addTagsToUserFile = async (req, res, next) => {
     }
     res.status(201).json({tag: newTag.toObject({ getters : true})});
 }
+
+exports.addTagsForUser = addTagsForUser;
+exports.addTagsToUserFile = addTagsToUserFile;
