@@ -80,7 +80,6 @@ const signup = async (req, res, next) => {
     social: [], 
     bioinfo: "This is bioinfo message",
     semail: "stest@test.com",
-    photos: createdPhotos, 
     officeAddress: "",
     mobile: ""
   });
@@ -98,7 +97,7 @@ const signup = async (req, res, next) => {
    * create photos object
    */
   const createdPhotos = new Photos({
-    email : email,
+    owner : createdUser.id,
     profilePhoto: "",
     coverImages: "",
     bgImage: ""
@@ -114,8 +113,7 @@ const signup = async (req, res, next) => {
   }
   /**
    * create tags object
-   */
-  const createdTags = new Tags({
+   const createdTags = new Tags({
     name : "",
     color : "",
     files : [],
@@ -130,6 +128,7 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
+  */
   /**
    * create social links object
    */
@@ -149,10 +148,12 @@ const signup = async (req, res, next) => {
     url: "http://Facebook.com",
     owner: createdUser.id
   })
+  createdUser.photos = createdPhotos;
   try {
     await CreatedLinkedin.save();
     await CreatedInstagram.save();
     await CreatedFacebook.save();
+ //   await createdUser.tags.push(createdTags)
     await createdUser.social.push(CreatedLinkedin);
     await createdUser.social.push(CreatedFacebook);
     await createdUser.social.push(CreatedInstagram);
