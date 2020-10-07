@@ -38,13 +38,14 @@ router.put('/social/:uid/:socialId', ensureAuthenticated, manageController.updat
 router.delete('/social/:uid/:socialId', ensureAuthenticated, manageController.deleteSocialLink);
 
 //tags related routes below
-/*
+
 router.post('/tags/:uid', ensureAuthenticated, tagsController.addTagsForUser);
 router.post('/tags/:uid/:documentId', ensureAuthenticated, tagsController.addTagsToUserFile);
 
-router.get('/tags/:uid', ensureAuthenticated, tagsController.getTagsForUser);
-router.get('/tags/:uid/:documentId', ensureAuthenticated, tagsController.getTagsOfUserFile);
-router.get('/tags/:uid/:tagId', ensureAuthenticated, tagsController.getFilesForUserTag);
-router.get('/tags/', ensureAuthenticated, tagsController.getAllTagsForAllUsers);
-*/
+//get all info for tags for a user
+router.get('/tags/:uid', tagsController.getTagsForUser);
+
+//get all tags for all users
+router.get('/tags/', tagsController.getAllTagsForAllUsers);
+
 module.exports = router;

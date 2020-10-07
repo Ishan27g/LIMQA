@@ -7,8 +7,6 @@ const Social = require('../models/social');
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const Photos = require('../models/photos');
-const Tags = require('../models/tag');
-
 
 
 const getUsers = async (req, res, next) => {
@@ -81,6 +79,7 @@ const signup = async (req, res, next) => {
     bioinfo: "This is bioinfo message",
     semail: "stest@test.com",
     officeAddress: "",
+    tags: [],
     mobile: ""
   });
 
