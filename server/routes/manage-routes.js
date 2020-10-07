@@ -37,12 +37,20 @@ router.put('/social/:uid/:socialId', ensureAuthenticated, manageController.updat
 
 router.delete('/social/:uid/:socialId', ensureAuthenticated, manageController.deleteSocialLink);
 
-//tags related routes below
 
+// create a new tag for a user
+/* json payload 
+    {"name":"testTag4","color":"black"} 
+*/
 router.post('/tags/:uid', ensureAuthenticated, tagsController.addTagsForUser);
+
+// create a new tag and link to 1 document
+/* json payload
+    {"name":"testTag3","color":"green"} 
+*/
 router.post('/tags/:uid/:documentId', ensureAuthenticated, tagsController.addTagsToUserFile);
 
-//get all info for tags for a user
+//get info for all tags for a user
 router.get('/tags/:uid', tagsController.getTagsForUser);
 
 //get all tags for all users
