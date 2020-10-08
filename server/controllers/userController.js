@@ -194,6 +194,7 @@ const login = (req, res, next) => {
 const forgotPassword = async (req, res, next) => {
 
   let user;
+  var token;
   try {
     user = await User.findOne({email: req.body.email});
   } catch (err) {
@@ -210,11 +211,16 @@ const forgotPassword = async (req, res, next) => {
   }
 
   try {
-    token = await bcrypt.hash(req.body.email, 10);
+    token  = crypto.randomBytes(20).toString('hex');
   } catch (err) {
-    const error = new HttpError("Generate token failed", 500);
+    console.log(err);
+    const error = new HttpError(
+      "Fail to generate token.",
+      500
+    )
     return next(error);
-  }
+  };
+
 
   console.log(token);
 
