@@ -7,7 +7,6 @@ import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns';
-import CardDeck from 'react-bootstrap/CardDeck';
 import Carousel from "react-bootstrap/Carousel";
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -30,12 +29,13 @@ class Home extends Component {
         this.docView = React.createRef();
         this.state = {
             bioinfo: '',
-            profilePage: '',
             cover:[sampleImage1, sampleImage2, sampleImage3],
             docShow: false,
             documents: [],
             docname:"",
             userId: this.props.match.params.id,
+            profileImg: http+'/api/users/profilePhoto/'+this.props.match.params.id,
+            bgImg: http+'/api/users/bgImage/'+this.props.match.params.id,
         }
     }
 
@@ -61,14 +61,14 @@ class Home extends Component {
             console.log(error);
         })
 
-        const imgUrl = http+'/api/users/coverImages';
+        const imgUrl = http+'/api/users/coverImages/'+this.state.userId;
         axios.get(imgUrl, { withCredentials: true })
         .then(res =>{
             if (res.data.coverImages.coverImages[0] !== ""){
                 var i;
                 const tempCover = [];
                 for (i=0; i<res.data.coverImages.coverImages.length; i++){
-                tempCover.push(http+'/api/users/coverImages/'+i)
+                tempCover.push(http+'/api/users/coverImages/'+this.state.userId+'/'+i)
                 }
                 this.setState({
                     cover: tempCover
@@ -139,7 +139,7 @@ class Home extends Component {
 
                     <Row style = {{marginTop: "2vmax"}} >
                         <Col style = {{textAlign: "center"}}>
-                        <Image src={http+'/api/users/profilePhoto'} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
+                        <Image src={this.state.profileImg} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
                         </Col>
                         <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
 

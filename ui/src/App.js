@@ -149,6 +149,8 @@ class App extends Component{
                       loginButton: false,
                       login: true,
                       userId: response.data.userid
+                    },()=>{
+                      window.location.href='/home/'+this.state.userId;
                     })
                   }
                 })

@@ -28,7 +28,7 @@ class AccountView extends Component {
       editVersion: false,
 
       // user details
-      profileImage: http+'/api/users/profilePhoto',
+      profileImage: http+'/api/users/profilePhoto/'+this.props.match.params.id,
       email: '',
       name: '',
       linkedin: '',
@@ -287,12 +287,6 @@ class AccountView extends Component {
                           <Row className = "edit-image-display">
                           <Image src={this.state.profileImage} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "10vmax", width: "10vmax"}}/>
                      
-                          </Row>
-                          <Row className = "edit-image-label">
-                            <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-                            <label htmlFor="BtnBrowseHidden" >
-                              Edit Image
-                            </label>
                           </Row>
                         </Container>
                       </Col>

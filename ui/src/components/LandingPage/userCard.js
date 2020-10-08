@@ -11,11 +11,13 @@ import iconLinkedin from '../../Image/Linkedin.png';
 import iconGithub from '../../Image/Github.png';
 import iconWechat from '../../Image/Wechat.png';
 
+import {pathForRequest} from '../http.js';
+let http = pathForRequest();
+
 class UserCard extends Component{
 
     render(){
-        const userLink = '/home/' + this.props.id;
-        console.log(userLink);
+        const profileImage = http+'/api/user/profilePhoto'+this.props.id;
         var socials = this.props.social;
 
         var Linkedin = socials.filter( social =>
@@ -39,7 +41,7 @@ class UserCard extends Component{
                   style={{ height: "auto"}}
                   bg = "light">
 
-                  <Card.Img variant="top" src={profile}
+                  <Card.Img variant="top" src={http+'/api/users/profilePhoto/'+this.props.id}
                             onError={(e)=>{e.target.onerror = null; e.target.src=profile}}
                             style = {{width: "10vmax", height: "10vmax", alignSelf: "center"}}/>
 
