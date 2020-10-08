@@ -4,6 +4,7 @@ const photoController = require("../controllers/photosController");
 const router = express.Router();
 const { check } = require('express-validator');
 const fileUpload = require("../middlerware/file-upload");
+const user = require('../models/user');
 
 
 router.get('/', userController.getUsers);
@@ -36,4 +37,8 @@ router.get('/coverImages/:id', photoController.getCoverImagesById);
 router.post('/bgImage', fileUpload.single('file'), photoController.addBgImage);
 router.get('/bgImage', photoController.getBgImage);
 
+// expect user email address
+router.post('/forgot', userController.forgotPassword);
+router.get('/resetPassword/:token', userController.checkToken);
+router.post('/resetPassword/:token', userController.resetPassowrd);
 module.exports = router;

@@ -7,6 +7,8 @@ const Social = require('../models/social');
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const Photos = require('../models/photos');
+const crypto = require('crypto');
+const { hrtime } = require('process');
 
 
 
@@ -189,8 +191,132 @@ const login = (req, res, next) => {
   })(req, res, next);
 };
 
+const forgotPassword = async (req, res, next) => {
+
+  let user;
+  try {
+    user = await User.findOne({email: req.body.email});
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Fail to find user for provided email",
+      500
+    )
+    return next(error);
+  };
+
+  if(!user) {
+    return next(new HttpError("This user does not exist.", 422));
+  }
+
+  try {
+    token = await bcrypt.hash(req.body.email, 10);
+  } catch (err) {
+    const error = new HttpError("Generate token failed", 500);
+    return next(error);
+  }
+
+  console.log(token);
+
+  user.resetPasswordToken = token;      // generate a unique token 
+  user.resetPasswordExpires = Date.now() + 3600000; //  token will be expired in 1 hour.
+
+  try{
+    await user.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Cannot save user, please try again.",
+      500
+      )
+      return next(error);
+  }
+  /*  could you send link in this format? I want to have the token string in url,
+    so that I can look up this token in database.
+    'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+
+  */
+
+  res.json({user : user.toObject({getters: true})});
+
+}
+
+// check if token has expired or not.
+const checkToken = async (req, res, next) => {
+  let user;
+  try {
+    user = await User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() }});
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Could not find user.",
+      500
+    )
+    return next(error);
+  }
+  if(!user) {
+    return next(new HttpError("Password reset token is invalid or has expired.", 422));
+  }
+
+  res.json({
+    token: true
+  })
+}
+
+const resetPassowrd = async (req, res, next) => {
+
+  let user;
+  try {
+    user = await User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } });
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Fail to find user for provided email",
+      500
+    )
+    return next(error);
+  };
+
+  if(!user) {
+    return next(new HttpError("Password reset token is invalid or has expired.", 422));
+  }
+
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(req.body.password, 10);
+  } catch (err) {
+    const error = new HttpError("Could not create password, please try again.", 500);
+    return next(error);
+  }
+
+  user.password = hashedPassword;
+  user.resetPasswordToken = undefined;      // set token to undefined  
+  user.resetPasswordExpires = undefined; // set expire time to undefinec.
+
+  try{
+    await user.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Cannot save user, please try again.",
+      500
+      )
+      return next(error);
+  }
+  /*  
+    send an email to user to notify that user has changed password successfully.
+  */
+
+  res.json({
+    reset: true
+  });
+
+}
 
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
 exports.check = check;
+exports.forgotPassword = forgotPassword;
+exports.checkToken = checkToken;
+exports.resetPassowrd = resetPassowrd;
