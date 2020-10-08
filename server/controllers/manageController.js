@@ -10,6 +10,7 @@ const Social = require('../models/social');
 const File = require('../models/file');
 const Tag = require('../models/tag');
 
+
 const { db, updateOne } = require('../models/user');
 
 
@@ -393,27 +394,37 @@ const uploadFiles = async (req, res, next) => {
 
 const work = new Tag({
   name: "Work-Experience",
-  color: "red"
+  color: "red",
+  files : [],
+  owner : userId
 });
 
 const Academic = new Tag({
   name: "Academic",
-  color: "blue"
+  color: "blue",
+  files : [],
+  owner : userId
 });
 
 const volunteering = new Tag({
   name: "Volunteering",
-  color: "green"
+  color: "green",
+  files : [],
+  owner : userId,
 });
 
 const Leadership = new Tag({
   name: "Leadership",
-  color: "brown"
+  color: "brown",
+  files : [],
+  owner : userId
 });
 
 const Curricular = new Tag({
   name: "Extra-Curricular",
-  color: "yellow"
+  color: "yellow",
+  files : [],
+  owner : userId
 });
 
 try{
