@@ -522,6 +522,33 @@ res.json({success: true});
  
 };
 
+// download file
+const downloadFile = async (req, res, next) => {
+  let path;
+  let filename;
+  let file;
+  try {
+    file = await File.findById(req.params.documentId);
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Fail to find this document.",
+      500
+    )
+    return next(error);
+  };
+
+  if(!file) {
+    return next(new HttpError("File does not exist.", 422));
+  }
+
+  path = file.path;
+  filename = file.name;
+
+  res.download(path, filename);
+
+};
+
 const getSocialLinks = async (req, res, next) => {
   let userId = req.params.uid;
   let socialLinks;
@@ -726,6 +753,7 @@ exports.getFiles = getFiles;
 exports.deleteFile = deleteFile;
 exports.getOneFile = getOneFile;
 exports.editFile = editFile;
+exports.downloadFile = downloadFile;
 exports.getSocialLinks = getSocialLinks;
 exports.getOneSocialLink = getOneSocialLink;
 exports.createSocialLink = createSocialLink;
