@@ -38,13 +38,14 @@ class ManagePage extends Component {
           filter : "Title",
           bio: 'tester',
           updateBio: '',
-          userid:'',
+          userid: this.props.match.params.id,
           cover: [sampleImage1, sampleImage2, sampleImage3],
           updateProfile: null,
           updateCover: null,
           updateDoc: null,
-          profileImg: http+'/api/users/profilePhoto',
-          bgImg: http+'/api/users/backgroundPhoto',
+          profileImg: http+'/api/users/profilePhoto/'+this.props.match.params.id,
+          bgImg: http+'/api/users/bgImage/'+this.props.match.params.id,
+          updatebgImg: null,
           docPath: '',
           doctype: '',
           documents: [],
@@ -61,47 +62,32 @@ class ManagePage extends Component {
         this.uploadCoverImage = this.uploadCoverImage.bind(this);
         this.onChangeDocUpload = this.onChangeDocUpload.bind(this);
         this.openDocView = this.openDocView.bind(this);
+        this.onChangeBgImg = this.onChangeBgImg.bind(this);
+        this.uploadBgImg = this.uploadBgImg.bind(this);
     }
 
     componentDidMount(){
-      const idurl = http+'/api/users/check';
-      axios.get(idurl, { withCredentials: true })
-      .then(response => {
+      const docUrl = http+'/api/documents/' + this.state.userid;
+      axios.get(docUrl, { withCredentials: true })
+      .then(res=>{
         this.setState({
-          userid: response.data.userid
-        }, ()=>{
-          const docUrl = http+'/api/documents/' + this.state.userid;
-          axios.get(docUrl, { withCredentials: true })
-          .then(res=>{
-            this.setState({
-              documents: res.data.documents
-            })
-          })
-        });
-      })
-      .catch(function(error) {
-        console.log(error);
+          documents: res.data.documents
+        })
       })
 
-      const biourl = http+'/api/bioinfo';
+      const biourl = http+'/api/bioinfo/' + this.state.userid;
       axios.get(biourl, { withCredentials: true })
       .then(res =>{
         this.setState({
           bio: res.data.bioinfo,
           updateBio: res.data.bioinfo
-        });
-        if (!res.data.bioinfo || this.state.bio.length < 1){
-          this.setState({
-            bio: 'this person have no bioinfo yet',
-            updateBio: 'this person have no bioinfo yet',
-          })
-        }
+        })
       })
       .catch(function(error) {
         console.log(error);
       })
 
-      const imgUrl = http+'/api/users/coverImages';
+      const imgUrl = http+'/api/users/coverImages/'+this.state.userid;
       axios.get(imgUrl, { withCredentials: true })
       .then(res =>{
 
@@ -109,7 +95,7 @@ class ManagePage extends Component {
           var i;
           const tempCover = [];
           for (i=0; i<res.data.coverImages.coverImages.length; i++){
-          tempCover.push(http+'/api/users/coverImages/'+i)
+          tempCover.push(http+'/api/users/coverImages/'+this.state.userid+'/'+i)
           }
           this.setState({
             cover: tempCover
@@ -136,7 +122,7 @@ class ManagePage extends Component {
       if (this.state.updateProfile !== null){
         const proImg = new FormData();
         proImg.append('file', this.state.updateProfile)
-        axios.post(http+'/api/users/profilePhoto', proImg, { withCredentials: true })
+        axios.post(http+'/api/users/profilePhoto/'+this.state.userid, proImg, { withCredentials: true })
         .then( res => {
           console.log(res);
           const tempProfile = URL.createObjectURL(this.state.updateProfile);
@@ -153,7 +139,7 @@ class ManagePage extends Component {
     onChangeCoverImage(e){
       console.log(e.target.files);
       this.setState({
-        updateCover: e.target.files[0]
+        updateCover: e.target.files
       }, ()=>{
         if(this.state.uploadCoverImage !== null){
           this.uploadCoverImage();
@@ -165,12 +151,16 @@ class ManagePage extends Component {
       if (this.state.updateCover !== null){
         const covImg = new FormData();
         covImg.append('files', this.state.updateCover)
-        axios.post(http+'/api/users/coverImages', covImg, { withCredentials: true })
+        axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
         .then( res => {
           console.log(res);
           if(this.state.cover.length<5){
-            var tempCo = this.state.cover;
-            tempCo.push(URL.createObjectURL(this.state.updateCover));
+            var tempCo = [];
+            var i;
+            for (i=0; i<this.state.updateCover.length; i++){
+              tempCo.push(URL.createObjectURL(this.state.updateCover[i]));
+            }
+            
             this.setState({
               cover: tempCo
             })
@@ -240,6 +230,33 @@ class ManagePage extends Component {
       });
     }
 
+    onChangeBgImg(e){
+      this.setState({
+        updatebgImg: e.target.files[0]
+      }, ()=>{
+        if(this.state.updatebgImg !== null){
+          this.uploadBgImg();
+        }
+      })
+    }
+
+    uploadBgImg(){
+      const bgImg = new FormData();
+      bgImg.append('file', this.state.updatebgImg)
+      axios.post(http+'/api/users/bgImage/'+this.state.userid, bgImg, { withCredentials: true })
+      .then( res => {
+        console.log(res);
+        const tempProfile = URL.createObjectURL(this.state.updatebgImg);
+        this.setState({
+          bgImg: tempProfile
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+      
+    }
+
     openDocView = () =>{
       this.docView.current.handleViewerShow();
     }
@@ -255,7 +272,9 @@ class ManagePage extends Component {
               <Card className='documentsCard' >
                 <Card.Img variant='top' src={docImage}/>
                 <Card.Body>
-                  <Button variant="secondary" href={"/documents/" + card._id} block>{card.name}</Button>
+                <Card.Title onClick = {event =>  window.location.href = '/documents/'+card._id }>
+                  {card.name}
+                </Card.Title>
                 </Card.Body>
 
               </Card>
@@ -382,7 +401,12 @@ class ManagePage extends Component {
                   </Row>
                   {/*Set Background Image*/}
                   <Row className = "mt-3">
-                   <Button block variant="info">Select Background Image</Button>
+                  <input
+                         type="file"
+                         style={{display: "none"}}
+                         onChange={this.onChangeBgImg}
+                         ref={bgInput=>this.bgInput=bgInput}/>
+                   <Button block variant="info" onClick = {() => this.docInput.click()}>Select Background Image</Button>
                   </Row>
                 </Container>
               </div>

@@ -6,7 +6,7 @@
   "scripts": {
     "ui-install": "npm install --prefix ui",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js --ignore '../ui/'",
+    "start": "node server.js",
     "ui": "cd ../ && npm start --prefix ui",
     "server": "concurrently \"npm start\" \"npm run ui\""
   },

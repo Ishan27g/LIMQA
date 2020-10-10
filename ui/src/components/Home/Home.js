@@ -4,24 +4,23 @@ import "../../App.css";
 import './Home.css';
 
 import axios from "axios";
-import Carousel from "react-bootstrap/Carousel";
-import Image from 'react-bootstrap/Image';
-import Card from 'react-bootstrap/Card';
-import CardDeck from 'react-bootstrap/CardDeck';
-import CoverImage from '../CoverImage/coverImage.js';
-import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
+import Card from 'react-bootstrap/Card';
+import CardColumns from 'react-bootstrap/CardColumns';
+import Carousel from "react-bootstrap/Carousel";
+import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
+import CoverImage from '../CoverImage/coverImage.js';
+import Image from 'react-bootstrap/Image';
+import Row from 'react-bootstrap/Row';
 
+import docImage from '../../Image/documents.png';
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import profile from '../../Image/profile.png';
-import docIcon from '../../Image/documents.png';
 
 import {pathForRequest} from '../http.js';
-
 let http = pathForRequest();
 
 class Home extends Component {
@@ -30,47 +29,46 @@ class Home extends Component {
         this.docView = React.createRef();
         this.state = {
             bioinfo: '',
-            profilePage: '',
             cover:[sampleImage1, sampleImage2, sampleImage3],
             docShow: false,
             documents: [],
             docname:"",
+            userId: this.props.match.params.id,
+            profileImg: http+'/api/users/profilePhoto/'+this.props.match.params.id,
+            bgImg: http+'/api/users/bgImage/'+this.props.match.params.id,
         }
     }
 
     componentDidMount(){
-        axios.get(http+'/api/users')
+        axios.get(http+'/api/bioinfo/'+this.state.userId)
         .then(res =>{
             this.setState({
-                bioinfo: res.data.users[0].bioinfo,
-                documents: res.data.users[0].documents
+                bioinfo: res.data.bioinfo,
             })
-            if (!res.data.users[0].bioinfo || this.state.bioinfo === ""){
-                this.setState({ bioinfo: 'this person have no bioinfo yet' });
-            }
-            if(res.data.users[0].documents[0] !== ""){
-                const getDoc = http+'/api/OneDocument/'+res.data.users[0].documents[0];
-                axios.get(getDoc)
-                .then(res=>{
-                    console.log(res.data.document);
-                    this.setState({
-                        docname: res.data.document.name
-                    })
-                })
-            }
         })
         .catch(function(error) {
             console.log(error);
         })
 
-        const imgUrl = http+'/api/users/coverImages';
+        axios.get(http+'/api/documents/'+this.state.userId)
+        .then(res =>{
+            console.log(res.data.documents)
+            this.setState({
+                documents: res.data.documents,
+            })
+        })
+        .catch(function(error) {
+            console.log(error);
+        })
+
+        const imgUrl = http+'/api/users/coverImages/'+this.state.userId;
         axios.get(imgUrl, { withCredentials: true })
         .then(res =>{
             if (res.data.coverImages.coverImages[0] !== ""){
                 var i;
                 const tempCover = [];
                 for (i=0; i<res.data.coverImages.coverImages.length; i++){
-                tempCover.push(http+'/api/users/coverImages/'+i)
+                tempCover.push(http+'/api/users/coverImages/'+this.state.userId+'/'+i)
                 }
                 this.setState({
                     cover: tempCover
@@ -92,6 +90,36 @@ class Home extends Component {
                 </Carousel.Item>
             )
         });
+        console.log(this.state.documents)
+        var hDoc = this.state.documents.filter(function(document){
+            return document.highlighted == true;
+        });
+
+        let highlightedDoc = hDoc.map(doc =>{
+            return (
+                <Card className='documentsCard' >
+                    <Card.Img variant='top' src={docImage}/>
+                    <Card.Body>
+                      <Card.Title onClick = {event =>  window.location.href = '/documents/'+ doc._id }>
+                        {doc.name}
+                      </Card.Title>
+                    </Card.Body>
+                </Card>
+            )
+        });
+            
+        var setDoc =[];
+        for(var i= 0; i < highlightedDoc.length; i=i+3){
+            setDoc.push(
+            <CardColumns variant = "flush">{highlightedDoc.slice(i,i+3)}</CardColumns>
+        )
+        }
+
+        let displayHDoc = setDoc.map(docDeck => {
+        return(<Carousel.Item>{docDeck}</Carousel.Item>)
+        });
+
+
 
         return(
           <body>
@@ -111,7 +139,7 @@ class Home extends Component {
 
                     <Row style = {{marginTop: "2vmax"}} >
                         <Col style = {{textAlign: "center"}}>
-                        <Image src={http+'/api/users/profilePhoto'} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
+                        <Image src={this.state.profileImg} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
                         </Col>
                         <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
 
@@ -129,7 +157,7 @@ class Home extends Component {
                     <h3> Highlighted Documents </h3>
                   </Col>
                 </Row>
-                    {this.state.documents.length<1 ? (
+                    {hDoc.length < 1 ? (
                         <Carousel indicators ={false}>
                         <Carousel.Item>
                             <img
@@ -144,73 +172,8 @@ class Home extends Component {
                         </Carousel.Item>
                         </Carousel>
                     ):(
-                        <Carousel indicators ={false}>
-                        <Carousel.Item>
-                        <CardDeck>
-                        <Card>
-                            <Card.Img src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img src={docIcon} />
-                            <Card.Body bsPrefix = "card-body">
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        </CardDeck>
-                        </Carousel.Item>
-                        <Carousel.Item>
-                        <CardDeck>
-                        <Card>
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        </CardDeck>
-                        </Carousel.Item>
-                        <Carousel.Item>
-                        <CardDeck>
-                        <Card >
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Img variant="top" src={docIcon} />
-                            <Card.Body>
-                                <Button variant="secondary" href={"/documents/" + this.state.documents[0]} block>{this.state.docname}</Button>
-                            </Card.Body>
-                        </Card>
-                        </CardDeck>
-                        </Carousel.Item>
+                        <Carousel indicators ={false} interval = {10000}>
+                            {displayHDoc}
                         </Carousel>
                     )}
                     

@@ -2,3 +2,7 @@ node_modules/
 data_db/
 uploads/
 tester.css
+server/.DS_Store
+server/MongoDB/
+ui/.DS_Store
+server/MongoDB/
