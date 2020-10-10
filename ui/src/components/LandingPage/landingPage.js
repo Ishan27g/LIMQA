@@ -213,10 +213,10 @@ class Landing extends Component{
           const regex = new RegExp(`${pattern}`, "g");
 
           return (name.toLowerCase().includes(this.state.search.toLowerCase())
-                  || name.match(regex))
+                  || name.substring(0,3).match(regex))
 
         }
-      }).sort((a,b)=> b["name"] - a["name"]).slice(0,7);
+      }).sort((a,b)=> b["name"] - a["name"]).slice(0,4);
 
     let showUsers = searchUsers.map( searchedUser => {
       return (
@@ -286,13 +286,24 @@ class Landing extends Component{
                       <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
                     </Form.Group>
                     {
-                      (this.state.loginInfo === false) ||
-                          (this.state.alertPassword === true) ?
-                          (
+                      this.state.Alertpassword === true ?(
+                        <Alert variant={'danger'}>
+                          please enter your password!
+                        </Alert>
+                      ):
+                      (
+                        <section></section>
+                      )
+                    }
+                    {
+                      this.state.loginInfo === false ?(
                         <Alert variant={'danger'}>
                           incorrect email or password!
                         </Alert>
-                      ) : (<section></section>)
+                      ):
+                      (
+                        <section></section>
+                      )
                     }
                   </form>
                 </Modal.Body>
