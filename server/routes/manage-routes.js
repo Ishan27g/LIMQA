@@ -1,5 +1,6 @@
 const express = require('express');
 const manageController = require("../controllers/manageController");
+const tagsController = require("../controllers/tagsController");
 const router = express.Router();
 const { check } = require('express-validator');
 const fileUpload = require("../middlerware/file-upload");
@@ -38,7 +39,22 @@ router.put('/social/:uid/:socialId', ensureAuthenticated, manageController.updat
 
 router.delete('/social/:uid/:socialId', ensureAuthenticated, manageController.deleteSocialLink);
 
+// create a new tag for a user
+/* json payload 
+    {"name":"testTag4","color":"black"} 
+*/
+router.post('/tags/:uid', ensureAuthenticated, tagsController.addTagsForUser);
 
+// create a new tag and link to 1 document
+/* json payload
+    {"name":"testTag3","color":"green"} 
+*/
+router.post('/tags/:uid/:documentId', ensureAuthenticated, tagsController.addTagsToUserFile);
 
+//get info for all tags for a user
+router.get('/tags/:uid', tagsController.getTagsForUser);
+
+//get all tags for all users
+router.get('/tags/', tagsController.getAllTagsForAllUsers);
 
 module.exports = router;

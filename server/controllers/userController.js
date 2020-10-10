@@ -11,7 +11,6 @@ const crypto = require('crypto');
 const { hrtime } = require('process');
 
 
-
 const getUsers = async (req, res, next) => {
   let users;
   try {
@@ -78,12 +77,34 @@ const signup = async (req, res, next) => {
     const error = new HttpError("Could not create user, please try again.", 500);
     return next(error);
   }
-  
-  /*const cretedSocial = new Social({
-    name = 
-  })*/
+
+  const createdUser = new User({
+    name,
+    email,
+    documents: [],
+    password: hashedPassword,
+    social: [], 
+    bioinfo: "This is bioinfo message",
+    semail: "stest@test.com",
+    officeAddress: "",
+    tags: [],
+    mobile: ""
+  });
+
+  try {
+    await createdUser.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'creating user failed, please try again.'
+    );
+    return next(error);
+  }
+  /**
+   * create photos object
+   */
   const createdPhotos = new Photos({
-    email : email,
+    owner : createdUser.id,
     profilePhoto: "",
     coverImages: "",
     bgImage: ""
@@ -97,30 +118,27 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-
-  const createdUser = new User({
-    name,
-    email,
-    documents: [],
-    password: hashedPassword,
-    social: [], 
-    bioinfo: "This is bioinfo message",
-    semail: "stest@test.com",
-    photos: createdPhotos, 
-    officeAddress: "",
-    mobile: ""
-  });
-
+  /**
+   * create tags object
+   const createdTags = new Tags({
+    name : "",
+    color : "",
+    files : [],
+    owner : createdUser.id
+  })
   try {
-    await createdUser.save();
+    await createdTags.save();
   } catch (err) {
     console.log(err);
     const error = new HttpError(
-      'creating user failed, please try again.'
+      'creating tags failed, please try again.'
     );
     return next(error);
   }
-
+  */
+  /**
+   * create social links object
+   */
   const CreatedLinkedin = new Social( {
     name: "Linkedin",
     url: "http://Linkedin.com",
@@ -150,6 +168,7 @@ const signup = async (req, res, next) => {
     owner: createdUser.id
   });
 
+  createdUser.photos = createdPhotos;
   try {
     await CreatedLinkedin.save();
     await CreatedInstagram.save();
@@ -157,6 +176,7 @@ const signup = async (req, res, next) => {
     await CreatedGithub.save();
     await CreatedWechat.save();
 
+ //   await createdUser.tags.push(createdTags)
     await createdUser.social.push(CreatedLinkedin);
     await createdUser.social.push(CreatedFacebook);
     await createdUser.social.push(CreatedInstagram);

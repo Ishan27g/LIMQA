@@ -13,7 +13,8 @@ const userSchema = new Schema({
     officeAddress: { type: String, required: false},
     mobile: { type: String, required: false},
     semail: { type: String, required: true},
-    photos: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Photos'}],
+    photos: { type: mongoose.Types.ObjectId, required: false, ref: 'Photos'},
+    tags : [{ type: mongoose.Types.ObjectId, required: false, ref: 'Tag'}],
     resetPasswordToken: String,
     resetPasswordExpires: Date
 });
