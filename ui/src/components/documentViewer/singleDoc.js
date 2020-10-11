@@ -76,13 +76,14 @@ class singleDoc extends Component {
         const getDoc = http+'/api/OneDocument/'+this.state.docId;
         axios.get(getDoc)
         .then(res=>{
+            console.log(res.data.document)
             this.setState({
                 docname: res.data.document.name,
                 docdate: res.data.document.dateCreated,
                 highlighted: res.data.document.highlighted,
                 docdesc: res.data.document.description,
                 achievement: res.data.document.achivement,
-                acinst: res.data.document.acinst,
+                acinst: res.data.document.institution,
                 acdate: res.data.document.dateAchieved,
                 tags: res.data.document.tags,
                 owner: res.data.document.owner
@@ -152,13 +153,22 @@ class singleDoc extends Component {
     handleCheckDelete =() =>{
         this.setState({checkDelete: true});
     }
+
     /*Delete document and close Editor*/
     handleDelete =() =>{
         const deleteDoc = http+'/api/documents/'+this.state.owner+'/'+this.state.docId;
         console.log(deleteDoc);
-        axios.delete(deleteDoc, { withCredentials: true });
-        this.setState({checkDelete: false, docEditor: false, docViewer: false});
-        this.props.history.goBack();
+        axios.delete(deleteDoc, { withCredentials: true })
+        .then(res => {
+            console.log(res);
+            this.setState({
+                checkDelete: false, 
+                docEditor: false, 
+                docViewer: false
+            }, ()=>{
+                this.props.history.goBack();
+            }); 
+        });
     }
 
     handleAchievement =()=>{
