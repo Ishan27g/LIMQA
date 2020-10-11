@@ -377,9 +377,60 @@ const uploadFiles = async (req, res, next) => {
     return next(error);
   }
 
+
+  const work = new Tag({
+    name: "Work-Experience",
+    color: "red",
+    files : [],
+    owner : userId
+  });
+  
+  const Academic = new Tag({
+    name: "Academic",
+    color: "blue",
+    files : [],
+    owner : userId
+  });
+  
+  const volunteering = new Tag({
+    name: "Volunteering",
+    color: "green",
+    files : [],
+    owner : userId,
+  });
+  
+  const Leadership = new Tag({
+    name: "Leadership",
+    color: "brown",
+    files : [],
+    owner : userId
+  });
+  
+  const Curricular = new Tag({
+    name: "Extra-Curricular",
+    color: "yellow",
+    files : [],
+    owner : userId
+  });
+  
+  try{
+      await work.save();
+      await Academic.save();
+      await volunteering.save();
+      await Leadership.save();
+      await Curricular.save();
+  } catch (err) {
+      console.log(err);
+      const error = new HttpError (
+          "created tags failed",
+          500
+      );
+  };
+
+  console.log(req.body);
+
   const { name, highlighted, description, achivement, institution, dateAchieved} = req.body;
   
-
   const CreatedFile = new File({
     name,
     description,
@@ -390,67 +441,11 @@ const uploadFiles = async (req, res, next) => {
     institution,
     dateAchieved,
     tags:[]
-  })
+  });
 
-const work = new Tag({
-  name: "Work-Experience",
-  color: "red",
-  files : [],
-  owner : userId
-});
-
-const Academic = new Tag({
-  name: "Academic",
-  color: "blue",
-  files : [],
-  owner : userId
-});
-
-const volunteering = new Tag({
-  name: "Volunteering",
-  color: "green",
-  files : [],
-  owner : userId,
-});
-
-const Leadership = new Tag({
-  name: "Leadership",
-  color: "brown",
-  files : [],
-  owner : userId
-});
-
-const Curricular = new Tag({
-  name: "Extra-Curricular",
-  color: "yellow",
-  files : [],
-  owner : userId
-});
-
-try{
-    await work.save();
-    await Academic.save();
-    await volunteering.save();
-    await Leadership.save();
-    await Curricular.save();
-} catch (err) {
-    console.log(err);
-    const error = new HttpError (
-        "created tags failed",
-        500
-    );
-};
   try {
     await CreatedFile.save();
-    await CreatedFile.tags.push(work);
-    await CreatedFile.tags.push(Academic);
-    await CreatedFile.tags.push(volunteering);
-    await CreatedFile.tags.push(Leadership);
-    await CreatedFile.tags.push(Curricular);
-    await CreatedFile.save();
-    
     await user.documents.push(CreatedFile);
-
     await user.save();
   } catch (err) {
     console.log(err);
@@ -459,6 +454,39 @@ try{
     );
     return next(error);
   }
+
+  let i;
+  let tag;
+  for( i = 0; i<req.body.tagName.length; i ++) {
+    try {
+      tag = await Tag.findOne({name: req.body.tagName[i]});
+    } catch (err) {
+      console.log(err);
+      const error = new HttpError(
+        "Could not find tag.",
+        500
+      );
+      return next(error);
+    }
+    if(!tag) {
+      return next(new HttpError("Tag does not exist, please select a valid tag.", 422));
+    }
+    tag.files.push(CreatedFile);
+    CreatedFile.tags.push(tag);
+
+
+  try {
+    await CreatedFile.save();
+    await tag.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'Saving file failed, please try again.'
+    );
+    return next(error);
+  }
+  }
+
 
   res.status(201).json({user: user.toObject({ getters : true})});
   
@@ -533,6 +561,33 @@ res.json({success: true});
  
 };
 
+// download file
+const downloadFile = async (req, res, next) => {
+  let path;
+  let filename;
+  let file;
+  try {
+    file = await File.findById(req.params.documentId);
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Fail to find this document.",
+      500
+    )
+    return next(error);
+  };
+
+  if(!file) {
+    return next(new HttpError("File does not exist.", 422));
+  }
+
+  path = file.path;
+  filename = file.name;
+
+  res.download(path, filename);
+
+};
+
 const getSocialLinks = async (req, res, next) => {
   let userId = req.params.uid;
   let socialLinks;
@@ -559,10 +614,13 @@ const getSocialLinks = async (req, res, next) => {
 };
 
 const getOneSocialLink = async (req, res, next) => {
-  let socialId = req.params.socialId;
+  let userId = req.params.uid;
+  let socialName = req.params.name;
+  let user;
   let socialLink;
+
   try{
-    socialLink = await Social.findById(socialId);
+    user = await User.findById(userId).populate("social");
   }catch(err) {
     console.log(err);
     const error = new HttpError(
@@ -573,11 +631,22 @@ const getOneSocialLink = async (req, res, next) => {
   }
 
 
-  if(! socialLink) {
-    return next(new HttpError("Cannot find social link for provided Id.", 422));
+  if(! user) {
+    return next(new HttpError("Cannot find user for provided Id.", 422));
   }
 
-  res.json({social: socialLink.toObject({getters : true})});
+  let i;
+  for (i = 0; i <5; i++) {
+    if(user.social[i].name === socialName) {
+      socialLink = user.social[i].url;
+    }
+  };
+
+  if(typeof socialLink === 'undefined') {
+    return next(new HttpError("Social media name is invalid."))
+  }
+
+  res.json({url: socialLink});
 
 
 }
@@ -723,6 +792,7 @@ exports.getFiles = getFiles;
 exports.deleteFile = deleteFile;
 exports.getOneFile = getOneFile;
 exports.editFile = editFile;
+exports.downloadFile = downloadFile;
 exports.getSocialLinks = getSocialLinks;
 exports.getOneSocialLink = getOneSocialLink;
 exports.createSocialLink = createSocialLink;

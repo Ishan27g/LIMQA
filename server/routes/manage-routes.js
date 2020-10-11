@@ -25,18 +25,19 @@ router.delete('/documents/:uid/:documentId', ensureAuthenticated, manageControll
 
 router.put('/editDocument/:documentId', ensureAuthenticated, manageController.editFile);
 
+router.get('/download/:documentId', manageController.downloadFile);
+
 
 // social links related routes below.
 router.get('/social/:uid', manageController.getSocialLinks);
 
-router.get('/social/onelink/:socialId', ensureAuthenticated, manageController.getOneSocialLink);
+router.get('/social/:uid/:name', manageController.getOneSocialLink);
 
 router.post('/social/:uid', ensureAuthenticated, manageController.createSocialLink);
 
 router.put('/social/:uid/:socialId', ensureAuthenticated, manageController.updateSocialLink);
 
 router.delete('/social/:uid/:socialId', ensureAuthenticated, manageController.deleteSocialLink);
-
 
 // create a new tag for a user
 /* json payload 
