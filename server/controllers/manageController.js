@@ -410,7 +410,8 @@ const uploadFiles = async (req, res, next) => {
   let tag;
   for( i = 0; i<req.body.tagName.length; i ++) {
     try {
-      tag = await Tag.findOne({name: req.body.tagName[i]});
+      tag = await Tag.findOne({name: req.body.tagName[i], owner: userId});
+      
     } catch (err) {
       console.log(err);
       const error = new HttpError(
