@@ -378,55 +378,6 @@ const uploadFiles = async (req, res, next) => {
   }
 
 
-  const work = new Tag({
-    name: "Work-Experience",
-    color: "red",
-    files : [],
-    owner : userId
-  });
-  
-  const Academic = new Tag({
-    name: "Academic",
-    color: "blue",
-    files : [],
-    owner : userId
-  });
-  
-  const volunteering = new Tag({
-    name: "Volunteering",
-    color: "green",
-    files : [],
-    owner : userId,
-  });
-  
-  const Leadership = new Tag({
-    name: "Leadership",
-    color: "brown",
-    files : [],
-    owner : userId
-  });
-  
-  const Curricular = new Tag({
-    name: "Extra-Curricular",
-    color: "yellow",
-    files : [],
-    owner : userId
-  });
-  
-  try{
-      await work.save();
-      await Academic.save();
-      await volunteering.save();
-      await Leadership.save();
-      await Curricular.save();
-  } catch (err) {
-      console.log(err);
-      const error = new HttpError (
-          "created tags failed",
-          500
-      );
-  };
-
   console.log(req.body);
 
   const { name, highlighted, description, achivement, institution, dateAchieved} = req.body;

@@ -7,6 +7,7 @@ const Social = require('../models/social');
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const Photos = require('../models/photos');
+const Tag = require('../models/tag');
 const crypto = require('crypto');
 const { hrtime } = require('process');
 
@@ -118,6 +119,71 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
+  // create some default tags for user.
+
+  const Default = new Tag({
+    name: "Default",
+    color: "grey",
+    files: [],
+    owner: createdUser.id
+  })
+
+  const work = new Tag({
+    name: "Work-Experience",
+    color: "red",
+    files : [],
+    owner : createdUser.id
+  });
+  
+  const Academic = new Tag({
+    name: "Academic",
+    color: "blue",
+    files : [],
+    owner : createdUser.id
+  });
+  
+  const volunteering = new Tag({
+    name: "Volunteering",
+    color: "green",
+    files : [],
+    owner : createdUser.id
+  });
+  
+  const Leadership = new Tag({
+    name: "Leadership",
+    color: "brown",
+    files : [],
+    owner : createdUser.id
+  });
+  
+  const Curricular = new Tag({
+    name: "Extra-Curricular",
+    color: "yellow",
+    files : [],
+    owner : createdUser.id
+  });
+  
+  try{
+      await Default.save();
+      await work.save();
+      await Academic.save();
+      await volunteering.save();
+      await Leadership.save();
+      await Curricular.save();
+      await createdUser.tags.push(Default);
+      await createdUser.tags.push(work);
+      await createdUser.tags.push(Academic);
+      await createdUser.tags.push(volunteering);
+      await createdUser.tags.push(Leadership);
+      await createdUser.tags.push(Curricular);
+  } catch (err) {
+      console.log(err);
+      const error = new HttpError (
+          "created tags failed",
+          500
+      );
+  };
+
   /**
    * create tags object
    const createdTags = new Tags({
