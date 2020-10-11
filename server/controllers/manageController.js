@@ -447,11 +447,10 @@ const uploadFiles = async (req, res, next) => {
 // edit document properties 
 const editFile = async (req, res, next) => {
   const { name, highlighted, description, achivement, institution, dateAchieved} = req.body;
-
+  let userId = req.user.id;
   let document;
   try {
-    document = await File.findById(req.params.documentId);
-    
+    document = await File.findById(req.params.documentId).populate('tags');
   } catch (err) {
     console.log(err);
     const error = new HttpError(
@@ -464,6 +463,7 @@ const editFile = async (req, res, next) => {
   if(!document) {
     return res.send("document doesn't exist in database");
   }
+  // TODO, empty tags array in document.
 
   document.name = name;
   document.highlighted = highlighted;
@@ -471,6 +471,74 @@ const editFile = async (req, res, next) => {
   document.achivement = achivement;
   document.institution = institution;
   document.dateAchieved = dateAchieved;
+  // first remove file id from tags' array.
+  try {
+    await Tag.updateMany(
+      {"files" : req.params.documentId},
+      { "$pull": { "files": req.params.documentId } }
+    )
+  } catch(err) {
+    console.log(err);
+    const error = new HttpError(
+      "Cannot update tags, please try again later.",
+      500
+    );
+    return next(error);
+  }
+
+  // then remove the tags id from file.
+  let j;
+  for (j = 0; j<document.tags.length; j++) {
+    console.log(document.tags[j]._id);
+    try{
+      await File.findOneAndUpdate(
+        { _id : req.params.documentId },
+        { "$pull": { "tags": document.tags[j]._id } }
+      )
+    } catch (err) {
+      console.log(err);
+      const error = new HttpError(
+        "Cannot update tags, please try again later.",
+        500
+      );
+      return next(error);
+    }
+  }
+
+  // add tags to the file .
+  let i;
+  let tag;
+  for( i = 0; i<req.body.tagName.length; i ++) {
+    try {
+      tag = await Tag.findOne({name: req.body.tagName[i], owner: userId});
+      
+    } catch (err) {
+      console.log(err);
+      const error = new HttpError(
+        "Could not find tag.",
+        500
+      );
+      return next(error);
+    }
+    if(!tag) {
+      return next(new HttpError("Tag does not exist, please select a valid tag.", 422));
+    }
+    tag.files.push(document);
+    document.tags.push(tag);
+
+
+  try {
+    await document.save();
+    await tag.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'Saving file failed, please try again.'
+    );
+    return next(error);
+  }
+  }
+
 
   try {   
       await document.save();
@@ -487,7 +555,7 @@ const editFile = async (req, res, next) => {
 
 };
 
-// delete file and ObjectId from relevent object
+// delete file and ObjectId from user and tags.
 const deleteFile = async (req, res, next) => {
 
   try {
@@ -496,10 +564,15 @@ const deleteFile = async (req, res, next) => {
         { new: true }
     )
 
+    await Tag.updateMany(
+      {"files" : req.params.documentId},
+      { "$pull": { "files": req.params.documentId } }
+    )
     await User.updateOne(
         { "documents": req.params.documentId },
         { "$pull": { "documents": req.params.documentId } }
     )
+
 } catch(err) {
     console.log(err);
     const error = new HttpError(

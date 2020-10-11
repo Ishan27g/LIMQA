@@ -21,7 +21,7 @@ const getUsers = async (req, res, next) => {
           path: 'tags',
           model: 'Tag'
         } 
-      }).populate("social");
+      }).populate("social").populate("tags");
   } catch (err) {
     const error = new HttpError(
       'Fetching users failed please try again later.',
