@@ -46,6 +46,7 @@ class singleDoc extends Component {
         this.handleAchievement = this.handleAchievement.bind(this);
         this.onChangeInstitution = this.onChangeInstitution.bind(this);
         this.onChangeAcdate = this.onChangeAcdate.bind(this);
+        this.onChangeTags = this.onChangeTags.bind(this);
 
         this.state = {
             login: false,
@@ -58,7 +59,7 @@ class singleDoc extends Component {
             /*Document Properties*/
             docname: "Untitled",
             docdate: "Document Date",
-            tags: [{'name':"Extra-Curricular"}, {'name': "Acadmeic"}, {'name': "Work-Experience"}, {'name': "Volunteering"}, {'name':"Leadership" }],
+            tags: [],
             highlighted: false,
             docdesc: "",
             achievement: false,
@@ -76,7 +77,12 @@ class singleDoc extends Component {
         const getDoc = http+'/api/OneDocument/'+this.state.docId;
         axios.get(getDoc)
         .then(res=>{
-            console.log(res.data.document)
+           console.log()
+            var tempTag = [];
+            var i;
+            for(i=0; i<res.data.document.tags.length; i++){
+                tempTag.push(res.data.document.tags[i].name)
+            }
             this.setState({
                 docname: res.data.document.name,
                 docdate: res.data.document.dateCreated,
@@ -85,7 +91,7 @@ class singleDoc extends Component {
                 achievement: res.data.document.achivement,
                 acinst: res.data.document.institution,
                 acdate: res.data.document.dateAchieved,
-                tags: res.data.document.tags,
+                tags: tempTag,
                 owner: res.data.document.owner
             })
         })
@@ -132,7 +138,7 @@ class singleDoc extends Component {
 
     /* Leaves abruptly w/o saving Changes */
     handleAbruptLeave = () => {
-        this.setState({docEditor:false, docViewer: false, checkEdit: false});
+        this.setState({docEditor:false, docViewer: true, checkEdit: false});
     }
 
     handleAddTags = () =>{
@@ -179,8 +185,8 @@ class singleDoc extends Component {
         this.setState({achievement: false})
     }
 
-
   updateDoc(){
+      // wait for backend for updating tags
     const docForm = {
         'name': this.state.docname,
         'highlighted': this.state.highlighted,
@@ -225,12 +231,27 @@ class singleDoc extends Component {
     })
   }
 
+  onChangeTags(e){
+    var chosetag = this.state.tags;
+    if(e.target.checked){
+        chosetag.push(e.target.value);
+    }else{
+        var index = chosetag.indexOf(e.target.value);
+        chosetag.splice(index, 1);
+    }
+    this.setState({
+        tags: chosetag
+    }, ()=>{
+        console.log(this.state.tags)
+    })
+  }
+
   render(){
     var tags = this.state.tags;
 
     let tagsMap = tags.map(tags =>{
         return(
-            <Tag note={tags.name} />
+            <Tag note={tags} />
         )
     })
 
@@ -239,17 +260,18 @@ class singleDoc extends Component {
           <Button
             variant = "outline-danger"
             style = {{border: "0px solid red"}}>
-            <Tag note={onetag.name} />
+            <Tag note={onetag} />
           </Button>
         )
     })
 
     var allTags = this.state.allTags;
     let SelectTags = allTags.map(onetag =>{
+        var check = this.state.tags.includes(onetag.name);
         return(
             <InputGroup className = "select-tags">
               <InputGroup.Prepend>
-                <InputGroup.Checkbox/>
+                <InputGroup.Checkbox onChange={this.onChangeTags} value={onetag.name} checked={check}/>
               </InputGroup.Prepend>
               <InputGroup.Append>
                   <Tag note={onetag.name} />

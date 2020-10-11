@@ -180,7 +180,7 @@ class App extends Component{
     }
     return (
       <div>
-          {front ? (
+          {front && !this.state.login ? (
             <header>
             <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
             <Navbar.Brand href="/" className = "mr-auto">

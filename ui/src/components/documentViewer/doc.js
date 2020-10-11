@@ -45,6 +45,7 @@ class DocMode extends Component {
     this.handleRemoveAchievement = this.handleRemoveAchievement.bind(this);
     this.handleAchievement = this.handleAchievement.bind(this);
     this.onChangeInstitution = this.onChangeInstitution.bind(this);
+    this.onChangeTags = this.onChangeTags.bind(this);
 
     this.state = {
       /*Viewer mode State*/
@@ -59,7 +60,7 @@ class DocMode extends Component {
       /*Document Properties*/
       docname: "Untitled",
       docdate: "Document Date",
-      tags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership"],
+      tags: [],
       highlighted: false,
       docdesc: "",
       achievement: false,
@@ -155,6 +156,10 @@ class DocMode extends Component {
       docForm.append('institution', this.state.acinst);
       docForm.append('dateAchieved', this.state.docdate);
       docForm.append('name', this.state.docname);
+      var i;
+      for(i=0; i<this.state.tags.length; i++){
+        docForm.append('tagName', this.state.tags[i]);
+      }
       console.log(docForm);
       const postDoc = http+'/api/documents/' + this.props.doc.id;
       axios.post(postDoc, docForm, { withCredentials: true } )
@@ -194,6 +199,21 @@ class DocMode extends Component {
     })
   }
 
+  onChangeTags(e){
+    var chosetag = this.state.tags;
+    if(e.target.checked){
+        chosetag.push(e.target.value);
+    }else{
+        var index = chosetag.indexOf(e.target.value);
+        chosetag.splice(index, 1);
+    }
+    this.setState({
+        tags: chosetag
+    }, ()=>{
+        console.log(this.state.tags)
+    })
+  }
+
   render(){
     var tags = this.state.tags;
 
@@ -215,10 +235,11 @@ class DocMode extends Component {
 
     var allTags = this.state.allTags;
     let SelectTags = allTags.map(allTags =>{
+        var check = this.state.tags.includes(allTags);
         return(
             <InputGroup className = "select-tags">
               <InputGroup.Prepend>
-                <InputGroup.Checkbox/>
+                <InputGroup.Checkbox onChange={this.onChangeTags} value={allTags} checked={check}/>
               </InputGroup.Prepend>
               <InputGroup.Append>
                   <Tag note={allTags} />
