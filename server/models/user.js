@@ -14,9 +14,7 @@ const userSchema = new Schema({
     mobile: { type: String, required: false},
     semail: { type: String, required: true},
     photos: { type: mongoose.Types.ObjectId, required: false, ref: 'Photos'},
-    tags : [{ type: mongoose.Types.ObjectId, required: false, ref: 'Tag'}],
-    resetPasswordToken: String,
-    resetPasswordExpires: Date
+    tags : [{ type: mongoose.Types.ObjectId, required: false, ref: 'Tag'}]
 });
 
 userSchema.plugin(uniqueValidator);
