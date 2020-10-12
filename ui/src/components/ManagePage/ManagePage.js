@@ -49,6 +49,8 @@ class ManagePage extends Component {
           docPath: '',
           doctype: '',
           documents: [],
+          searching: false,
+          search: "",
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -64,6 +66,7 @@ class ManagePage extends Component {
         this.openDocView = this.openDocView.bind(this);
         this.onChangeBgImg = this.onChangeBgImg.bind(this);
         this.uploadBgImg = this.uploadBgImg.bind(this);
+        this.onChangeSearch = this.onChangeSearch.bind(this);
     }
 
     componentDidMount(){
@@ -269,6 +272,21 @@ class ManagePage extends Component {
       this.docView.current.handleViewerShow();
     }
 
+    onChangeSearch(e){
+      if (e.target.value === ""){	
+        this.setState({	
+          search: e.target.value,	
+          searching: false	
+        });	
+      } else {	
+        this.setState({	
+          search: e.target.value,	
+          searching: true	
+        });	
+      }	
+  
+    }
+
     render(){
       var doc = {doc: this.state.updateDoc, id: this.state.userid};
       //const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
@@ -289,6 +307,47 @@ class ManagePage extends Component {
           </Col>
         )
       });
+
+      var searchDocs = this.state.documents.filter(doc => {
+        if (this.state.search === "") {
+
+            return("")
+
+        } else {
+
+          var name = doc.name;
+          const pattern = this.state.search.split("").map(letter => {
+                    if(!("\\+*()?.,".includes(letter))) {
+                      return `(?=.*${letter})`
+                    } else {
+                      return ""
+                    }
+                  }).join("");
+
+          const regex = new RegExp(`${pattern}`, "g");
+
+          return (name.toLowerCase().includes(this.state.search.toLowerCase())
+                  || name.match(regex))
+
+        }
+      }).sort((a,b)=> b["name"] - a["name"]).slice(0,7);
+      
+    let showDocs = searchDocs.map( searchedDoc => {
+        return (
+            <Col sm='4' >
+                <div>
+                <Card className='documentsCard' >
+                    <Card.Img variant='top' src={docImage}/>
+                    <Card.Body>
+                    <Card.Title onClick = {event =>  window.location.href = '/documents/'+ searchedDoc._id }>
+                        {searchedDoc.name}
+                    </Card.Title>
+                    </Card.Body>
+                </Card>
+                </div>
+            </Col>
+        )
+    });
 
       const coverImg = this.state.cover;
       let coverImage = coverImg.map(cover =>{
@@ -382,11 +441,12 @@ class ManagePage extends Component {
                       </Col >
 
                       <Col xs={6} md={8}>
-                      <Container fluid style={{overflow:"scroll", height:'45rem'}}>
+
+                      <Container fluid style={{height:'45rem'}}>
                         <Row>
                           <Col style = {{textAlign: "center"}}>
                             <Form inline>
-                                <FormControl type="text" placeholder="Search for documents" className="mr-sm-2" />
+                                <FormControl type="text" placeholder="Search for documents" className="mr-sm-2" onChange={this.onChangeSearch}/>
                                 <Dropdown>
                                   <Dropdown.Toggle variant="success" id="dropdown-basic">
                                       {this.state.filter}
@@ -400,9 +460,18 @@ class ManagePage extends Component {
                             </Form>
                           </Col>
                         </Row>
-                        <Row style = {{marginTop:"3vmax"}}>
-                            {docCards}
-                        </Row>
+                        <Container fluid style={{overflow:"auto", height:'45rem'}}>
+                          {this.state.searching ? (
+                            <Row style = {{marginTop:"3vmax", }}>
+                              {showDocs}
+                            </Row>
+                          ):(
+                            <Row style = {{marginTop:"3vmax", }}>
+                              {docCards}
+                            </Row>
+                          )}
+
+                        </Container>
                       </Container>
                       </Col>
                   </Row>

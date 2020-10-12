@@ -27,11 +27,6 @@ class Search extends Component{
       documents: [],
       search: "",
       userId: this.props.match.params.id,
-
-      /*Login Values*/
-      email: "",
-      password: "",
-      loginid: "",
     }
   }
   componentDidMount(){
