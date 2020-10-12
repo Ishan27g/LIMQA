@@ -124,21 +124,6 @@ render(){
         )
     });
 
-    let alldocs2 = this.state.documents.map( cardDoc =>{
-        return (
-            <div class="col-md-3" style={{marginRight: '3vmax', marginBottom:"5rem"}}>
-                <Card className='documentsCard' >
-                    <Card.Img variant='top' src={docImage}/>
-                    <Card.Body onClick = {event =>  window.location.href = '/documents/'+ cardDoc._id }>
-                    <Card.Title>
-                        {cardDoc.name}
-                    </Card.Title>
-                    </Card.Body>
-                </Card>
-            </div>
-        )
-    });
-
     return (
 
         <body>
