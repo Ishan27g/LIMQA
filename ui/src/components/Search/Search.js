@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
+import axios from 'axios';
 import FormControl from 'react-bootstrap/FormControl';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup';
 
 import docImage from '../../Image/documents.png';
 
@@ -27,11 +27,6 @@ class Search extends Component{
       documents: [],
       search: "",
       userId: this.props.match.params.id,
-
-      /*Login Values*/
-      email: "",
-      password: "",
-      loginid: "",
     }
   }
   componentDidMount(){
@@ -92,7 +87,7 @@ render(){
       
     let showDocs = searchDocs.map( searchedDoc => {
         return (
-            <Col sm='3'>
+            <Col sm='3' >
                 <div>
                 <Card className='documentsCard' >
                     <Card.Img variant='top' src={docImage}/>
@@ -113,8 +108,8 @@ render(){
                 <div>
                 <Card className='documentsCard' >
                     <Card.Img variant='top' src={docImage}/>
-                    <Card.Body>
-                    <Card.Title onClick = {event =>  window.location.href = '/documents/'+ cardDoc._id }>
+                    <Card.Body onClick = {event =>  window.location.href = '/documents/'+ cardDoc._id }>
+                    <Card.Title>
                         {cardDoc.name}
                     </Card.Title>
                     </Card.Body>
@@ -125,8 +120,9 @@ render(){
     });
 
     return (
+
         <body>
-            <Container fluid style={{marginBottom:"5rem"}}>
+            <Container style={{marginBottom:"5rem"}} fluid>
                 <Row className = "landing-header">
                     Discover documents
                 </Row>
@@ -135,18 +131,22 @@ render(){
                                 onChange = {this.onChangeSearch}
                                 placeholder="Search documents"/>
                 </Row>
-            
                 {this.state.searching ? (
-                    <Row style = {{marginTop:"1rem"}}>
-                        {showDocs}
-                    </Row>
+                    <Container>
+                        <div class="row justify-content-md-center" style={{marginTop:"2rem"}}>
+                            {showDocs}
+                        </div>
+                    </Container>
                 ):(
-                    <Row style = {{marginTop:"1rem"}}>
-                        <ListGroup variant = "flush">{alldocs}</ListGroup>
-                    </Row>
+                    <Container>
+                        <div class="row justify-content-md-center" style={{marginTop:"2rem"}}>
+                            {alldocs}
+                        </div>
+                    </Container>
                 )}
             </Container>
         </body>
+
     )
   }
 }

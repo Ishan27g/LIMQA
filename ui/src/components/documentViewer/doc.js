@@ -60,7 +60,7 @@ class DocMode extends Component {
       /*Document Properties*/
       docname: "Untitled",
       docdate: "Document Date",
-      tags: [],
+      tags: ["Default"],
       highlighted: false,
       docdesc: "",
       achievement: false,
@@ -68,7 +68,7 @@ class DocMode extends Component {
       acdate: "",
 
        /*All Tags Created*/
-      allTags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership", "Extra1", "Extra2", "Extra3"],
+      allTags: ["Extra-Curricular" , "Academic", "Work-Experience", "Volunteering", "Leadership", "Extra1", "Extra2", "Extra3"],
     }
 
   }
@@ -156,11 +156,14 @@ class DocMode extends Component {
       docForm.append('institution', this.state.acinst);
       docForm.append('dateAchieved', this.state.docdate);
       docForm.append('name', this.state.docname);
-      var i;
-      for(i=0; i<this.state.tags.length; i++){
-        docForm.append('tagName', this.state.tags[i]);
+      if(this.state.tags.length === 1){
+        docForm.append('tagName[]', this.state.tags[0])
+      }else{
+        var i;
+        for(i=0; i<this.state.tags.length; i++){
+          docForm.append('tagName', this.state.tags[i]);
+        }
       }
-      console.log(docForm);
       const postDoc = http+'/api/documents/' + this.props.doc.id;
       axios.post(postDoc, docForm, { withCredentials: true } )
       .then(res=>{
