@@ -23,7 +23,7 @@ class NotFound extends Component {
                           marginTop: "10%"}}>
                 <p>Whoops! Looks like you took a wrong turn.</p>
                 <a href= {this.props.link}>
-                  <Button variant='primary' size='lg' className='submitBtn'>
+                  <Button variant='primary' size='lg' className='submitBtn' onClick={event =>  window.location.href = '/'}>
                     Return
                   </Button>
                 </a>
