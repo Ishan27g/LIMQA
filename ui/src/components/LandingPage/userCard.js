@@ -43,7 +43,8 @@ class UserCard extends Component{
 
                   <Card.Img variant="top" src={http+'/api/users/profilePhoto/'+this.props.id}
                             onError={(e)=>{e.target.onerror = null; e.target.src=profile}}
-                            style = {{width: "10vmax", height: "10vmax", alignSelf: "center"}}/>
+                            style = {{width: "10vmax", height: "10vmax", alignSelf: "center"}}
+                            onClick = {event =>  window.location.href = '/home/'+this.props.id }/>
 
                   <Card.Title style = {{fontSize: "1.25em", color: "black"}}
                               onClick = {event =>  window.location.href = '/home/'+this.props.id }>
@@ -53,7 +54,7 @@ class UserCard extends Component{
                                   {this.props.email}
                                 </Card.Text>
                   </Card.Title>
-                  <Card.Body style={{height: "auto"}} >
+                  <Card.Body style={{height: "auto"}} onClick = {event =>  window.location.href = '/home/'+this.props.id } >
                     <Card.Text style = {{fontSize: "0.6em", color: "black"}}>
                       {this.props.bioinfo}
                     </Card.Text>

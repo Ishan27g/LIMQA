@@ -276,7 +276,6 @@ class ManagePage extends Component {
                   {card.name}
                 </Card.Title>
                 </Card.Body>
-
               </Card>
             </div>
           </Col>

@@ -52,7 +52,6 @@ class Home extends Component {
 
         axios.get(http+'/api/documents/'+this.state.userId)
         .then(res =>{
-            console.log(res.data.documents)
             this.setState({
                 documents: res.data.documents,
             })
@@ -62,7 +61,7 @@ class Home extends Component {
         })
 
         const imgUrl = http+'/api/users/coverImages/'+this.state.userId;
-        axios.get(imgUrl, { withCredentials: true })
+        axios.get(imgUrl)
         .then(res =>{
             if (res.data.coverImages.coverImages[0] !== ""){
                 var i;
@@ -90,7 +89,7 @@ class Home extends Component {
                 </Carousel.Item>
             )
         });
-        console.log(this.state.documents)
+        
         var hDoc = this.state.documents.filter(function(document){
             return document.highlighted == true;
         });
