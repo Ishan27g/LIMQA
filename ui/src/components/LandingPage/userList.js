@@ -6,11 +6,10 @@ import ListGroup from 'react-bootstrap/ListGroup';
 
 class UserList extends Component{
     render(){
-        var userLink = `/${this.props.id}`;
         return (
                 <ListGroup.Item
                   className = "user-search-list-item"
-                  onClick = {event =>  window.location.href = {userLink} }>
+                  onClick = {event =>  window.location.href = '/home/' + this.props.id }>
                   {this.props.name}&nbsp;&nbsp;<span>{this.props.email}</span>
                 </ListGroup.Item>
         )

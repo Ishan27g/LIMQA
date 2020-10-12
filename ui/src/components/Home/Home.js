@@ -98,8 +98,8 @@ class Home extends Component {
             return (
                 <Card className='documentsCard' >
                     <Card.Img variant='top' src={docImage}/>
-                    <Card.Body>
-                      <Card.Title onClick = {event =>  window.location.href = '/documents/'+ doc._id }>
+                    <Card.Body onClick = {event =>  window.location.href = '/documents/'+doc._id }>
+                      <Card.Title>
                         {doc.name}
                       </Card.Title>
                     </Card.Body>

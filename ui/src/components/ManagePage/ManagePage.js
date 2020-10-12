@@ -139,7 +139,7 @@ class ManagePage extends Component {
     onChangeCoverImage(e){
       console.log(e.target.files);
       this.setState({
-        updateCover: e.target.files
+        updateCover: e.target.files[0]
       }, ()=>{
         if(this.state.uploadCoverImage !== null){
           this.uploadCoverImage();
@@ -151,6 +151,14 @@ class ManagePage extends Component {
       if (this.state.updateCover !== null){
         const covImg = new FormData();
         covImg.append('files', this.state.updateCover)
+        /*var i;
+        var tempCover = [];
+        for(i=0; i<this.state.updateCover.length; i++){
+          console.log(this.state.updateCover[i])
+          covImg.append('files', this.state.updateCover[i]);
+          tempCover.push(URL.createObjectURL(this.state.updateCover[i]));
+        }*/
+
         axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
         .then( res => {
           console.log(res);
@@ -271,8 +279,8 @@ class ManagePage extends Component {
             <div>
               <Card className='documentsCard' >
                 <Card.Img variant='top' src={docImage}/>
-                <Card.Body>
-                <Card.Title onClick = {event =>  window.location.href = '/documents/'+card._id }>
+                <Card.Body onClick = {event =>  window.location.href = '/documents/'+card._id }>
+                <Card.Title >
                   {card.name}
                 </Card.Title>
                 </Card.Body>

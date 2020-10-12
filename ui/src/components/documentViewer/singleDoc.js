@@ -68,7 +68,7 @@ class singleDoc extends Component {
             owner: "",
             docId: this.props.match.params.id,
             /*All Tags Created*/
-            allTags: [{'name':"Extra-Curricular"}, {'name': "Acadmeic"}, {'name': "Work-Experience"}, {'name': "Volunteering"}, {'name':"Leadership" }, {'name': "Extra1"}, {name: "Extra2"}, {name:"Extra3"} ],
+            allTags: [{'name':"Extra-Curricular"}, {'name': "Academic"}, {'name': "Work-Experience"}, {'name': "Volunteering"}, {'name':"Leadership" }, {'name': "Extra1"}, {name: "Extra2"}, {name:"Extra3"} ],
         }
 
     }
@@ -186,6 +186,7 @@ class singleDoc extends Component {
     }
 
   updateDoc(){
+
       // wait for backend for updating tags
     const docForm = {
         'name': this.state.docname,
@@ -193,7 +194,8 @@ class singleDoc extends Component {
         'description': this.state.docdesc,
         'achivement': this.state.achievement,
         'institution': this.state.acinst,
-        'dateAchieved': this.state.docdate
+        'dateAchieved': this.state.docdate,
+        'tagName': this.state.tags,
     }
 
     const putDoc = http+'/api/editDocument/' + this.props.match.params.id;
