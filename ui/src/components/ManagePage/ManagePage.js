@@ -460,13 +460,13 @@ class ManagePage extends Component {
                             </Form>
                           </Col>
                         </Row>
-                        <Container fluid style={{overflow:"auto", height:'35rem'}}>
+                        <Container fluid style={{overflow:"auto", height:'40rem', marginTop: '3rem'}}>
                           {this.state.searching ? (
-                            <Row style = {{marginTop:"3vmax", }}>
+                            <Row>
                               {showDocs}
                             </Row>
                           ):(
-                            <Row style = {{marginTop:"3vmax", }}>
+                            <Row>
                               {docCards}
                             </Row>
                           )}
