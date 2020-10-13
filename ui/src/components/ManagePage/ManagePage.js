@@ -363,7 +363,7 @@ class ManagePage extends Component {
         <div class = "manage-cover-image">
           <Carousel>
             {coverImage}
-          <Carousel.Item>
+          <Carousel.Item style={{height: "23vmax"}}>
             <input
              type="file"
              style={{display: "none"}}
