@@ -164,31 +164,7 @@ const updateAcc  = async (req, res, next) => {
   
   user.mobile = req.body.Mobile;
   user.name = req.body.Username;
-  user.officeAddress = req.body.Address;
-
-  let existingPhoto
-  try {
-      existingPhoto = await Photos.findOne({ owner: userId})
-    } catch (err) {
-      const error = new HttpError(
-          'Photos not found.',
-           500
-      );
-      return next(error);    
-    }
-  
-  if(existingPhoto) {
-    const update = {profilePhoto : req.file.path}
-      await existingPhoto.updateOne(update);
-  }else{
-    const error = new HttpError(
-          'profile photo not uploaded.',
-          500            
-          );
-    return next(error);
-  }
-
-  
+  user.officeAddress = req.body.Address;  
   
   if ( normalizeEmail(req.body.Email) !== user.email) {
     let email;
