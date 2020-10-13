@@ -15,6 +15,7 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
 import doc from '../../Image/documents.png';
+import { DatePicker } from 'react-rainbow-components';
 import Tag from './../Tags/Tag.js';
 
 import {pathForRequest} from '../http.js';
@@ -45,7 +46,6 @@ class singleDoc extends Component {
         this.handleRemoveAchievement = this.handleRemoveAchievement.bind(this);
         this.handleAchievement = this.handleAchievement.bind(this);
         this.onChangeInstitution = this.onChangeInstitution.bind(this);
-        this.onChangeAcdate = this.onChangeAcdate.bind(this);
         this.onChangeTags = this.onChangeTags.bind(this);
 
         this.state = {
@@ -194,7 +194,7 @@ class singleDoc extends Component {
         'description': this.state.docdesc,
         'achivement': this.state.achievement,
         'institution': this.state.acinst,
-        'dateAchieved': this.state.docdate,
+        'dateAchieved': this.state.acdate,
         'tagName': this.state.tags,
     }
 
@@ -224,12 +224,6 @@ class singleDoc extends Component {
   onChangeInstitution(e){
     this.setState({
         acinst: e.target.value
-    })
-  }
-
-  onChangeAcdate(e){
-    this.setState({
-        acdate: e.target.value
     })
   }
 
@@ -375,10 +369,11 @@ class singleDoc extends Component {
                                 defaultValue = {this.state.acinst}
                                 style ={{marginBottom: "0.6vmax"}}
                                 onChange = {this.onChangeInstitution}/>
-                                <FormControl
-                                    placeholder = "Date"
-                                    defaultValue = {this.state.acdate}
-                                    onChange={this.onChangeAcdate}/>
+                              <DatePicker
+                               onChange={value => this.setState({acdate: value})}
+                               value={this.state.acdate}
+                               locale="en-US"
+                               />
                             </Row>
                             </Collapse>
                         </Col>

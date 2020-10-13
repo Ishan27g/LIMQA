@@ -460,7 +460,7 @@ class ManagePage extends Component {
                             </Form>
                           </Col>
                         </Row>
-                        <Container fluid style={{overflow:"auto", height:'45rem'}}>
+                        <Container fluid style={{overflow:"auto", height:'35rem'}}>
                           {this.state.searching ? (
                             <Row style = {{marginTop:"3vmax", }}>
                               {showDocs}
@@ -476,13 +476,15 @@ class ManagePage extends Component {
                       </Col>
                   </Row>
                   {/*Set Background Image*/}
+                </Container>
+                <Container>
                   <Row className = "mt-3">
-                  <input
-                         type="file"
-                         style={{display: "none"}}
-                         onChange={this.onChangeBgImg}
-                         ref={bgInput=>this.bgInput=bgInput}/>
-                   <Button block variant="info" onClick = {() => this.docInput.click()}>Select Background Image</Button>
+                    <input
+                          type="file"
+                          style={{display: "none"}}
+                          onChange={this.onChangeBgImg}
+                          ref={bgInput=>this.bgInput=bgInput}/>
+                    <Button block variant="info" onClick = {() => this.docInput.click()}>Select Background Image</Button>
                   </Row>
                 </Container>
               </div>

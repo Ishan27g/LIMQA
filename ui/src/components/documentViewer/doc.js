@@ -17,6 +17,8 @@ import Collapse from 'react-bootstrap/Collapse';
 import Alert from 'react-bootstrap/Alert';
 import doc from '../../Image/documents.png';
 import Tag from './../Tags/Tag.js';
+import { DatePicker } from 'react-rainbow-components';
+
 import {pathForRequest} from '../http.js';
 
 let http = pathForRequest();
@@ -56,6 +58,7 @@ class DocMode extends Component {
       uploadMode: false,
       docViewer: false,
       alertDescription: false,
+      alertSuccess: false,
 
       /*Document Properties*/
       docname: "Untitled",
@@ -65,7 +68,7 @@ class DocMode extends Component {
       docdesc: "",
       achievement: false,
       acinst: "",
-      acdate: "",
+      acdate: new Date().toLocaleDateString(),
 
        /*All Tags Created*/
       allTags: ["Extra-Curricular" , "Academic", "Work-Experience", "Volunteering", "Leadership", "Extra1", "Extra2", "Extra3"],
@@ -154,7 +157,8 @@ class DocMode extends Component {
       docForm.append('achivement', this.state.achievement);
       docForm.append('document', this.props.doc.doc);
       docForm.append('institution', this.state.acinst);
-      docForm.append('dateAchieved', this.state.docdate);
+      docForm.append('dateCreated', this.state.docdate);
+      docForm.append('dateAchieved', this.state.acdate);
       docForm.append('name', this.state.docname);
       if(this.state.tags.length === 1){
         docForm.append('tagName[]', this.state.tags[0])
@@ -172,11 +176,19 @@ class DocMode extends Component {
       .catch(function(error) {
         console.log(error);
       });
-      this.setState({
-        docViewer: false,
-        DocEditor: false,
-        uploadMode: false
-      })
+   
+      this.setState({alertSuccess:true},()=>{
+        window.setTimeout(()=>{
+          this.setState({alertSuccess:false}, ()=>{
+            this.setState({
+              docViewer: false,
+              DocEditor: false,
+              uploadMode: false
+            })
+          })
+        },1500);
+      });
+
   } else {
     this.setState({alertDescription: true});
   }
@@ -311,7 +323,10 @@ class DocMode extends Component {
                             onClick = {this.handleCheckDelete}>
                             Delete Document
                           </Button>)
-                            }
+                          }
+                        <Alert variant="success" show={this.state.alertSuccess} block>
+                          Successfully upload the documents!
+                        </Alert>
                         </Row>
                       </Col>
                       <Col className = "docedit-properties">
@@ -365,9 +380,11 @@ class DocMode extends Component {
                               defaultValue = {this.state.acinst}
                               style ={{marginBottom: "0.6vmax"}}
                               onChange = {this.onChangeInstitution}/>
-                              <FormControl
-                                placeholder = "Date"
-                                defaultValue = {this.state.acdate}/>
+                              <DatePicker
+                               onChange={value => this.setState({acdate: value})}
+                               value={this.state.acdate}
+                               locale="en-US"
+                               />
                           </Row>
                         </Collapse>
 
