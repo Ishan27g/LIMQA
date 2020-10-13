@@ -234,6 +234,7 @@ const signup = async (req, res, next) => {
     owner: createdUser.id
   });
 
+
   createdUser.photos = createdPhotos;
   try {
     await CreatedLinkedin.save();

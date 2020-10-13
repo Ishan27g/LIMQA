@@ -71,7 +71,7 @@ class Register extends Component{
   /*Change true Condition to pass Ahead After Check 1*/
   handleRegister () {
     var regex_password = /^(?=.*[0-9]+.*)(?=.*[A-Z]+.*)[0-9a-zA-Z]{6,}$/;
-    var regex_email = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    var regex_email = /^[\w-.]+@([\w-]+.)+[\w-]{2,4}$/;
     const check_pass_match = (this.state.repassword === this.state.password);
     const check_empty_username = !(this.state.username === "");
     const check_password = regex_password.test(this.state.password);
@@ -96,7 +96,7 @@ class Register extends Component{
         .catch(function(error) {
             console.log(error);
         })
-        
+
     } else {
       this.setState(
         {
@@ -109,7 +109,7 @@ class Register extends Component{
   }
   render(){
     return(
-      <div class ="page-fill">
+      <div className ="page-fill">
       <Container className = "register">
         <Col>
           <Form className = "register-form">
@@ -177,7 +177,7 @@ class Register extends Component{
               <div></div>
             )
             }
-            <Form.Group controlId="formBasicPassword">
+            <Form.Group controlId="formBasicRePassword">
               <Col sm = "2">
               <Form.Label>Re-enter Password</Form.Label>
               </Col>

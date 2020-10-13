@@ -13,7 +13,7 @@
 .carousel-item > img {
   display: block;
   width: 100%;
-  height: 1vmax;
+  height: 23vmax;
 
 }
 .cover-image {
@@ -40,7 +40,7 @@ h3{
   font-size: 1.8em;
 }
 
-p{
+.p{
   line-height: 2em;
   font-size: 1.2em;
   font-family: 'Roboto', sans-serif;
