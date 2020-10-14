@@ -4,7 +4,6 @@ import "../../App.css";
 import './Home.css';
 
 import axios from "axios";
-import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns';
 import Carousel from "react-bootstrap/Carousel";

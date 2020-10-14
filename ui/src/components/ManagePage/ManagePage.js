@@ -12,6 +12,7 @@ import Container from 'react-bootstrap/Container';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
+import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
 import Tag from './../Tags/Tag.js';
@@ -52,7 +53,9 @@ class ManagePage extends Component {
           documents: [],
           searching: false,
           search: "",
-          tags: []
+          tags: [],
+          newTag: false,
+          tagName: "",
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -69,6 +72,10 @@ class ManagePage extends Component {
         this.onChangeBgImg = this.onChangeBgImg.bind(this);
         this.uploadBgImg = this.uploadBgImg.bind(this);
         this.onChangeSearch = this.onChangeSearch.bind(this);
+        this.handleAddTagClose = this.handleAddTagClose.bind(this);
+        this.handleAddTagShow = this.handleAddTagShow.bind(this);
+        this.createNewTag = this.createNewTag.bind(this);
+        this.onChangeTagName = this.onChangeTagName.bind(this);
     }
 
     componentDidMount(){
@@ -230,6 +237,15 @@ class ManagePage extends Component {
         this.setState({filter: "Else"});
     }
 
+    handleAddTagShow(){
+      console.log('up to here')
+      this.setState({newTag: true})
+    }
+
+    handleAddTagClose(){
+      this.setState({newTag: false})
+    }
+
     onChangBioInfo(e){
       if (e.target.value.length > 0){
         this.setState({
@@ -297,8 +313,41 @@ class ManagePage extends Component {
           searching: true	
         });	
       }	
-  
     }
+
+    onChangeTagName(e){
+      this.setState({
+        tagName: e.target.value
+      }, ()=>{
+        console.log(this.state.tagName)
+      })
+    }
+
+    createNewTag(){
+      const obj = {
+        name: this.state.tagName,
+        color: 'green'
+      }
+      const tagUrl = http+'/api/tags/'+this.state.userid;
+      axios.post(tagUrl, obj, { withCredentials: true })
+      .then( res => {
+        console.log(res);
+        const gettagUrl = http+'/api/tags/' + this.state.userid;
+        axios.get(gettagUrl)
+        .then(res =>{
+          this.setState({
+            tags: res.data
+          })
+        })
+        .catch(function(error) {
+          console.log(error);
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }
+
 
     render(){
       var doc = {doc: this.state.updateDoc, id: this.state.userid};
@@ -375,7 +424,7 @@ class ManagePage extends Component {
 
       let tagsMap = tags.map(tags =>{
           return(
-              <Tag style={{}} note={tags.name} />
+              <Tag note={tags.name}/>
           )
       })
 
@@ -501,17 +550,27 @@ class ManagePage extends Component {
               <div class = "document-arena">
                 <h2 style = {{marginBottom: "3vmax"}}>Tags Management</h2>
                 <Container>
-                  <Row>
+                  <Row style = {{height: "10vmax"}}>
                     <Col>
-                      <Button variant="info">Add new tag</Button>
+                      {this.state.newTag? (
+                        <Form>
+                          <Form.Group controlId="formBasicEmail">
+                            <Form.Control type="tag" placeholder="Enter new tag name" onChange={this.onChangeTagName}/>
+                          </Form.Group>
+                          <Button variant="primary" type="submit" onClick={this.createNewTag}>
+                            Create
+                          </Button>
+                        </Form>
+                        
+                      ):(
+                        <Button variant="info" onClick={this.handleAddTagShow}>Add new tag</Button>
+                      )}
                     </Col>
                     <Col>
-                      
+                      {tagsMap}
                     </Col>
                   </Row>
-                  <Row>
-                    {tagsMap}
-                  </Row>
+
                 </Container>
                 <Container>
                   <Row className = "mt-3">
@@ -524,6 +583,7 @@ class ManagePage extends Component {
                   </Row>
                 </Container>
               </div>
+
             </body>
         )
     }
