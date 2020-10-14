@@ -61,6 +61,7 @@ class AccountView extends Component {
     this.onChangeOfficeAddress = this.onChangeOfficeAddress.bind(this);
     this.onChangeSupplymentaryEmail = this.onChangeSupplymentaryEmail.bind(this);
     this.onChangeMobile = this.onChangeMobile.bind(this);
+    this.changePass = this.changePass.bind(this);
   }
 
   componentDidMount(){
@@ -269,6 +270,10 @@ class AccountView extends Component {
     });
   }
 
+  changePass(){
+    window.location.href = '/updatePass/'+this.state.userid;
+  }
+
     render(){
         return(
             <body>
@@ -324,7 +329,7 @@ class AccountView extends Component {
                           <Button variant="outline-dark" onClick={this.updateChanges}>Save Changes</Button>
                         </Row>
                         <Row className = "edit-update-password">
-                          <label>Update Password</label>
+                          <label onClick={this.changePass}>Update Password</label>
                         </Row>
                       </Col>
 
@@ -433,7 +438,7 @@ class AccountView extends Component {
                         <Button variant="outline-dark" onClick={this.handleEditingOpen}>Edit</Button>
                       </Row>
                       <Row className = "acc-update-password">
-                        <label>Update Password</label>
+                        <label onClick={this.changePass}>Update Password</label>
                       </Row>
                     </Col>
 
