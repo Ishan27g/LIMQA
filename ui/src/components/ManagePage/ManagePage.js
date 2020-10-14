@@ -14,6 +14,7 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
+import Tag from './../Tags/Tag.js';
 
 import CoverImage from '../CoverImage/coverImage.js';
 import Docview from '../documentViewer/doc.js';
@@ -51,6 +52,7 @@ class ManagePage extends Component {
           documents: [],
           searching: false,
           search: "",
+          tags: []
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -108,6 +110,17 @@ class ManagePage extends Component {
       .catch(function(error) {
         console.log(error);
       });
+
+      const tagUrl = http+'/api/tags/' + this.state.userid;
+      axios.get(tagUrl)
+      .then(res =>{
+        this.setState({
+          tags: res.data
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
     };
 
     onChangeProfileImage(e){
@@ -142,7 +155,7 @@ class ManagePage extends Component {
     onChangeCoverImage(e){
       console.log(e.target.files);
       this.setState({
-        updateCover: e.target.files[0]
+        updateCover: e.target.files
       }, ()=>{
         if(this.state.uploadCoverImage !== null){
           this.uploadCoverImage();
@@ -153,14 +166,14 @@ class ManagePage extends Component {
     uploadCoverImage(){
       if (this.state.updateCover !== null){
         const covImg = new FormData();
-        covImg.append('files', this.state.updateCover)
-        /*var i;
+        //covImg.append('files', this.state.updateCover)
+        var i;
         var tempCover = [];
         for(i=0; i<this.state.updateCover.length; i++){
           console.log(this.state.updateCover[i])
           covImg.append('files', this.state.updateCover[i]);
           tempCover.push(URL.createObjectURL(this.state.updateCover[i]));
-        }*/
+        }
 
         axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
         .then( res => {
@@ -358,6 +371,14 @@ class ManagePage extends Component {
         )
       });
 
+      var tags = this.state.tags;
+
+      let tagsMap = tags.map(tags =>{
+          return(
+              <Tag style={{}} note={tags.name} />
+          )
+      })
+
       return(
         <body>
         <div class = "manage-cover-image">
@@ -475,7 +496,22 @@ class ManagePage extends Component {
                       </Container>
                       </Col>
                   </Row>
-                  {/*Set Background Image*/}
+                </Container>
+              </div>
+              <div class = "document-arena">
+                <h2 style = {{marginBottom: "3vmax"}}>Tags Management</h2>
+                <Container>
+                  <Row>
+                    <Col>
+                      <Button variant="info">Add new tag</Button>
+                    </Col>
+                    <Col>
+                      
+                    </Col>
+                  </Row>
+                  <Row>
+                    {tagsMap}
+                  </Row>
                 </Container>
                 <Container>
                   <Row className = "mt-3">
