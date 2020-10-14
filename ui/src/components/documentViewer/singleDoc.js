@@ -68,7 +68,7 @@ class singleDoc extends Component {
             owner: "",
             docId: this.props.match.params.id,
             /*All Tags Created*/
-            allTags: [{'name':"Extra-Curricular"}, {'name': "Academic"}, {'name': "Work-Experience"}, {'name': "Volunteering"}, {'name':"Leadership" }, {'name': "Extra1"}, {name: "Extra2"}, {name:"Extra3"} ],
+            allTags: [],
         }
 
     }
@@ -77,7 +77,6 @@ class singleDoc extends Component {
         const getDoc = http+'/api/OneDocument/'+this.state.docId;
         axios.get(getDoc)
         .then(res=>{
-           console.log()
             var tempTag = [];
             var i;
             for(i=0; i<res.data.document.tags.length; i++){
@@ -93,6 +92,24 @@ class singleDoc extends Component {
                 acdate: res.data.document.dateAchieved,
                 tags: tempTag,
                 owner: res.data.document.owner
+            },()=>{
+                const tagUrl = http+'/api/tags/' + this.state.owner;
+                console.log(tagUrl)
+                axios.get(tagUrl)
+                .then(res =>{
+                    var tempTag = [];
+                    var i;
+                    console.log(res.data)
+                    for(i=0; i<res.data.length; i++){
+                      tempTag.push(res.data[i].name);
+                    }
+                    this.setState({
+                      allTags: tempTag
+                    })
+                })
+                .catch(function(error) {
+                  console.log(error);
+                })
             })
         })
         .catch(function(error) {
@@ -108,6 +125,8 @@ class singleDoc extends Component {
                 })
             }
         })
+
+
     }
 
     handleViewerShow = () => {
@@ -263,14 +282,14 @@ class singleDoc extends Component {
 
     var allTags = this.state.allTags;
     let SelectTags = allTags.map(onetag =>{
-        var check = this.state.tags.includes(onetag.name);
+        var check = this.state.tags.includes(onetag);
         return(
             <InputGroup className = "select-tags">
               <InputGroup.Prepend>
-                <InputGroup.Checkbox onChange={this.onChangeTags} value={onetag.name} checked={check}/>
+                <InputGroup.Checkbox onChange={this.onChangeTags} value={onetag} checked={check}/>
               </InputGroup.Prepend>
               <InputGroup.Append>
-                  <Tag note={onetag.name} />
+                  <Tag note={onetag} />
               </InputGroup.Append>
             </InputGroup>
         )

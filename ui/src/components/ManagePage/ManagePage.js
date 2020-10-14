@@ -318,8 +318,6 @@ class ManagePage extends Component {
     onChangeTagName(e){
       this.setState({
         tagName: e.target.value
-      }, ()=>{
-        console.log(this.state.tagName)
       })
     }
 
