@@ -341,12 +341,13 @@ const forgotPassword = async (req, res, next) => {
         pass: `${PASSWORD}`,
     }
   });
+  var host = req.headers.host.split(":")[0] + ':3000'
   //Create email with required properties
   mailOptions = {
     from: `${EMAIL}`,
     to: req.body.email,
     subject: 'Password reset link',
-    text:`Navigate to 'http://${req.headers.host}/reset/${token}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`
+    text:`Navigate to 'http://${host}/reset/${token}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`
   }
   //send the email
   tr.sendMail(mailOptions, function(err,data){
