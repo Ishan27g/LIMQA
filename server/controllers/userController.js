@@ -331,15 +331,10 @@ const forgotPassword = async (req, res, next) => {
       )
       return next(error);
   }
-  /*  could you send link in this format? I want to have the token string in url,
-    so that I can look up this token in database.
-    'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-
-  */
-
-  //Create email transport service
-  tr = nodemailer.createTransport({
-    service: `${SERVICE}`,
+ 
+ //Create email transport service
+ tr = nodemailer.createTransport({
+  service: `${SERVICE}`,
     auth: {
         user: `${EMAIL}`,
         pass: `${PASSWORD}`,
@@ -350,7 +345,7 @@ const forgotPassword = async (req, res, next) => {
     from: `${EMAIL}`,
     to: req.body.email,
     subject: 'Password reset link',
-    text:` 'http://' + ${req.headers.host} + '/reset/' + ${token} + '\n\n'`
+    text:`Navigate to 'http://${req.headers.host}/reset/${token}\n\n`
   }
   //send the email
   tr.sendMail(mailOptions, function(err,data){
