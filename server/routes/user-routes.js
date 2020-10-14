@@ -57,4 +57,6 @@ router.post('/resetPassword/:token', userController.resetPassowrd);
 router.put('/updatePassword/:uid', ensureAuthenticated, [
     check("password").not().isEmpty(), 
     check("password").isLength({ min: 6 }), ] ,userController.updatePassword);
+router.post('/checkPassword', ensureAuthenticated, userController.checkPreviousPassword);
+
 module.exports = router;

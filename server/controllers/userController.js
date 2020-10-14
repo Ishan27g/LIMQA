@@ -506,6 +506,27 @@ const updatePassword = async (req, res, next) => {
   res.json({success:true})
 }
 
+const checkPreviousPassword = async (req, res, next) => {
+
+  password = req.body.password; 
+  let user = req.user;
+  const match;
+  try {
+    match = await bcrypt.compare(password, user.password);
+  } catch (err) {
+    console.log(err);
+  }
+
+  if (!match ) {
+    res.json({
+      match:false
+    })
+  }
+  res.json({
+    match:true
+  });
+}
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
@@ -514,3 +535,4 @@ exports.forgotPassword = forgotPassword;
 exports.checkToken = checkToken;
 exports.resetPassowrd = resetPassowrd;
 exports.updatePassword = updatePassword;
+exports.checkPreviousPassword = checkPreviousPassword;
