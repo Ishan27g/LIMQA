@@ -22,6 +22,7 @@ class Landing extends Component{
   constructor(props){
     super(props);
     this.getUsers = this.getUsers.bind(this);
+    this.onChangeSearch = this.onChangeSearch.bind(this);
 
     this.state = {
       /*App states*/
@@ -50,6 +51,21 @@ class Landing extends Component{
     .catch(function(error) {
       console.log(error);
     });
+  }
+
+  onChangeSearch(e){
+    if (e.target.value === ""){	
+      this.setState({	
+        search: e.target.value,	
+        searching: false	
+      });	
+    } else {	
+      this.setState({	
+        search: e.target.value,	
+        searching: true	
+      });	
+    }	
+
   }
 
   render(){

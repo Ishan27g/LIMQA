@@ -7,6 +7,9 @@ const Social = require('../models/social');
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const Photos = require('../models/photos');
+const Tag = require('../models/tag');
+const crypto = require('crypto');
+const { hrtime } = require('process');
 
 
 const getUsers = async (req, res, next) => {
@@ -18,7 +21,7 @@ const getUsers = async (req, res, next) => {
           path: 'tags',
           model: 'Tag'
         } 
-      }).populate("social");
+      }).populate("social").populate("tags");
   } catch (err) {
     const error = new HttpError(
       'Fetching users failed please try again later.',
@@ -116,6 +119,71 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
+  // create some default tags for user.
+
+  const Default = new Tag({
+    name: "Default",
+    color: "grey",
+    files: [],
+    owner: createdUser.id
+  })
+
+  const work = new Tag({
+    name: "Work-Experience",
+    color: "red",
+    files : [],
+    owner : createdUser.id
+  });
+  
+  const Academic = new Tag({
+    name: "Academic",
+    color: "blue",
+    files : [],
+    owner : createdUser.id
+  });
+  
+  const volunteering = new Tag({
+    name: "Volunteering",
+    color: "green",
+    files : [],
+    owner : createdUser.id
+  });
+  
+  const Leadership = new Tag({
+    name: "Leadership",
+    color: "brown",
+    files : [],
+    owner : createdUser.id
+  });
+  
+  const Curricular = new Tag({
+    name: "Extra-Curricular",
+    color: "yellow",
+    files : [],
+    owner : createdUser.id
+  });
+  
+  try{
+      await Default.save();
+      await work.save();
+      await Academic.save();
+      await volunteering.save();
+      await Leadership.save();
+      await Curricular.save();
+      await createdUser.tags.push(Default);
+      await createdUser.tags.push(work);
+      await createdUser.tags.push(Academic);
+      await createdUser.tags.push(volunteering);
+      await createdUser.tags.push(Leadership);
+      await createdUser.tags.push(Curricular);
+  } catch (err) {
+      console.log(err);
+      const error = new HttpError (
+          "created tags failed",
+          500
+      );
+  };
+
   /**
    * create tags object
    const createdTags = new Tags({
@@ -210,8 +278,138 @@ const login = (req, res, next) => {
   })(req, res, next);
 };
 
+const forgotPassword = async (req, res, next) => {
+
+  let user;
+  var token;
+  try {
+    user = await User.findOne({email: req.body.email});
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Fail to find user for provided email",
+      500
+    )
+    return next(error);
+  };
+
+  if(!user) {
+    return next(new HttpError("This user does not exist.", 422));
+  }
+
+  try {
+    token  = crypto.randomBytes(20).toString('hex');
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Fail to generate token.",
+      500
+    )
+    return next(error);
+  };
+
+
+  console.log(token);
+
+  user.resetPasswordToken = token;      // generate a unique token 
+  user.resetPasswordExpires = Date.now() + 3600000; //  token will be expired in 1 hour.
+
+  try{
+    await user.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Cannot save user, please try again.",
+      500
+      )
+      return next(error);
+  }
+  /*  could you send link in this format? I want to have the token string in url,
+    so that I can look up this token in database.
+    'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+
+  */
+
+  res.json({user : user.toObject({getters: true})});
+
+}
+
+// check if token has expired or not.
+const checkToken = async (req, res, next) => {
+  let user;
+  try {
+    user = await User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() }});
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Could not find user.",
+      500
+    )
+    return next(error);
+  }
+  if(!user) {
+    return next(new HttpError("Password reset token is invalid or has expired.", 422));
+  }
+
+  res.json({
+    token: true
+  })
+}
+
+const resetPassowrd = async (req, res, next) => {
+
+  let user;
+  try {
+    user = await User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } });
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Fail to find user for provided email",
+      500
+    )
+    return next(error);
+  };
+
+  if(!user) {
+    return next(new HttpError("Password reset token is invalid or has expired.", 422));
+  }
+
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(req.body.password, 10);
+  } catch (err) {
+    const error = new HttpError("Could not create password, please try again.", 500);
+    return next(error);
+  }
+
+  user.password = hashedPassword;
+  user.resetPasswordToken = undefined;      // set token to undefined  
+  user.resetPasswordExpires = undefined; // set expire time to undefinec.
+
+  try{
+    await user.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "Cannot save user, please try again.",
+      500
+      )
+      return next(error);
+  }
+  /*  
+    send an email to user to notify that user has changed password successfully.
+  */
+
+  res.json({
+    reset: true
+  });
+
+}
 
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
 exports.check = check;
+exports.forgotPassword = forgotPassword;
+exports.checkToken = checkToken;
+exports.resetPassowrd = resetPassowrd;

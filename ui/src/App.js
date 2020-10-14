@@ -21,6 +21,7 @@ import ManagePage from './components/ManagePage/ManagePage.js';
 import NotFound from './components/NotFound.js';
 import Register from './components/SignUp/register.js';
 import singleDoc from './components/documentViewer/singleDoc.js';
+import Search from './components/Search/Search.js';
 
 import logo from './Image/logo.png';
 import loginButton from './Image/loginButton.svg';
@@ -41,6 +42,7 @@ class App extends Component{
     this.onChangePassword = this.onChangePassword.bind(this);
     this.Adminlogin = this.Adminlogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleSearchPage = this.handleSearchPage.bind(this);
 
     this.state ={
         /*App states*/
@@ -171,6 +173,12 @@ class App extends Component{
     this.setState({ loginButton: false });
   }
 
+  handleSearchPage(){
+    var id = window.location.pathname.split('/')[2];
+    //console.log(window.location.pathname.split('/')[2])
+    window.location.href='/search/'+id;
+  }
+
   render(){
     var front = true;
     if(window.location.pathname !== '/' && window.location.pathname !== '/notfound'){
@@ -178,9 +186,10 @@ class App extends Component{
     }else{
       front = true;
     }
+
     return (
       <div>
-          {front ? (
+          {front && !this.state.login ? (
             <header>
             <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
             <Navbar.Brand href="/" className = "mr-auto">
@@ -282,7 +291,7 @@ class App extends Component{
                       }
                       <Form inline>
                         <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                        <Button variant="outline-dark">Search</Button>
+                        <Button variant="outline-dark" onClick={this.handleSearchPage}>Search</Button>
                       </Form>
 
                     </Nav>
@@ -355,6 +364,7 @@ class App extends Component{
             <Route path="/register" component={Register}/>
             <Route path="/home/:id" component={Home}/>
             <Route path="/documents/:id" component={singleDoc}/>
+            <Route path="/search/:id" component={Search}/>
             {this.state.login? (<Route path="/manage/:id" component={ManagePage}/>):(<Route path="/manage/:id" component={NotFound}/>)}
             {this.state.login? (<Route path="/view/:id" component={AccountView}/>):(<Route path="/view/:id" component={NotFound}/>)}
             <Route path="/notfound" render = {() => <NotFound link = "/"/> }/>

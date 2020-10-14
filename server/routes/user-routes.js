@@ -19,10 +19,21 @@ router.post('/signup', fileUpload.array('files',10), [
     check("password").isLength({ min: 6 }), ] , userController.signup);
 
 router.post('/login', check('email').normalizeEmail(),userController.login);
+
 router.get('/logout', (req, res) => {
     req.logout();
     res.send({ success : true, message : 'logged out' }); 
-})
+});
+
+// this route send the login status back to front end.
+router.get('/check', userController.check);
+
+router.post('/profilePhoto', fileUpload.single('file'), photoController.addProfilePhoto);
+router.get('/profilePhoto', photoController.getProfilePhoto);
+
+router.post('/coverImages', fileUpload.array('files',5), photoController.addCoverImages);
+router.get('/coverImages', photoController.getCoverImages);
+router.get('/coverImages/:id', photoController.getCoverImagesById);
 
 
 router.post('/profilePhoto/:uid', ensureAuthenticated, fileUpload.single('file'), photoController.addProfilePhoto);
@@ -38,4 +49,8 @@ router.post('/bgImage/:uid', ensureAuthenticated, fileUpload.single('file'), pho
 router.get('/bgImage/:uid', photoController.getBgImage);
 router.delete('/bgImage/:uid', ensureAuthenticated, photoController.delBgImage);
 
+// expect user email address
+router.post('/forgot', userController.forgotPassword);
+router.get('/resetPassword/:token', userController.checkToken);
+router.post('/resetPassword/:token', userController.resetPassowrd);
 module.exports = router;
