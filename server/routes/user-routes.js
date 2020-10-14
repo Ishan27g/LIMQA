@@ -45,4 +45,13 @@ router.delete('/bgImage/:uid', ensureAuthenticated, photoController.delBgImage);
 router.post('/forgot', userController.forgotPassword);
 router.get('/resetPassword/:token', userController.checkToken);
 router.post('/resetPassword/:token', userController.resetPassowrd);
+
+router.put('/updatePassword/:uid', ensureAuthenticated, [
+    check("password").not().isEmpty(), 
+    check("password").isLength({ min: 6 }), ] ,userController.updatePassword);
+router.post('/checkPassword', ensureAuthenticated, userController.checkPreviousPassword);
+
+// QR code generator
+router.post('/QRCode', userController.generateQRCode);
+
 module.exports = router;
