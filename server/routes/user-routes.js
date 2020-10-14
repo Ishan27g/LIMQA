@@ -28,14 +28,6 @@ router.get('/logout', (req, res) => {
 // this route send the login status back to front end.
 router.get('/check', userController.check);
 
-router.post('/profilePhoto', fileUpload.single('file'), photoController.addProfilePhoto);
-router.get('/profilePhoto', photoController.getProfilePhoto);
-
-router.post('/coverImages', fileUpload.array('files',5), photoController.addCoverImages);
-router.get('/coverImages', photoController.getCoverImages);
-router.get('/coverImages/:id', photoController.getCoverImagesById);
-
-
 router.post('/profilePhoto/:uid', ensureAuthenticated, fileUpload.single('file'), photoController.addProfilePhoto);
 router.get('/profilePhoto/:uid', photoController.getProfilePhoto);
 router.delete('/profilePhoto/:uid', ensureAuthenticated, photoController.deleteProfilePhoto);

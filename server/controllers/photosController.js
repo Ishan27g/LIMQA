@@ -1,8 +1,6 @@
 const fs = require('fs');
 const { exec } = require('child_process');
-const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
-const {validationResult } = require("express-validator");
 const  Photos = require('../models/photos');
 
 const getBgImage = async (req, res, next) => {
@@ -122,6 +120,7 @@ const getCoverImagesById = async (req, res, next) =>{
     try {
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
+        console.log(err)
         const error = new HttpError(
         'Photos not found.',
         500
@@ -217,7 +216,6 @@ const addCoverImages = async (req, res, next) =>{
         var path = [];
         for (i = 0; i < req.files.length; i++) {
             path.push(req.files[i].path);
-            console.log('File : ' + i + req.files[i].path)
         }
         const update = {coverImages : path}
         await existingPhoto.updateOne(update);
