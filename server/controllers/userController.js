@@ -515,6 +515,7 @@ const checkPreviousPassword = async (req, res, next) => {
     match = await bcrypt.compare(password, user.password);
   } catch (err) {
     console.log(err);
+    return next(new HttpError("Validate password failed."))
   }
 
   if (!match ) {
