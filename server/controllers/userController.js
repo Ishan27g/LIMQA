@@ -464,7 +464,7 @@ const updatePassword = async (req, res, next) => {
 
   let user;
   try {
-    await User.findById(req.params.uid);
+    user = await User.findById(req.params.uid);
   } catch (err) {
     console.log(err);
     const error = new HttpError (
@@ -480,9 +480,9 @@ const updatePassword = async (req, res, next) => {
 
   let hashedPassword;
   try {
-    hashedPassword = await bcrypt.hash(password, 10);
+    hashedPassword = await bcrypt.hash(req.body.password, 10);
   } catch (err) {
-    const error = new HttpError("Could not create user, please try again.", 500);
+    const error = new HttpError("Could not create password, please try again.", 500);
     return next(error);
   }
 
