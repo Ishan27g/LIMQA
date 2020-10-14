@@ -53,4 +53,8 @@ router.delete('/bgImage/:uid', ensureAuthenticated, photoController.delBgImage);
 router.post('/forgot', userController.forgotPassword);
 router.get('/resetPassword/:token', userController.checkToken);
 router.post('/resetPassword/:token', userController.resetPassowrd);
+
+router.put('/updatePassword/:uid', ensureAuthenticated, [
+    check("password").not().isEmpty(), 
+    check("password").isLength({ min: 6 }), ] ,userController.updatePassword);
 module.exports = router;

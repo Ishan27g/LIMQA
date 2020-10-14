@@ -458,6 +458,54 @@ const resetPassowrd = async (req, res, next) => {
   })
 }
 
+
+const updatePassword = async (req, res, next) => {
+  const error =  validationResult(req);
+  if(!error.isEmpty()) {
+      console.log(error);
+      return next(new HttpError("Invalid inputs passed, please check your data.", 422));
+  }
+
+  let user;
+  try {
+    await User.findById(req.params.uid);
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError (
+      "Find user failed.",
+      500
+    );
+    return next(error);
+  }
+
+  if(! user) {
+    return next(new HttpError("This user does not exist.", 422));
+  }
+
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 10);
+  } catch (err) {
+    const error = new HttpError("Could not create user, please try again.", 500);
+    return next(error);
+  }
+
+  user.password = hashedPassword;
+
+  try {
+    await user.save();
+  } catch(err) {
+    console.log(err);
+    const error = new HttpError(
+      "Update password failed, please try again.",
+      500
+    );
+    return next(error);
+  }
+
+  res.json({success:true})
+}
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
@@ -465,3 +513,4 @@ exports.check = check;
 exports.forgotPassword = forgotPassword;
 exports.checkToken = checkToken;
 exports.resetPassowrd = resetPassowrd;
+exports.updatePassword = updatePassword;
