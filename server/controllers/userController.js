@@ -11,6 +11,13 @@ const Tag = require('../models/tag');
 const crypto = require('crypto');
 const { hrtime } = require('process');
 
+require('dotenv').config();
+const nodemailer = require('nodemailer');
+const {
+  SERVICE,
+  EMAIL,
+  PASSWORD,
+} = process.env
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -330,8 +337,31 @@ const forgotPassword = async (req, res, next) => {
 
   */
 
-  res.json({user : user.toObject({getters: true})});
-
+  //Create email transport service
+  tr = nodemailer.createTransport({
+    service: `${SERVICE}`,
+    auth: {
+        user: `${EMAIL}`,
+        pass: `${PASSWORD}`,
+    }
+  });
+  //Create email with required properties
+  mailOptions = {
+    from: `${EMAIL}`,
+    to: req.body.email,
+    subject: 'Password reset link',
+    text:` 'http://' + ${req.headers.host} + '/reset/' + ${token} + '\n\n'`
+  }
+  //send the email
+  tr.sendMail(mailOptions, function(err,data){
+    if(err){
+      console.log(err);
+      console.log('Error sending email')
+    }else{  
+      console.log('email sent')
+      res.json({user : user.toObject({getters: true})});
+    }
+  })
 }
 
 // check if token has expired or not.
@@ -399,11 +429,33 @@ const resetPassowrd = async (req, res, next) => {
   /*  
     send an email to user to notify that user has changed password successfully.
   */
-
-  res.json({
-    reset: true
+  //Create email transport service
+  tr = nodemailer.createTransport({
+    service: `${SERVICE}`,
+    auth: {
+        user: `${EMAIL}`,
+        pass: `${PASSWORD}`,
+    }
   });
-
+  //Create email with required properties
+  mailOptions = {
+    from: `${EMAIL}`,
+    to: user.email,
+    subject: 'Password reset notification',
+    text:`Your password has been updated`
+  }
+  //send the email
+  tr.sendMail(mailOptions, function(err,data){
+    if(err){
+      console.log(err);
+      console.log('Error sending email')
+    }else{  
+      console.log('email sent')
+      res.json({
+        reset: true
+      });
+    }
+  })
 }
 
 exports.getUsers = getUsers;
