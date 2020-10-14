@@ -175,6 +175,9 @@ class changePassword extends Component{
             <Row>
             <Button block variant = "outline-dark" onClick = {this.handleUpdate}> Change </Button>
             </Row>
+            <Row className = "edit-update-password">
+              <label onClick={()=>window.location.href = '/forget'} style={{margin: "auto"}}>forget your password?</label>
+            </Row>
           </Form>
         </Col>
       </Container>

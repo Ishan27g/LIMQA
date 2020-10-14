@@ -14,6 +14,7 @@ import Modal from 'react-bootstrap/Modal';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import Row from 'react-bootstrap/Row';
 
 import AccountView from './components/AccountView/accountView.js';
 import Landing from './components/LandingPage/landingPage.js';
@@ -23,6 +24,8 @@ import Register from './components/SignUp/register.js';
 import singleDoc from './components/documentViewer/singleDoc.js';
 import Search from './components/Search/Search.js';
 import changePassword from './components/Password/changePassword.js';
+import forgetPassEmail from './components/Password/forgetPassEmail.js';
+import forgetPass from './components/Password/forgetPass.js';
 
 import logo from './Image/logo.png';
 import loginButton from './Image/loginButton.svg';
@@ -242,6 +245,9 @@ class App extends Component{
                   <Button size="lg" block variant="primary" onClick={event =>  window.location.href='/register'}>
                     Register
                   </Button>
+                  <Row className = "edit-update-password">
+                    <label onClick={()=>window.location.href = '/forget'} >forget your password?</label>
+                  </Row>
                 </Modal.Footer>
               </Modal>
             </Navbar>
@@ -354,6 +360,9 @@ class App extends Component{
                   <Button size="lg" block variant="primary" onClick={event =>  window.location.href='/register'}>
                     Register
                   </Button>
+                  <Row className = "edit-update-password">
+                    <label onClick={()=>window.location.href = '/forget'} >forget your password?</label>
+                  </Row>
                 </Modal.Footer>
               </Modal>
             </header>
@@ -366,6 +375,8 @@ class App extends Component{
             <Route path="/home/:id" component={Home}/>
             <Route path="/documents/:id" component={singleDoc}/>
             <Route path="/search/:id" component={Search}/>
+            <Route path="/forget" component={forgetPassEmail}/>
+            <Route path="/reset/:id" component={forgetPass}/>
             {this.state.login? (<Route path="/manage/:id" component={ManagePage}/>):(<Route path="/manage/:id" component={NotFound}/>)}
             {this.state.login? (<Route path="/view/:id" component={AccountView}/>):(<Route path="/view/:id" component={NotFound}/>)}
             {this.state.login? (<Route path="/updatePass/:id" component={changePassword}/>):(<Route path="/updatePass/:id" component={NotFound}/>)}
