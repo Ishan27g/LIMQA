@@ -350,7 +350,7 @@ const forgotPassword = async (req, res, next) => {
     from: `${EMAIL}`,
     to: req.body.email,
     subject: 'Password reset link',
-    text:` 'http://' + ${req.headers.host} + '/reset/' + ${token} + '\n\n'`
+    text:` 'http://' + ${req.headers.host} + '/resetPassword/' + ${token} + '\n\n' + 'If you did not request this, please ignore this email and your password will remain unchanged.\n'`
   }
   //send the email
   tr.sendMail(mailOptions, function(err,data){
