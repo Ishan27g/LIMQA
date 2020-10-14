@@ -368,8 +368,7 @@ class App extends Component{
             <Route path="/search/:id" component={Search}/>
             {this.state.login? (<Route path="/manage/:id" component={ManagePage}/>):(<Route path="/manage/:id" component={NotFound}/>)}
             {this.state.login? (<Route path="/view/:id" component={AccountView}/>):(<Route path="/view/:id" component={NotFound}/>)}
-            
-            {this.state.login? (<Route path="/updatePass/:id" component={changePassword}/>):(<Route path="/reset" component={NotFound}/>)}
+            {this.state.login? (<Route path="/updatePass/:id" component={changePassword}/>):(<Route path="/updatePass/:id" component={NotFound}/>)}
             <Route path="/notfound" render = {() => <NotFound link = "/"/> }/>
             
           </Switch>
