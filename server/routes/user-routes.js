@@ -59,4 +59,7 @@ router.put('/updatePassword/:uid', ensureAuthenticated, [
     check("password").isLength({ min: 6 }), ] ,userController.updatePassword);
 router.post('/checkPassword', ensureAuthenticated, userController.checkPreviousPassword);
 
+// QR code generator
+router.post('/QRCode', userController.generateQRCode);
+
 module.exports = router;

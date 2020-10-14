@@ -9,6 +9,7 @@ const bcrypt = require("bcryptjs");
 const Photos = require('../models/photos');
 const Tag = require('../models/tag');
 const crypto = require('crypto');
+const QRCode = require('qrcode')
 const { hrtime } = require('process');
 
 require('dotenv').config();
@@ -505,7 +506,7 @@ const checkPreviousPassword = async (req, res, next) => {
 
   password = req.body.password; 
   let user = req.user;
-  const match;
+  let match;
   try {
     match = await bcrypt.compare(password, user.password);
   } catch (err) {
@@ -523,6 +524,22 @@ const checkPreviousPassword = async (req, res, next) => {
   });
 }
 
+const generateQRCode = (req, res, next) => {
+  var url = req.body.url;
+  if (url.length === 0) {
+    res.send("empty data.");
+  }
+  QRCode.toDataURL(url, (err, src) => {
+    if(err) {
+      console.log(err);
+      res.send("error occured.");
+    }
+    res.send(src);
+  })
+
+  
+}
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
@@ -532,3 +549,4 @@ exports.checkToken = checkToken;
 exports.resetPassowrd = resetPassowrd;
 exports.updatePassword = updatePassword;
 exports.checkPreviousPassword = checkPreviousPassword;
+exports.generateQRCode = generateQRCode;
