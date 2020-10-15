@@ -9,8 +9,16 @@ const bcrypt = require("bcryptjs");
 const Photos = require('../models/photos');
 const Tag = require('../models/tag');
 const crypto = require('crypto');
+const QRCode = require('qrcode')
 const { hrtime } = require('process');
 
+require('dotenv').config();
+const nodemailer = require('nodemailer');
+const {
+  SERVICE,
+  EMAIL,
+  PASSWORD,
+} = process.env
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -86,7 +94,7 @@ const signup = async (req, res, next) => {
     password: hashedPassword,
     social: [], 
     bioinfo: "This is bioinfo message",
-    semail: "stest@test.com",
+    semail: "",
     officeAddress: "",
     tags: [],
     mobile: ""
@@ -324,14 +332,33 @@ const forgotPassword = async (req, res, next) => {
       )
       return next(error);
   }
-  /*  could you send link in this format? I want to have the token string in url,
-    so that I can look up this token in database.
-    'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-
-  */
-
-  res.json({user : user.toObject({getters: true})});
-
+ 
+ //Create email transport service
+ tr = nodemailer.createTransport({
+  service: `${SERVICE}`,
+    auth: {
+        user: `${EMAIL}`,
+        pass: `${PASSWORD}`,
+    }
+  });
+  var host = req.headers.host.split(":")[0] + ':3000'
+  //Create email with required properties
+  mailOptions = {
+    from: `${EMAIL}`,
+    to: req.body.email,
+    subject: 'Password reset link',
+    text:`Navigate to 'http://${host}/reset/${token}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`
+  }
+  //send the email
+  tr.sendMail(mailOptions, function(err,data){
+    if(err){
+      console.log(err);
+      console.log('Error sending email')
+    }else{  
+      console.log('email sent')
+      res.json({user : user.toObject({getters: true})});
+    }
+  })
 }
 
 // check if token has expired or not.
@@ -399,11 +426,119 @@ const resetPassowrd = async (req, res, next) => {
   /*  
     send an email to user to notify that user has changed password successfully.
   */
-
-  res.json({
-    reset: true
+  //Create email transport service
+  tr = nodemailer.createTransport({
+    service: `${SERVICE}`,
+    auth: {
+        user: `${EMAIL}`,
+        pass: `${PASSWORD}`,
+    }
   });
+  //Create email with required properties
+  mailOptions = {
+    from: `${EMAIL}`,
+    to: user.email,
+    subject: 'Password reset notification',
+    text:`Your password has been updated`
+  }
+  //send the email
+  tr.sendMail(mailOptions, function(err,data){
+    if(err){
+      console.log(err);
+      console.log('Error sending email')
+    }else{  
+      console.log('email sent')
+      res.json({
+        reset: true
+      });
+    }
+  })
+}
 
+
+const updatePassword = async (req, res, next) => {
+  const error =  validationResult(req);
+  if(!error.isEmpty()) {
+      console.log(error);
+      return next(new HttpError("Invalid inputs passed, please check your data.", 422));
+  }
+
+  let user;
+  try {
+    user = await User.findById(req.params.uid);
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError (
+      "Find user failed.",
+      500
+    );
+    return next(error);
+  }
+
+  if(! user) {
+    return next(new HttpError("This user does not exist.", 422));
+  }
+
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(req.body.password, 10);
+  } catch (err) {
+    const error = new HttpError("Could not create password, please try again.", 500);
+    return next(error);
+  }
+
+  user.password = hashedPassword;
+
+  try {
+    await user.save();
+  } catch(err) {
+    console.log(err);
+    const error = new HttpError(
+      "Update password failed, please try again.",
+      500
+    );
+    return next(error);
+  }
+
+  res.json({success:true})
+}
+
+const checkPreviousPassword = async (req, res, next) => {
+
+  password = req.body.password; 
+  let user = req.user;
+  let match;
+  try {
+    match = await bcrypt.compare(password, user.password);
+  } catch (err) {
+    console.log(err);
+    return next(new HttpError("Validate password failed."))
+  }
+
+  if (!match ) {
+    res.json({
+      match:false
+    })
+  }
+  res.json({
+    match:true
+  });
+}
+
+const generateQRCode = (req, res, next) => {
+  var url = req.body.url;
+  if (url.length === 0) {
+    res.send("empty data.");
+  }
+  QRCode.toDataURL(url, (err, src) => {
+    if(err) {
+      console.log(err);
+      res.send("error occured.");
+    }
+    res.send(src);
+  })
+
+  
 }
 
 exports.getUsers = getUsers;
@@ -413,3 +548,6 @@ exports.check = check;
 exports.forgotPassword = forgotPassword;
 exports.checkToken = checkToken;
 exports.resetPassowrd = resetPassowrd;
+exports.updatePassword = updatePassword;
+exports.checkPreviousPassword = checkPreviousPassword;
+exports.generateQRCode = generateQRCode;

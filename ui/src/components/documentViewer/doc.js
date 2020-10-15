@@ -71,9 +71,27 @@ class DocMode extends Component {
       acdate: new Date().toLocaleDateString(),
 
        /*All Tags Created*/
-      allTags: ["Extra-Curricular" , "Academic", "Work-Experience", "Volunteering", "Leadership", "Extra1", "Extra2", "Extra3"],
+      allTags: [],
     }
 
+  }
+
+  componentDidMount(){
+    const tagUrl = http+'/api/tags/' + this.props.doc.id;
+    axios.get(tagUrl)
+    .then(res =>{
+      var tempTag = [];
+      var i;
+      for(i=0; i<res.data.length; i++){
+        tempTag.push(res.data[i].name);
+      }
+      this.setState({
+        allTags: tempTag
+      })
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
   }
 
   handleViewerShow = () => {

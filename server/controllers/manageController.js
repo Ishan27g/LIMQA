@@ -142,7 +142,6 @@ const updateAcc  = async (req, res, next) => {
           500
         );
       }
-      console.log("media is "+ media);
       names.push(media.name);
       if (media.name === "Instagram" ) {
         ins = media;
@@ -165,8 +164,7 @@ const updateAcc  = async (req, res, next) => {
   
   user.mobile = req.body.Mobile;
   user.name = req.body.Username;
-  user.officeAddress = req.body.Address;
-  
+  user.officeAddress = req.body.Address;  
   
   if ( normalizeEmail(req.body.Email) !== user.email) {
     let email;

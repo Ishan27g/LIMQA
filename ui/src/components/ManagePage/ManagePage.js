@@ -12,8 +12,10 @@ import Container from 'react-bootstrap/Container';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
+import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
+import Tag from './../Tags/Tag.js';
 
 import CoverImage from '../CoverImage/coverImage.js';
 import Docview from '../documentViewer/doc.js';
@@ -51,6 +53,9 @@ class ManagePage extends Component {
           documents: [],
           searching: false,
           search: "",
+          tags: [],
+          newTag: false,
+          tagName: "",
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -67,6 +72,10 @@ class ManagePage extends Component {
         this.onChangeBgImg = this.onChangeBgImg.bind(this);
         this.uploadBgImg = this.uploadBgImg.bind(this);
         this.onChangeSearch = this.onChangeSearch.bind(this);
+        this.handleAddTagClose = this.handleAddTagClose.bind(this);
+        this.handleAddTagShow = this.handleAddTagShow.bind(this);
+        this.createNewTag = this.createNewTag.bind(this);
+        this.onChangeTagName = this.onChangeTagName.bind(this);
     }
 
     componentDidMount(){
@@ -108,6 +117,17 @@ class ManagePage extends Component {
       .catch(function(error) {
         console.log(error);
       });
+
+      const tagUrl = http+'/api/tags/' + this.state.userid;
+      axios.get(tagUrl)
+      .then(res =>{
+        this.setState({
+          tags: res.data
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
     };
 
     onChangeProfileImage(e){
@@ -142,7 +162,7 @@ class ManagePage extends Component {
     onChangeCoverImage(e){
       console.log(e.target.files);
       this.setState({
-        updateCover: e.target.files[0]
+        updateCover: e.target.files
       }, ()=>{
         if(this.state.uploadCoverImage !== null){
           this.uploadCoverImage();
@@ -153,14 +173,14 @@ class ManagePage extends Component {
     uploadCoverImage(){
       if (this.state.updateCover !== null){
         const covImg = new FormData();
-        covImg.append('files', this.state.updateCover)
-        /*var i;
+        //covImg.append('files', this.state.updateCover)
+        var i;
         var tempCover = [];
         for(i=0; i<this.state.updateCover.length; i++){
           console.log(this.state.updateCover[i])
           covImg.append('files', this.state.updateCover[i]);
           tempCover.push(URL.createObjectURL(this.state.updateCover[i]));
-        }*/
+        }
 
         axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
         .then( res => {
@@ -215,6 +235,15 @@ class ManagePage extends Component {
 
     handleFilterOnElse = () => {
         this.setState({filter: "Else"});
+    }
+
+    handleAddTagShow(){
+      console.log('up to here')
+      this.setState({newTag: true})
+    }
+
+    handleAddTagClose(){
+      this.setState({newTag: false})
     }
 
     onChangBioInfo(e){
@@ -273,19 +302,50 @@ class ManagePage extends Component {
     }
 
     onChangeSearch(e){
-      if (e.target.value === ""){
-        this.setState({
-          search: e.target.value,
-          searching: false
-        });
-      } else {
-        this.setState({
-          search: e.target.value,
-          searching: true
-        });
-      }
-
+      if (e.target.value === ""){	
+        this.setState({	
+          search: e.target.value,	
+          searching: false	
+        });	
+      } else {	
+        this.setState({	
+          search: e.target.value,	
+          searching: true	
+        });	
+      }	
     }
+
+    onChangeTagName(e){
+      this.setState({
+        tagName: e.target.value
+      })
+    }
+
+    createNewTag(){
+      const obj = {
+        name: this.state.tagName,
+        color: 'green'
+      }
+      const tagUrl = http+'/api/tags/'+this.state.userid;
+      axios.post(tagUrl, obj, { withCredentials: true })
+      .then( res => {
+        console.log(res);
+        const gettagUrl = http+'/api/tags/' + this.state.userid;
+        axios.get(gettagUrl)
+        .then(res =>{
+          this.setState({
+            tags: res.data
+          })
+        })
+        .catch(function(error) {
+          console.log(error);
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }
+
 
     render(){
       var doc = {doc: this.state.updateDoc, id: this.state.userid};
@@ -357,6 +417,14 @@ class ManagePage extends Component {
           </Carousel.Item>
         )
       });
+
+      var tags = this.state.tags;
+
+      let tagsMap = tags.map(tags =>{
+          return(
+              <Tag note={tags.name}/>
+          )
+      })
 
       return(
         <body>
@@ -485,7 +553,32 @@ class ManagePage extends Component {
                       </Container>
                       </Col>
                   </Row>
-                  {/*Set Background Image*/}
+                </Container>
+              </div>
+              <div class = "document-arena">
+                <h2 style = {{marginBottom: "3vmax"}}>Tags Management</h2>
+                <Container>
+                  <Row style = {{height: "10vmax"}}>
+                    <Col>
+                      {this.state.newTag? (
+                        <Form>
+                          <Form.Group controlId="formBasicEmail">
+                            <Form.Control type="tag" placeholder="Enter new tag name" onChange={this.onChangeTagName}/>
+                          </Form.Group>
+                          <Button variant="primary" type="submit" onClick={this.createNewTag}>
+                            Create
+                          </Button>
+                        </Form>
+                        
+                      ):(
+                        <Button variant="info" onClick={this.handleAddTagShow}>Add new tag</Button>
+                      )}
+                    </Col>
+                    <Col>
+                      {tagsMap}
+                    </Col>
+                  </Row>
+
                 </Container>
                 <Container>
                   <Row className = "mt-3">
@@ -499,6 +592,7 @@ class ManagePage extends Component {
                   </Row>
                 </Container>
               </div>
+
             </body>
         )
     }
