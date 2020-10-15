@@ -7,21 +7,29 @@ class NotFound extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className={'div_min75'} style={{display: 'flex', justifyContent: 'center',  flexDirection: 'column', textAlign: 'center'}}>
-          <Container>
-            <div className='div_padding submitTitle' style={{display: 'flex', justifyContent: 'center',  flexDirection: 'column', textAlign: 'center'}}>
-              <div className='loginBox'>
-                <h2>Page Not Found - 404 Error</h2>
+          <Container fluid style = {{display: 'flex',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        textAlign: 'center',
+                        fontSize: "1em",
+                        color: "white",}}>
+            <h4>404 Error - Page Not Found </h4>
+            <div style = {{display: 'flex',
+                          justifyContent: 'center',
+                          flexDirection: 'column',
+                          textAlign: 'center',
+                          fontSize: "2em",
+                          color: "white",
+                          marginTop: "10%"}}>
                 <p>Whoops! Looks like you took a wrong turn.</p>
-                <a href='/'>
-                  <Button variant='primary' size='lg' className='submitBtn'>
-                    Return to Home Page
+                <a href= {this.props.link}>
+                  <Button variant='primary' size='lg' className='submitBtn' onClick={event =>  window.location.href = '/'}>
+                    Return
                   </Button>
                 </a>
-              </div>
+
             </div>
           </Container>
-        </div>
       </React.Fragment>
     );
   }

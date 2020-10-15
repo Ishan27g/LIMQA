@@ -17,6 +17,8 @@ import Collapse from 'react-bootstrap/Collapse';
 import Alert from 'react-bootstrap/Alert';
 import doc from '../../Image/documents.png';
 import Tag from './../Tags/Tag.js';
+import { DatePicker } from 'react-rainbow-components';
+
 import {pathForRequest} from '../http.js';
 
 let http = pathForRequest();
@@ -45,6 +47,7 @@ class DocMode extends Component {
     this.handleRemoveAchievement = this.handleRemoveAchievement.bind(this);
     this.handleAchievement = this.handleAchievement.bind(this);
     this.onChangeInstitution = this.onChangeInstitution.bind(this);
+    this.onChangeTags = this.onChangeTags.bind(this);
 
     this.state = {
       /*Viewer mode State*/
@@ -55,21 +58,40 @@ class DocMode extends Component {
       uploadMode: false,
       docViewer: false,
       alertDescription: false,
+      alertSuccess: false,
 
       /*Document Properties*/
       docname: "Untitled",
       docdate: "Document Date",
-      tags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership"],
+      tags: ["Default"],
       highlighted: false,
       docdesc: "",
       achievement: false,
       acinst: "",
-      acdate: "",
+      acdate: new Date().toLocaleDateString(),
 
        /*All Tags Created*/
-      allTags: ["Extra-Curricular" , "Acadmeic", "Work-Experience", "Volunteering", "Leadership", "Extra1", "Extra2", "Extra3"],
+      allTags: [],
     }
 
+  }
+
+  componentDidMount(){
+    const tagUrl = http+'/api/tags/' + this.props.doc.id;
+    axios.get(tagUrl)
+    .then(res =>{
+      var tempTag = [];
+      var i;
+      for(i=0; i<res.data.length; i++){
+        tempTag.push(res.data[i].name);
+      }
+      this.setState({
+        allTags: tempTag
+      })
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
   }
 
   handleViewerShow = () => {
@@ -153,22 +175,38 @@ class DocMode extends Component {
       docForm.append('achivement', this.state.achievement);
       docForm.append('document', this.props.doc.doc);
       docForm.append('institution', this.state.acinst);
-      docForm.append('dateAchieved', this.state.docdate);
+      docForm.append('dateCreated', this.state.docdate);
+      docForm.append('dateAchieved', this.state.acdate);
       docForm.append('name', this.state.docname);
-      console.log(docForm);
+      if(this.state.tags.length === 1){
+        docForm.append('tagName[]', this.state.tags[0])
+      }else{
+        var i;
+        for(i=0; i<this.state.tags.length; i++){
+          docForm.append('tagName', this.state.tags[i]);
+        }
+      }
       const postDoc = http+'/api/documents/' + this.props.doc.id;
       axios.post(postDoc, docForm, { withCredentials: true } )
       .then(res=>{
         console.log(res);
-        this.setState({
-          docViewer: false,
-          DocEditor: false,
-          uploadMode: false
-        })
       })
       .catch(function(error) {
         console.log(error);
       });
+   
+      this.setState({alertSuccess:true},()=>{
+        window.setTimeout(()=>{
+          this.setState({alertSuccess:false}, ()=>{
+            this.setState({
+              docViewer: false,
+              DocEditor: false,
+              uploadMode: false
+            })
+          })
+        },1500);
+      });
+
   } else {
     this.setState({alertDescription: true});
   }
@@ -194,6 +232,21 @@ class DocMode extends Component {
     })
   }
 
+  onChangeTags(e){
+    var chosetag = this.state.tags;
+    if(e.target.checked){
+        chosetag.push(e.target.value);
+    }else{
+        var index = chosetag.indexOf(e.target.value);
+        chosetag.splice(index, 1);
+    }
+    this.setState({
+        tags: chosetag
+    }, ()=>{
+        console.log(this.state.tags)
+    })
+  }
+
   render(){
     var tags = this.state.tags;
 
@@ -215,10 +268,11 @@ class DocMode extends Component {
 
     var allTags = this.state.allTags;
     let SelectTags = allTags.map(allTags =>{
+        var check = this.state.tags.includes(allTags);
         return(
             <InputGroup className = "select-tags">
               <InputGroup.Prepend>
-                <InputGroup.Checkbox/>
+                <InputGroup.Checkbox onChange={this.onChangeTags} value={allTags} checked={check}/>
               </InputGroup.Prepend>
               <InputGroup.Append>
                   <Tag note={allTags} />
@@ -287,7 +341,10 @@ class DocMode extends Component {
                             onClick = {this.handleCheckDelete}>
                             Delete Document
                           </Button>)
-                            }
+                          }
+                        <Alert variant="success" show={this.state.alertSuccess} block>
+                          Successfully upload the documents!
+                        </Alert>
                         </Row>
                       </Col>
                       <Col className = "docedit-properties">
@@ -341,9 +398,11 @@ class DocMode extends Component {
                               defaultValue = {this.state.acinst}
                               style ={{marginBottom: "0.6vmax"}}
                               onChange = {this.onChangeInstitution}/>
-                              <FormControl
-                                placeholder = "Date"
-                                defaultValue = {this.state.acdate}/>
+                              <DatePicker
+                               onChange={value => this.setState({acdate: value})}
+                               value={this.state.acdate}
+                               locale="en-US"
+                               />
                           </Row>
                         </Collapse>
 

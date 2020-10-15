@@ -15,6 +15,7 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
 import doc from '../../Image/documents.png';
+import { DatePicker } from 'react-rainbow-components';
 import Tag from './../Tags/Tag.js';
 
 import {pathForRequest} from '../http.js';
@@ -45,7 +46,7 @@ class singleDoc extends Component {
         this.handleRemoveAchievement = this.handleRemoveAchievement.bind(this);
         this.handleAchievement = this.handleAchievement.bind(this);
         this.onChangeInstitution = this.onChangeInstitution.bind(this);
-        this.onChangeAcdate = this.onChangeAcdate.bind(this);
+        this.onChangeTags = this.onChangeTags.bind(this);
 
         this.state = {
             login: false,
@@ -58,7 +59,7 @@ class singleDoc extends Component {
             /*Document Properties*/
             docname: "Untitled",
             docdate: "Document Date",
-            tags: [{'name':"Extra-Curricular"}, {'name': "Acadmeic"}, {'name': "Work-Experience"}, {'name': "Volunteering"}, {'name':"Leadership" }],
+            tags: [],
             highlighted: false,
             docdesc: "",
             achievement: false,
@@ -67,7 +68,7 @@ class singleDoc extends Component {
             owner: "",
             docId: this.props.match.params.id,
             /*All Tags Created*/
-            allTags: [{'name':"Extra-Curricular"}, {'name': "Acadmeic"}, {'name': "Work-Experience"}, {'name': "Volunteering"}, {'name':"Leadership" }, {'name': "Extra1"}, {name: "Extra2"}, {name:"Extra3"} ],
+            allTags: [],
         }
 
     }
@@ -76,16 +77,39 @@ class singleDoc extends Component {
         const getDoc = http+'/api/OneDocument/'+this.state.docId;
         axios.get(getDoc)
         .then(res=>{
+            var tempTag = [];
+            var i;
+            for(i=0; i<res.data.document.tags.length; i++){
+                tempTag.push(res.data.document.tags[i].name)
+            }
             this.setState({
                 docname: res.data.document.name,
                 docdate: res.data.document.dateCreated,
                 highlighted: res.data.document.highlighted,
                 docdesc: res.data.document.description,
                 achievement: res.data.document.achivement,
-                acinst: res.data.document.acinst,
+                acinst: res.data.document.institution,
                 acdate: res.data.document.dateAchieved,
-                tags: res.data.document.tags,
+                tags: tempTag,
                 owner: res.data.document.owner
+            },()=>{
+                const tagUrl = http+'/api/tags/' + this.state.owner;
+                console.log(tagUrl)
+                axios.get(tagUrl)
+                .then(res =>{
+                    var tempTag = [];
+                    var i;
+                    console.log(res.data)
+                    for(i=0; i<res.data.length; i++){
+                      tempTag.push(res.data[i].name);
+                    }
+                    this.setState({
+                      allTags: tempTag
+                    })
+                })
+                .catch(function(error) {
+                  console.log(error);
+                })
             })
         })
         .catch(function(error) {
@@ -101,6 +125,8 @@ class singleDoc extends Component {
                 })
             }
         })
+
+
     }
 
     handleViewerShow = () => {
@@ -131,7 +157,7 @@ class singleDoc extends Component {
 
     /* Leaves abruptly w/o saving Changes */
     handleAbruptLeave = () => {
-        this.setState({docEditor:false, docViewer: false, checkEdit: false});
+        this.setState({docEditor:false, docViewer: true, checkEdit: false});
     }
 
     handleAddTags = () =>{
@@ -152,13 +178,22 @@ class singleDoc extends Component {
     handleCheckDelete =() =>{
         this.setState({checkDelete: true});
     }
+
     /*Delete document and close Editor*/
     handleDelete =() =>{
         const deleteDoc = http+'/api/documents/'+this.state.owner+'/'+this.state.docId;
         console.log(deleteDoc);
-        axios.delete(deleteDoc, { withCredentials: true });
-        this.setState({checkDelete: false, docEditor: false, docViewer: false});
-        this.props.history.goBack();
+        axios.delete(deleteDoc, { withCredentials: true })
+        .then(res => {
+            console.log(res);
+            this.setState({
+                checkDelete: false, 
+                docEditor: false, 
+                docViewer: false
+            }, ()=>{
+                this.props.history.goBack();
+            }); 
+        });
     }
 
     handleAchievement =()=>{
@@ -169,15 +204,17 @@ class singleDoc extends Component {
         this.setState({achievement: false})
     }
 
-
   updateDoc(){
+
+      // wait for backend for updating tags
     const docForm = {
         'name': this.state.docname,
         'highlighted': this.state.highlighted,
         'description': this.state.docdesc,
         'achivement': this.state.achievement,
         'institution': this.state.acinst,
-        'dateAchieved': this.state.docdate
+        'dateAchieved': this.state.acdate,
+        'tagName': this.state.tags,
     }
 
     const putDoc = http+'/api/editDocument/' + this.props.match.params.id;
@@ -209,9 +246,18 @@ class singleDoc extends Component {
     })
   }
 
-  onChangeAcdate(e){
+  onChangeTags(e){
+    var chosetag = this.state.tags;
+    if(e.target.checked){
+        chosetag.push(e.target.value);
+    }else{
+        var index = chosetag.indexOf(e.target.value);
+        chosetag.splice(index, 1);
+    }
     this.setState({
-        acdate: e.target.value
+        tags: chosetag
+    }, ()=>{
+        console.log(this.state.tags)
     })
   }
 
@@ -220,7 +266,7 @@ class singleDoc extends Component {
 
     let tagsMap = tags.map(tags =>{
         return(
-            <Tag note={tags.name} />
+            <Tag note={tags} />
         )
     })
 
@@ -229,20 +275,21 @@ class singleDoc extends Component {
           <Button
             variant = "outline-danger"
             style = {{border: "0px solid red"}}>
-            <Tag note={onetag.name} />
+            <Tag note={onetag} />
           </Button>
         )
     })
 
     var allTags = this.state.allTags;
     let SelectTags = allTags.map(onetag =>{
+        var check = this.state.tags.includes(onetag);
         return(
             <InputGroup className = "select-tags">
               <InputGroup.Prepend>
-                <InputGroup.Checkbox/>
+                <InputGroup.Checkbox onChange={this.onChangeTags} value={onetag} checked={check}/>
               </InputGroup.Prepend>
               <InputGroup.Append>
-                  <Tag note={onetag.name} />
+                  <Tag note={onetag} />
               </InputGroup.Append>
             </InputGroup>
         )
@@ -341,10 +388,11 @@ class singleDoc extends Component {
                                 defaultValue = {this.state.acinst}
                                 style ={{marginBottom: "0.6vmax"}}
                                 onChange = {this.onChangeInstitution}/>
-                                <FormControl
-                                    placeholder = "Date"
-                                    defaultValue = {this.state.acdate}
-                                    onChange={this.onChangeAcdate}/>
+                              <DatePicker
+                               onChange={value => this.setState({acdate: value})}
+                               value={this.state.acdate}
+                               locale="en-US"
+                               />
                             </Row>
                             </Collapse>
                         </Col>

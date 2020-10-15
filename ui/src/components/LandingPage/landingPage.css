@@ -1,0 +1,55 @@
+.copyright{
+  color: grey;
+}
+
+.app-body {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.landing-header, .user-search{
+  display: flex;
+  justify-content: center;
+
+}
+
+.landing-header {
+   color: white;
+   font-family: serif, cursive;
+   font-size: 3em;
+   margin-bottom: 1vmax;
+}
+.search-field, .user-cards{
+  margin-bottom: 1vmax;
+}
+.search-field > .ListGroup{
+  margin-bottom: -50%;
+}
+
+.user-cards-carousel {
+  padding-left: 8vmax;
+  padding-right: 8vmax;
+  padding-bottom: 3vmax;
+}
+
+.user-search-list-item {
+  font-size: 1.35em;
+}
+.user-search-list-item  > span{
+  color: lightgrey;
+  font-size: 0.85em;
+  margin-right: auto;
+}
+
+.user-search-list-item:hover {
+  color: darkblue;
+}
+.user-card > .card-title{
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.user-card > .card-title:hover{
+  background-color: lightgrey;
+}

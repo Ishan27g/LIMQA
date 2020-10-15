@@ -7,6 +7,13 @@ DB_DIR=MongoDB/
 PERSISTENT_DIR=mongodata
 UPLOADS_DIR=uploads
 
+echo ""
+echo "CREATING A FRESH DATABASE, ctrl + c to exit now"
+sleep 6
+echo ""
+sudo rm -rf server/MongoDB
+sudo rm -rf server/uploads
+echo "Stopping all apps"
 sudo ./stopApp.sh
 
 cd $SERVER_DIR

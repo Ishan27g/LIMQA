@@ -26,7 +26,9 @@ class AccountView extends Component {
     super(props);
     this.state = {
       editVersion: false,
-      profileImage: '',
+
+      // user details
+      profileImage: http+'/api/users/profilePhoto/'+this.props.match.params.id,
       email: '',
       name: '',
       linkedin: '',
@@ -35,8 +37,9 @@ class AccountView extends Component {
       officeAddress: '',
       SupplymentaryEmail: '',
       mobile: '',
-      userid: '',
       media: [],
+
+      // updates information
       updateEmail: '',
       updateName: '',
       UpdateLinkedin: '',
@@ -44,7 +47,9 @@ class AccountView extends Component {
       UpdateFacebook: '',
       UpdateOfficeAddress: '',
       UpdataSupplymentaryEmail: '',
-      updataMobile: ''
+      updataMobile: '',
+
+      userid: this.props.match.params.id
     }
     this.handleEditingOpen = this.handleEditingOpen.bind(this);
     this.updateChanges = this.updateChanges.bind(this);
@@ -56,62 +61,52 @@ class AccountView extends Component {
     this.onChangeOfficeAddress = this.onChangeOfficeAddress.bind(this);
     this.onChangeSupplymentaryEmail = this.onChangeSupplymentaryEmail.bind(this);
     this.onChangeMobile = this.onChangeMobile.bind(this);
+    this.changePass = this.changePass.bind(this);
   }
 
   componentDidMount(){
-    const check = http+'/api/users/check';
-    axios.get(check, { withCredentials: true })
-    .then(response => {
-      console.log(response.data.userid)
+
+    const accurl = http+'/api/accSetting/'+ this.state.userid;
+    axios.get(accurl, { withCredentials: true })
+    .then(res => {
       this.setState({
-        userid: response.data.userid
+        email: res.data.user.email,
+        updateEmail: res.data.user.email,
+        SupplymentaryEmail: res.data.user.semail,
+        UpdataSupplymentaryEmail: res.data.user.semail,
+        mobile: res.data.user.mobile,
+        updateMobile: res.data.user.mobile,
+        officeAddress: res.data.user.officeAddress,
+        UpdateOfficeAddress: res.data.user.officeAddress,
+        name: res.data.user.name,
+        updateName: res.data.user.name,
+        media: res.data.user.social
       })
-      const accurl = http+'/api/accSetting/'+ this.state.userid;
-      axios.get(accurl, { withCredentials: true })
-      .then(res => {
-        this.setState({
-          email: res.data.user.email,
-          updateEmail: res.data.user.email,
-          SupplymentaryEmail: res.data.user.semail,
-          UpdataSupplymentaryEmail: res.data.user.semail,
-          mobile: res.data.user.mobile,
-          updateMobile: res.data.user.mobile,
-          officeAddress: res.data.user.officeAddress,
-          UpdateOfficeAddress: res.data.user.officeAddress,
-          name: res.data.user.name,
-          updateName: res.data.user.name,
-          media: res.data.user.social
-        })
-        var i
-        for(i=0; i<this.state.media.length; i++){
-          if (this.state.media[i].name === 'Facebook'){
-            this.setState({
-              facebook: this.state.media[i].url,
-              UpdateFacebook: this.state.media[i].url
-            })
-          }
-          if (this.state.media[i].name === 'Instagram'){
-            this.setState({
-              instagram: this.state.media[i].url,
-              UpdateInstagram: this.state.media[i].url
-            })
-          }
-          if (this.state.media[i].name === 'Linkedin'){
-            this.setState({
-              linkedin: this.state.media[i].url,
-              UpdateLinkedin: this.state.media[i].url
-            })
-          }
+      var i
+      for(i=0; i<this.state.media.length; i++){
+        if (this.state.media[i].name === 'Facebook'){
+          this.setState({
+            facebook: this.state.media[i].url,
+            UpdateFacebook: this.state.media[i].url
+          })
         }
-      })
-      .catch(function(error) {
-        console.log(error);
-      })
+        if (this.state.media[i].name === 'Instagram'){
+          this.setState({
+            instagram: this.state.media[i].url,
+            UpdateInstagram: this.state.media[i].url
+          })
+        }
+        if (this.state.media[i].name === 'Linkedin'){
+          this.setState({
+            linkedin: this.state.media[i].url,
+            UpdateLinkedin: this.state.media[i].url
+          })
+        }
+      }
     })
     .catch(function(error) {
       console.log(error);
     })
-
   };
 
   handleEditingOpen = () => {
@@ -143,7 +138,6 @@ class AccountView extends Component {
       var tempofficeAddress= this.state.UpdateOfficeAddress;
       var tempname= this.state.updateName;
       var templinkedin = this.state.UpdateLinkedin;
-      console.log(templinkedin);
       var tempinstagram =this.state.UpdateInstagram;
       var tempfacebook = this.state.UpdateFacebook;
 
@@ -156,8 +150,6 @@ class AccountView extends Component {
         linkedin: templinkedin,
         instagram:tempinstagram,
         facebook: tempfacebook,
-      }, ()=>{
-        console.log(this.state.linkedin)
       })
     })
     .catch(function(error) {
@@ -208,12 +200,10 @@ class AccountView extends Component {
   onChangeLinkedin(e){
     console.log(e.target.value);
     if (e.target.value.length > 0){
-      console.log("up to line 208");
       this.setState({
         UpdateLinkedin: e.target.value
       });
     }else{
-      console.log("up to line 213");
       var lin = this.state.linkedin;
       this.setState({
         UpdateLinkedin: lin
@@ -280,6 +270,10 @@ class AccountView extends Component {
     });
   }
 
+  changePass(){
+    window.location.href = '/updatePass/'+this.state.userid;
+  }
+
     render(){
         return(
             <body>
@@ -296,14 +290,8 @@ class AccountView extends Component {
                       <Col className = "edit-image">
                         <Container>
                           <Row className = "edit-image-display">
-                          <Image src={http+'/api/users/profilePhoto'} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "10vmax", width: "10vmax"}}/>
+                          <Image src={this.state.profileImage} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "10vmax", width: "10vmax"}}/>
                      
-                          </Row>
-                          <Row className = "edit-image-label">
-                            <input type="file" id="BtnBrowseHidden" name="files" style={{display: "none"}} />
-                            <label htmlFor="BtnBrowseHidden" >
-                              Edit Image
-                            </label>
                           </Row>
                         </Container>
                       </Col>
@@ -341,7 +329,7 @@ class AccountView extends Component {
                           <Button variant="outline-dark" onClick={this.updateChanges}>Save Changes</Button>
                         </Row>
                         <Row className = "edit-update-password">
-                          <label>Update Password</label>
+                          <label onClick={this.changePass}>Update Password</label>
                         </Row>
                       </Col>
 
@@ -432,7 +420,7 @@ class AccountView extends Component {
                   <Row className = "acc-info justify-content-md-center">
 
                     <Col className = "acc-image">
-                     <Image src={http+'/api/users/profilePhoto'} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "10vmax", width: "10vmax"}}/>
+                     <Image src={this.state.profileImage} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "10vmax", width: "10vmax"}}/>
                        
                     </Col>
 
@@ -450,7 +438,7 @@ class AccountView extends Component {
                         <Button variant="outline-dark" onClick={this.handleEditingOpen}>Edit</Button>
                       </Row>
                       <Row className = "acc-update-password">
-                        <label>Update Password</label>
+                        <label onClick={this.changePass}>Update Password</label>
                       </Row>
                     </Col>
 
