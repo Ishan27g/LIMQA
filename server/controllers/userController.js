@@ -93,7 +93,7 @@ const signup = async (req, res, next) => {
     documents: [],
     password: hashedPassword,
     social: [], 
-    bioinfo: "This is bioinfo message",
+    bioinfo: "Describe yourself in a few words.",
     semail: "",
     officeAddress: "",
     tags: [],
