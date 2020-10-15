@@ -37,14 +37,13 @@ class UserCard extends Component{
         )[0].url;
 
         return (
-                <Card className = "user-card-item"
+                <Card className = "user-card"
                   style={{ height: "auto"}}
                   bg = "light">
 
                   <Card.Img variant="top" src={http+'/api/users/profilePhoto/'+this.props.id}
                             onError={(e)=>{e.target.onerror = null; e.target.src=profile}}
-                            style = {{width: "10vmax", height: "10vmax", alignSelf: "center"}}
-                            onClick = {event =>  window.location.href = '/home/'+this.props.id }/>
+                            style = {{width: "10vmax", height: "10vmax", alignSelf: "center"}}/>
 
                   <Card.Title style = {{fontSize: "1.25em", color: "black"}}
                               onClick = {event =>  window.location.href = '/home/'+this.props.id }>
@@ -54,7 +53,7 @@ class UserCard extends Component{
                                   {this.props.email}
                                 </Card.Text>
                   </Card.Title>
-                  <Card.Body style={{height: "auto"}} onClick = {event =>  window.location.href = '/home/'+this.props.id } >
+                  <Card.Body style={{height: "auto"}}>
                     <Card.Text style = {{fontSize: "0.6em", color: "black"}}>
                       {this.props.bioinfo}
                     </Card.Text>
@@ -77,8 +76,6 @@ class UserCard extends Component{
                             style = {{width: "2vmax", height: "2vmax"}} />
                   </Card.Footer>
                 </Card>
-
-
         )
     }
 }

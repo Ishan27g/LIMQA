@@ -25,7 +25,7 @@ import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import uploadIcon from '../../Image/uploadIcon.png';
 import uploadDocuments from '../../Image/uploadDocuments.svg';
-
+import uploadCoverImageBg from '../../Image/bioContentBackground.jpg';
 import {pathForRequest} from '../http.js';
 let http = pathForRequest();
 
@@ -171,7 +171,7 @@ class ManagePage extends Component {
             for (i=0; i<this.state.updateCover.length; i++){
               tempCo.push(URL.createObjectURL(this.state.updateCover[i]));
             }
-            
+
             this.setState({
               cover: tempCo
             })
@@ -265,7 +265,7 @@ class ManagePage extends Component {
       .catch(function(error) {
         console.log(error);
       });
-      
+
     }
 
     openDocView = () =>{
@@ -273,18 +273,18 @@ class ManagePage extends Component {
     }
 
     onChangeSearch(e){
-      if (e.target.value === ""){	
-        this.setState({	
-          search: e.target.value,	
-          searching: false	
-        });	
-      } else {	
-        this.setState({	
-          search: e.target.value,	
-          searching: true	
-        });	
-      }	
-  
+      if (e.target.value === ""){
+        this.setState({
+          search: e.target.value,
+          searching: false
+        });
+      } else {
+        this.setState({
+          search: e.target.value,
+          searching: true
+        });
+      }
+
     }
 
     render(){
@@ -331,7 +331,7 @@ class ManagePage extends Component {
 
         }
       }).sort((a,b)=> b["name"] - a["name"]).slice(0,7);
-      
+
     let showDocs = searchDocs.map( searchedDoc => {
         return (
             <Col sm='4' >
@@ -361,23 +361,26 @@ class ManagePage extends Component {
       return(
         <body>
         <div class = "manage-cover-image">
-          <Carousel>
+          <Carousel Fluid>
             {coverImage}
-          <Carousel.Item style={{height: "23vmax"}}>
+          <Carousel.Item>
             <input
              type="file"
              style={{display: "none"}}
              onChange={this.onChangeCoverImage}
              ref={coverInput=>this.coverInput=coverInput}
              multiple="multiple"/>
-            <label className="imageUpload">
-              <Image
-               src = {uploadIcon}
-               alt ="Upload Icon"
-               style = {{width: "11vmax", height: "9vmax"}}
-               onClick = {() => this.coverInput.click()} />
-              <br/>Upload Cover Images
-              </label>
+            <img
+             src = {uploadCoverImageBg}
+             onClick = {() => this.coverInput.click()} />
+           <Carousel.Caption>
+             <img
+              src = {uploadIcon}
+              alt ="Upload Icon"
+              onClick = {() => this.coverInput.click()}
+              style = {{height: "7vmax", width: "9vmax", marginBottom: "1vmax"}}/>
+            <h3>Uplaod Cover Image</h3>
+           </Carousel.Caption>
           </Carousel.Item>
           </Carousel>
         </div>
@@ -386,10 +389,10 @@ class ManagePage extends Component {
               <Container fluid = {true}>
                   <Row>
                     <Col>
-                      <h1>Welcome!</h1>
+                      <h1 className = "welcome-sign">Welcome!<br/></h1>
                     </Col>
                   </Row>
-                  <Row style ={{marginTop: "2vmax"}}>
+                  <Row>
                       <Col style = {{textAlign: "center"}}>
                           <Image src={this.state.profileImg} roundedCircle style = {{height: "20vmax", width: "20vmax"}} onError={(e)=>{e.target.onerror = null; e.target.src=profile}}/>
                           <input
@@ -401,22 +404,24 @@ class ManagePage extends Component {
                         <Button variant="info" onClick={() => this.profileInput.click()}>Select photo</Button> {' '}
                       </Col>
                       </Col>
-                      <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
+                      <Col className = "bioinfo">
                           {this.state.editBio ? (
                               <Form style ={{textAlign: "center", color: "white"}}>
-                                  <h4>Enter your new bio here</h4>
-                                  <Form.Control as="textarea" rows="12" onChange={this.onChangBioInfo}/>
+                                  <h5>Enter your new bio here</h5>
+                                  <Form.Control
+                                    as="textarea"
+                                    rows = "8"
+                                    defaultValue = {this.state.bio}
+                                    onChange={this.onChangBioInfo}/>
                                   <Button variant="info" onClick={this.handleSubmiteBio} block className = "mt-3">Submit</Button>
                               </Form>
                           ):
                           (
                           <Form>
-                            <p>{this.state.bio}</p>
+                            {this.state.bio}
                             <Button variant="info" onClick={this.handleEditBio} block>Edit</Button>
                           </Form>
                           )}
-
-
                       </Col>
                   </Row>
                 </Container>
@@ -427,8 +432,9 @@ class ManagePage extends Component {
               <div class = "document-arena">
                 <h2 style = {{marginBottom: "3vmax"}}>Document Arena</h2>
                 <Container>
-                  <Row style ={{}}>
-                      <Col style = {{textAlign: "center", marginTop: "15vmax", marginBottom: "10vmax"}}>
+                  <Row>
+                      <Col className = "upload-doc-input">
+                        <Row>
                         <input
                          type="file"
                          style={{display: "none"}}
@@ -438,7 +444,11 @@ class ManagePage extends Component {
                          src={uploadDocuments}
                          style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}
                          onClick = {() => this.docInput.click()}/>
-                      </Col >
+                        </Row>
+                        <Row>
+                          <p>Upload Documents</p>
+                        </Row>
+                      </Col>
 
                       <Col xs={6} md={8}>
 
@@ -484,7 +494,8 @@ class ManagePage extends Component {
                           style={{display: "none"}}
                           onChange={this.onChangeBgImg}
                           ref={bgInput=>this.bgInput=bgInput}/>
-                    <Button block variant="info" onClick = {() => this.docInput.click()}>Select Background Image</Button>
+                    <Button block variant="info" onClick = {() => this.docInput.click()}>
+                      Select Background Gradient</Button>
                   </Row>
                 </Container>
               </div>
