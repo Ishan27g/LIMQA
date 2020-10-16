@@ -12,7 +12,6 @@ import Container from 'react-bootstrap/Container';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
 import Tag from './../Tags/Tag.js';
@@ -184,18 +183,9 @@ class ManagePage extends Component {
 
         axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
         .then( res => {
-          console.log(res);
-          if(this.state.cover.length<5){
-            var tempCo = [];
-            var i;
-            for (i=0; i<this.state.updateCover.length; i++){
-              tempCo.push(URL.createObjectURL(this.state.updateCover[i]));
-            }
-            
-            this.setState({
-              cover: tempCo
-            })
-          }
+          this.setState({
+            cover: tempCover
+          })
         })
         .catch(function(error) {
           console.log(error);

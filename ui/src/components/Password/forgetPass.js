@@ -82,7 +82,7 @@ class forgetPass extends Component{
 
   render(){
     return(
-        <body>
+        <body style={{marginTop: "100px"}}>
         {this.state.updateStatus?(
             <div className ="page-fill">
                 <Container className = "register">

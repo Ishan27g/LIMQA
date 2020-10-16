@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import './App.css';
 
 import Alert from 'react-bootstrap/Alert';
@@ -8,7 +8,6 @@ import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
 import Image from 'react-bootstrap/Image';
 import Modal from 'react-bootstrap/Modal';
 import Nav from 'react-bootstrap/Nav';
@@ -185,7 +184,7 @@ class App extends Component{
 
   render(){
     var front = true;
-    if(window.location.pathname !== '/' && window.location.pathname !== '/notfound'){
+    if(window.location.pathname !== '/' && window.location.pathname !== '/notfound' && window.location.pathname !== '/forget'){
       front = false;
     }else{
       front = true;
@@ -297,7 +296,6 @@ class App extends Component{
                       </Button>)
                       }
                       <Form inline>
-                        <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                         <Button variant="outline-dark" onClick={this.handleSearchPage}>Search</Button>
                       </Form>
 

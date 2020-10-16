@@ -16,6 +16,8 @@ import Container from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
 import doc from '../../Image/documents.png';
 import { DatePicker } from 'react-rainbow-components';
+import FileViewer from 'react-file-viewer';
+import { CustomErrorComponent } from 'custom-error';
 import Tag from './../Tags/Tag.js';
 
 import {pathForRequest} from '../http.js';
@@ -69,6 +71,8 @@ class singleDoc extends Component {
             docId: this.props.match.params.id,
             /*All Tags Created*/
             allTags: [],
+            fileType: "pdf",
+            filePath: "testfile.pdf",
         }
 
     }
@@ -82,6 +86,9 @@ class singleDoc extends Component {
             for(i=0; i<res.data.document.tags.length; i++){
                 tempTag.push(res.data.document.tags[i].name)
             }
+            var parts = res.data.document.path.split('.');
+            var pathParts = res.data.document.path.split('/');
+            console.log(pathParts);
             this.setState({
                 docname: res.data.document.name,
                 docdate: res.data.document.dateCreated,
@@ -91,15 +98,17 @@ class singleDoc extends Component {
                 acinst: res.data.document.institution,
                 acdate: res.data.document.dateAchieved,
                 tags: tempTag,
-                owner: res.data.document.owner
+                owner: res.data.document.owner,
+                filePath: pathParts[pathParts.length-1],
+                fileType: parts[parts.length-1]
+
             },()=>{
+                console.log(this.state.filePath);
                 const tagUrl = http+'/api/tags/' + this.state.owner;
-                console.log(tagUrl)
                 axios.get(tagUrl)
                 .then(res =>{
                     var tempTag = [];
                     var i;
-                    console.log(res.data)
                     for(i=0; i<res.data.length; i++){
                       tempTag.push(res.data[i].name);
                     }
@@ -111,6 +120,7 @@ class singleDoc extends Component {
                   console.log(error);
                 })
             })
+
         })
         .catch(function(error) {
             console.log(error);
@@ -261,6 +271,10 @@ class singleDoc extends Component {
     })
   }
 
+  onError = (e) => {
+    console.log(e, "error in file-viewer");
+  };
+
   render(){
     var tags = this.state.tags;
 
@@ -294,7 +308,15 @@ class singleDoc extends Component {
             </InputGroup>
         )
     })
-    //console.log(this.props.doc)
+
+    var path = this.state.filePath;
+    
+    // To access database one use this route
+    //let docPath = require("/usr/src/uploads/images/"+path);
+
+    // for local testing use this routes
+    let docPath = require("./"+path);
+
     return(
         <body>
         { this.state.docEditor ?(
@@ -477,8 +499,14 @@ class singleDoc extends Component {
                     <Container fluid>
                     <Row>
                         <Col className = "docview-image" xs ={5} md = {5}>
-                        {/*Change Image Src to document preview */}
-                        <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
+                        {/*Change Image Src to document preview  <Image src ={doc} style = {{height:"100%", width: "100%"}}/>*/ }
+                        <FileViewer
+                        fileType={this.state.fileType}
+                        filePath={docPath}
+                        errorComponent={CustomErrorComponent}
+                        onError={this.onError}
+                        key={this.props.match.params.id}
+                        />
                         </Col>
                         <Col className = "docview-properties">
                         <Row>

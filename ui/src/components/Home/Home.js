@@ -90,7 +90,7 @@ class Home extends Component {
         });
         
         var hDoc = this.state.documents.filter(function(document){
-            return document.highlighted == true;
+            return document.highlighted === true;
         });
 
         let highlightedDoc = hDoc.map(doc =>{
