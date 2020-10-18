@@ -3,7 +3,8 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Timeline.css';
 
-import { Card, ActivityTimeline, TimelineMarker } from 'react-rainbow-components';
+import { ActivityTimeline } from 'react-rainbow-components';
+import TimelineMarker from '../TImelineMarker.js'
 
 import {pathForRequest} from '../http.js';
 let http = pathForRequest();
@@ -16,7 +17,6 @@ class Timeline extends Component {
       userid: this.props.match.params.id
     }
     this.getUserDocs = this.getUserDocs.bind(this)
-
   }
 
   componentDidMount(){
@@ -38,10 +38,7 @@ class Timeline extends Component {
       <div className = "app-body">
         <ActivityTimeline>
           <TimelineMarker
-              label="User Sign Up."
-              datetime = "Yesterday"
-              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore etdolore magna aliqua."
-          />
+            />
         </ActivityTimeline>
       </div>
     )
