@@ -2,7 +2,7 @@
 const {v4:uuid4} =require('uuid');
 const mongoose = require('mongoose');
 const HttpError = require('../models/http-error');
-const {validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const normalizeEmail = require('normalize-email');
 const validator = require("email-validator");
 const  User = require('../models/user');
@@ -58,10 +58,10 @@ const updateBioinfo  = async (req, res, next) => {
     );
     return next(error);
   }
-  if(user) {
-    user.bioinfo = bioinfo;
+  if(!user) {
+   return next(new HttpError("User doesn't exist, please try again."));
   }
-
+  user.bioinfo = bioinfo;
   try {
     await user.save();
   } catch (err) {
@@ -360,6 +360,12 @@ const getOneFile = async (req, res, next) => {
 };
 
 const uploadFiles = async (req, res, next) => {
+  const error =  validationResult(req);
+  if(!error.isEmpty()) {
+      console.log(error);
+      return next(new HttpError("Invalid inputs passed, please check your data.", 422));
+  }
+
   let userId;
   userId = req.params.uid;
 
