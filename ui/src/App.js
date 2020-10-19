@@ -58,11 +58,25 @@ class App extends Component{
         loginInfo: true,
         userId: '',
         QRcode: null,
-
+        front: false,
+        showQR: false,
       /*Login Values*/
         email: '',
         password: '',
 
+    }
+  }
+
+  componentWillUnmount(){
+    if(window.location.pathname !== '/' && window.location.pathname !== '/notfound' && window.location.pathname !== '/forget'){
+      this.setState({
+        front: false
+      })
+    }else{
+      this.setState({
+        front: true,
+        userId: window.location.pathname.split("/")[2]
+      })
     }
   }
 
@@ -79,6 +93,18 @@ class App extends Component{
           })
         }
     })
+
+    var path = window.location.pathname.split("/")[1];
+    console.log(path)
+    if(path==='home' || path==='manage' || path === 'view'){
+      this.setState({
+        showQR: true
+      })
+    }else{
+      this.setState({
+        showQR: false
+      })
+    }
   };
 
   handleSignClose = () => {
@@ -200,21 +226,9 @@ class App extends Component{
   }
 
   render(){
-    var front = true;
-    if(window.location.pathname !== '/' && window.location.pathname !== '/notfound' && window.location.pathname !== '/forget'){
-      front = false;
-    }else{
-      front = true;
-    }
-    console.log(window.location.pathname.split("/"));
-    var path = window.location.pathname.split("/")[1];
-    var showQR = false;
-    if(path==='home' || path==='manage' || path === 'view'){
-      showQR = true;
-    }
     return (
       <div>
-          {front && !this.state.login ? (
+          {this.state.front && !this.state.login ? (
             <header>
             <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
             <Navbar.Brand href="/" className = "mr-auto">
@@ -283,7 +297,7 @@ class App extends Component{
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className ="mr-auto">
                     <Nav.Item class = "nav-item">
-                    <Nav.Link href="/">About me</Nav.Link>
+                    <Nav.Link href={"/home/"+this.state.userId}>About me</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
                     <Nav.Link href="/">Experience</Nav.Link>
@@ -292,7 +306,7 @@ class App extends Component{
                       <Nav.Link href="/">Achievements</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
-                      <Nav.Link href="/">Timeline</Nav.Link>
+                      <Nav.Link href="/timeline/">Timeline</Nav.Link>
                     </Nav.Item>
                     <NavDropdown title="More" id="collasible-nav-dropdown">
                       <Nav.Item class = "nav-item">
@@ -405,7 +419,7 @@ class App extends Component{
           </Switch>
         </BrowserRouter>}
 
-          {showQR ? (
+          {this.state.showQR ? (
             <footer>
               <Navbar
                 bg = "light" variant = "light"
