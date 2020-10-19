@@ -57,6 +57,7 @@ class App extends Component{
         AlertLogin: '',
         loginInfo: true,
         userId: '',
+        QRcode: null,
 
       /*Login Values*/
         email: '',
@@ -89,7 +90,23 @@ class App extends Component{
   }
 
   handleQRShow = () => {
-    this.setState({ QRButton: true });
+    const obj = {
+      url: http+"/home/"+ window.location.pathname.split("/")[2]
+    }
+    console.log(obj);
+    const url = http + '/api/users/QRCode';
+    axios.post(url, obj)
+    .then(res =>{
+      this.setState({
+        QRcode: res.data
+      },()=>{
+        this.setState({ QRButton: true });
+      })
+    })
+    .catch(function(error){
+      console.log(error)
+    })
+    
   }
 
   handleQRClose = () => {
@@ -189,7 +206,12 @@ class App extends Component{
     }else{
       front = true;
     }
-
+    console.log(window.location.pathname.split("/"));
+    var path = window.location.pathname.split("/")[1];
+    var showQR = false;
+    if(path==='home' || path==='manage' || path === 'view'){
+      showQR = true;
+    }
     return (
       <div>
           {front && !this.state.login ? (
@@ -383,16 +405,41 @@ class App extends Component{
           </Switch>
         </BrowserRouter>}
 
-        <footer>
-        <Navbar
-          bg = "light" variant = "light"
-          expand = "lg" fixed ="bottom"
-          className = "copyright">
-          <Form>
-            <Form.Text> Product of team LiMQA ©</Form.Text>
-          </Form>
-        </Navbar>
-        </footer>
+          {showQR ? (
+            <footer>
+              <Navbar
+                bg = "light" variant = "light"
+                expand = "lg" fixed ="bottom"
+                className = "copyright">
+                <Button onClick={this.handleQRShow}>QR Code</Button>
+                <Form>
+                  <Form.Text> Product of team LiMQA © QR</Form.Text>
+                </Form>
+              </Navbar>
+              <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
+                <Modal.Body className ="qr-code">
+                  <Image src={this.state.QRcode} rounded style ={{width: "15vmax", height: "15vmax"}} />
+                </Modal.Body>
+                <Modal.Footer>
+                <Button block variant="outline-dark" onClick={this.handleQRClose}>
+                  Close
+                </Button>
+                </Modal.Footer>
+              </Modal>
+            </footer>
+          ):(
+            <footer>
+              <Navbar
+                bg = "light" variant = "light"
+                expand = "lg" fixed ="bottom"
+                className = "copyright">
+                <Form>
+                  <Form.Text> Product of team LiMQA ©</Form.Text>
+                </Form>
+              </Navbar>
+            </footer>
+          )}
+
         </div>
     )
   }
