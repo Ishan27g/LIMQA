@@ -1,0 +1,23 @@
+.timeline-body{
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 40px;
+  background-color: white;
+
+}
+
+.timeline-body > h2 {
+  color: black;
+  padding-top: 1vmax;
+  padding-bottom: 1vmax;
+}
+.timeline-marker {
+  padding-left: 3vmax;
+  padding-right: 3vmax;
+}
+.icon-hover{
+  padding: 5px
+}
+.icon-hover:hover{
+  background-color: #e6e6e6;
+}

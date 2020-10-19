@@ -24,9 +24,14 @@
 .search-field, .user-cards{
   margin-bottom: 1vmax;
 }
+.search-field > .ListGroup{
+  margin-bottom: -50%;
+}
 
-.user-cards{
-  margin-top: 1vmax;
+.user-cards-carousel {
+  padding-left: 8vmax;
+  padding-right: 8vmax;
+  padding-bottom: 3vmax;
 }
 
 .user-search-list-item {
@@ -41,7 +46,10 @@
 .user-search-list-item:hover {
   color: darkblue;
 }
-
-.user-card-item > .card-title:hover{
-  color: lightgrey;
+.user-card > .card-title{
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.user-card > .card-title:hover{
+  background-color: lightgrey;
 }

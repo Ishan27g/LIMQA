@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Kavoon&family=Roboto:wght@300&display=swap');
 *{box-sizing: border-box;}
-
 .basic-info{
   margin-top: 0vmax;
   margin-bottom:5vmax;
@@ -9,21 +8,24 @@
   padding: 0px;
 
 }
-
-.carousel-item > img {
-  display: block;
-  width: 100%;
-  height: 23vmax;
-
-}
 .cover-image {
-  position: relative;
-  margin-top: 56px;
+  display: flex;
+  justify-content: center;
   margin-bottom: 0px;
-
   margin-left: 5%;
   margin-right: 5%;
 }
+
+.cover-image > .carousel{
+  width: 90%;
+}
+.carousel-item > img {
+  display: block;
+  width: 100%;
+  height: 20vmax;
+
+}
+
 
 h1, h2, h3{
   font-family: 'Kavoon', cursive;
@@ -40,13 +42,12 @@ h3{
   font-size: 1.8em;
 }
 
-.p{
+p{
   line-height: 2em;
   font-size: 1.2em;
   font-family: 'Roboto', sans-serif;
   font-weight: bolder;
   color: white;
-  text-align: center;
 
 }
 
@@ -70,4 +71,19 @@ h3{
 .card-body{
   background-color: rgba(180,180,180,0.5);
   height: 5vmax;
+}
+.welcome-sign{
+  line-height: 2;
+  font-family: 'Kavoon', cursive;
+  font-size: 3.85em;
+  text-align: center;
+  color: white;
+}
+.bioinfo{
+  background-color: rgba(180,180,180,0.5);
+  border: 2px solid black;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 1.25em;
+  color: white;
 }

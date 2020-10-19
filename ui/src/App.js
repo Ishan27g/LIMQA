@@ -18,6 +18,7 @@ import Row from 'react-bootstrap/Row';
 import AccountView from './components/AccountView/accountView.js';
 import Landing from './components/LandingPage/landingPage.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
+import Timeline from './components/Timeline/Timeline.js';
 import NotFound from './components/NotFound.js';
 import Register from './components/SignUp/register.js';
 import singleDoc from './components/documentViewer/singleDoc.js';
@@ -229,69 +230,37 @@ class App extends Component{
     return (
       <div>
           {this.state.front && !this.state.login ? (
-            <header>
-            <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
-            <Navbar.Brand href="/" className = "mr-auto">
-              <Image alt="Logo" src = {logo} style = {{width: "9vmax", height: "2.5vmax"}}/>
-            </Navbar.Brand>
-              <Button
-                variant="primary-info"
-                onClick={this.handleSignShow}
-                className="mr-2">
-                <img alt="Login" src = {loginButton}/>
-              </Button>
-              <Modal show={this.state.loginButton} onHide={this.handleSignClose} >
-                <Modal.Body >
-                  <form>
-                    <h3 className ="text-center font-size-15px" style={{ color: 'black' }}>
-                    Welcome back!
-                    </h3>
-
-                    <Form.Group controlId="formBasicEmail">
-                      <Form.Label>Email address</Form.Label>
-                      <Form.Control type="email" placeholder="Enter email" onChange={this.onChangeEmail} />
-                    </Form.Group>
-                    {
-                      this.state.alertEmail ?(
-                        <Alert variant={'danger'}>
-                          Please enter a valid email!
-                        </Alert>
-                      ) : (<section></section>)
-                    }
-                    <Form.Group controlId="formBasicPassword">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
-                    </Form.Group>
-                    {
-                      (this.state.loginInfo === false) ||
-                          (this.state.alertPassword === true) ?
-                          (
-                        <Alert variant={'danger'}>
-                          incorrect email or password!
-                        </Alert>
-                      ) : (<section></section>)
-                    }
-                  </form>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button size="lg" block variant="primary" onClick={this.Adminlogin}>
-                    Login
+            <div>
+              <header>
+                <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
+                <Navbar.Brand href="/" className = "mr-auto">
+                  <Image alt="Logo" src = {logo} style = {{width: "9vmax", height: "2.5vmax"}}/>
+                </Navbar.Brand>
+                  <Button
+                    variant="primary-info"
+                    onClick={this.handleSignShow}
+                    className="mr-2">
+                    <img alt="Login" src = {loginButton}/>
                   </Button>
-                  <Button size="lg" block variant="primary" onClick={event =>  window.location.href='/register'}>
-                    Register
-                  </Button>
-                  <Row className = "edit-update-password">
-                    <label onClick={()=>window.location.href = '/forget'} >forget your password?</label>
-                  </Row>
-                </Modal.Footer>
-              </Modal>
-            </Navbar>
-            </header>
+                </Navbar>
+              </header>
+              <footer>
+                <Navbar
+                  bg = "light" variant = "light"
+                  expand = "lg" fixed ="bottom"
+                  className = "copyright">
+                  <Form>
+                    <Form.Text> Product of team LiMQA ©</Form.Text>
+                  </Form>
+                </Navbar>
+              </footer>
+            </div>
           ):(
             <header>
               <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
               <Navbar.Brand href="/">
-                <img alt="Logo" src = {logo} width="100" height="30" className="d-inline-block align-top"/>
+                <img alt="Logo" src = {logo} style = {{width: "9vmax", height: "2.5vmax"}}
+                  className="d-inline-block align-top"/>
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
@@ -306,13 +275,11 @@ class App extends Component{
                       <Nav.Link href="/">Achievements</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
-                      <Nav.Link href="/timeline/">Timeline</Nav.Link>
+                      <Nav.Link href={'/timeline/'+this.state.userId}>Timeline</Nav.Link>
                     </Nav.Item>
-                    <NavDropdown title="More" id="collasible-nav-dropdown">
-                      <Nav.Item class = "nav-item">
-                        <Nav.Link href="/">Contact me</Nav.Link>
-                      </Nav.Item>
-                    </NavDropdown>
+                    <Nav.Item class = "nav-item">
+                      <Nav.Link href="/">Contact me</Nav.Link>
+                    </Nav.Item>
                     </Nav>
                     <Nav>
                       {this.state.login ?
@@ -334,127 +301,77 @@ class App extends Component{
                       <Form inline>
                         <Button variant="outline-dark" onClick={this.handleSearchPage}>Search</Button>
                       </Form>
-
                     </Nav>
                 </Navbar.Collapse>
               </Navbar>
-
-
-              <Modal show={this.state.loginButton} onHide={this.handleSignClose}>
-                <Modal.Body>
-                <form>
-                  <h3 className ="text-center font-size-15px" style={{ color: 'black' }}>
-                  Welcome back!</h3>
-
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" onChange={this.onChangeEmail} />
-                  </Form.Group>
-                  {
-                    this.state.Alertemail === true ?(
-                      <Alert variant={'danger'}>
-                        please enter your email!
-                      </Alert>
-                    ):
-                    (
-                      <section></section>
-                    )
-                  }
-                  <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
-                  </Form.Group>
-                  {
-                    this.state.Alertpassword === true ?(
-                      <Alert variant={'danger'}>
-                        please enter your password!
-                      </Alert>
-                    ):
-                    (
-                      <section></section>
-                    )
-                  }
-                  {
-                    this.state.loginInfo === false ?(
-                      <Alert variant={'danger'}>
-                        incorrect email or password!
-                      </Alert>
-                    ):
-                    (
-                      <section></section>
-                    )
-                  }
-                </form>
-
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button size="lg" block variant="primary" onClick={this.Adminlogin}>
-                    Login
-                  </Button>
-                  <Button size="lg" block variant="primary" onClick={event =>  window.location.href='/register'}>
-                    Register
-                  </Button>
-                  <Row className = "edit-update-password">
-                    <label onClick={()=>window.location.href = '/forget'} >forget your password?</label>
-                  </Row>
-                </Modal.Footer>
-              </Modal>
             </header>
           )}
-
         {<BrowserRouter>
           <Switch>
             <Route path="/" component ={Landing} exact/>
             <Route path="/register" component={Register}/>
             <Route path="/home/:id" component={Home}/>
+            <Route path="/timeline/:id" component={Timeline}/>
             <Route path="/documents/:id" component={singleDoc}/>
             <Route path="/search/:id" component={Search}/>
             <Route path="/forget" component={forgetPassEmail}/>
             <Route path="/reset/:id" component={forgetPass}/>
-            {this.state.login? (<Route path="/manage/:id" component={ManagePage}/>):(<Route path="/manage/:id" component={NotFound}/>)}
-            {this.state.login? (<Route path="/view/:id" component={AccountView}/>):(<Route path="/view/:id" component={NotFound}/>)}
+            {this.state.login? (<Route path="/manage/:id"
+                                    component={ManagePage}/>)
+              :(<Route path="/manage/:id" component={NotFound}/>)
+            }
+            {this.state.login? (<Route path="/view/:id"
+                                      component={AccountView}/>)
+              :(<Route path="/view/:id" component={NotFound}/>)}
             {this.state.login? (<Route path="/updatePass/:id" component={changePassword}/>):(<Route path="/updatePass/:id" component={NotFound}/>)}
             <Route path="/notfound" render = {() => <NotFound link = "/"/> }/>
-            
+
           </Switch>
         </BrowserRouter>}
 
-          {this.state.showQR ? (
-            <footer>
-              <Navbar
-                bg = "light" variant = "light"
-                expand = "lg" fixed ="bottom"
-                className = "copyright">
-                <Button onClick={this.handleQRShow}>QR Code</Button>
-                <Form>
-                  <Form.Text> Product of team LiMQA © QR</Form.Text>
-                </Form>
-              </Navbar>
-              <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
-                <Modal.Body className ="qr-code">
-                  <Image src={this.state.QRcode} rounded style ={{width: "15vmax", height: "15vmax"}} />
-                </Modal.Body>
-                <Modal.Footer>
-                <Button block variant="outline-dark" onClick={this.handleQRClose}>
-                  Close
-                </Button>
-                </Modal.Footer>
-              </Modal>
-            </footer>
-          ):(
-            <footer>
-              <Navbar
-                bg = "light" variant = "light"
-                expand = "lg" fixed ="bottom"
-                className = "copyright">
-                <Form>
-                  <Form.Text> Product of team LiMQA ©</Form.Text>
-                </Form>
-              </Navbar>
-            </footer>
-          )}
+        <Modal show={this.state.loginButton} onHide={this.handleSignClose} >
+          <Modal.Body >
+            <form>
+              <h3 className ="text-center font-size-15px" style={{ color: 'black' }}>
+              Welcome back!
+              </h3>
 
-        </div>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control type="email" placeholder="Enter email" onChange={this.onChangeEmail} />
+              </Form.Group>
+              {
+                this.state.Alertemail ?(
+                  <Alert variant={'danger'}>
+                    Please enter a valid email!
+                  </Alert>
+                ) : (<section></section>)
+              }
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
+              </Form.Group>
+              {
+                ((this.state.loginInfo === false) ||
+                    (this.state.Alertpassword === true)) ?
+                    (
+                  <Alert variant={'danger'}>
+                    Incorrect email or password!
+                  </Alert>
+                ) : (<section></section>)
+              }
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button size="lg" block variant="primary" onClick={this.Adminlogin}>
+              Login
+            </Button>
+            <Button size="lg" block variant="primary" onClick={event =>  window.location.href='/register'}>
+              Register
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
     )
   }
 }

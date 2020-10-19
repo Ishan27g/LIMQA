@@ -12,6 +12,8 @@ import Container from 'react-bootstrap/Container';
 import CoverImage from '../CoverImage/coverImage.js';
 import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
+import Navbar from 'react-bootstrap/Navbar';
+import Form from 'react-bootstrap/Form';
 
 import docImage from '../../Image/documents.png';
 import sampleImage1 from '../../Image/sampleImage1.jpg';
@@ -77,7 +79,7 @@ class Home extends Component {
             console.log(error);
         })
     };
-  
+
 
     render(){
         var coverImg = this.state.cover;
@@ -88,7 +90,7 @@ class Home extends Component {
                 </Carousel.Item>
             )
         });
-        
+
         var hDoc = this.state.documents.filter(function(document){
             return document.highlighted === true;
         });
@@ -105,7 +107,7 @@ class Home extends Component {
                 </Card>
             )
         });
-            
+
         var setDoc =[];
         for(var i= 0; i < highlightedDoc.length; i=i+3){
             setDoc.push(
@@ -120,9 +122,10 @@ class Home extends Component {
 
 
         return(
-          <body>
+        <div>
+          <body className = "home">
             <div class = "cover-image">
-                <Carousel>
+                <Carousel Fluid >
                     {coverImage}
                 </Carousel>
             </div>
@@ -131,19 +134,20 @@ class Home extends Component {
                 <Container fluid = {true}>
                     <Row>
                       <Col>
-                        <h1 style = {{lineHeight: 2 }}>Welcome!<br/></h1>
+                        <h1 className = "welcome-sign">Welcome!<br/></h1>
                       </Col>
                     </Row>
 
-                    <Row style = {{marginTop: "2vmax"}} >
+                    <Row>
                         <Col style = {{textAlign: "center"}}>
-                        <Image src={this.state.profileImg} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "20vmax", width: "20vmax"}}/>
+                          <Image src={this.state.profileImg}
+                                 onError={(e)=>{e.target.onerror = null;
+                                                          e.target.src=profile}}
+                                roundedCircle
+                                style = {{height: "20vmax", width: "20vmax"}}/>
                         </Col>
-                        <Col style = {{backgroundColor: "rgba(180,180,180,0.5)" , border: "2px solid black", borderRadius: "15px"}}>
-
-                        <p>
-                          {this.state.bioinfo}
-                        </p>
+                        <Col className = "bioinfo">
+                            {this.state.bioinfo}
                         </Col>
                     </Row>
                 </Container>
@@ -174,10 +178,21 @@ class Home extends Component {
                             {displayHDoc}
                         </Carousel>
                     )}
-                    
-                    
+
+
             </div>
-        </body>
+          </body>
+          <footer>
+            <Navbar
+              bg = "light" variant = "light"
+              expand = "lg" sticky ="bottom"
+              className = "copyright">
+              <Form>
+                <Form.Text> Product of team LiMQA ©</Form.Text>
+              </Form>
+            </Navbar>
+          </footer>
+        </div>
         )
     }
 }
