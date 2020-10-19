@@ -182,16 +182,6 @@ class Home extends Component {
 
             </div>
           </body>
-          <footer>
-            <Navbar
-              bg = "light" variant = "light"
-              expand = "lg" sticky ="bottom"
-              className = "copyright">
-              <Form>
-                <Form.Text> Product of team LiMQA ©</Form.Text>
-              </Form>
-            </Navbar>
-          </footer>
         </div>
         )
     }

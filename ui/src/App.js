@@ -221,9 +221,7 @@ class App extends Component{
   }
 
   handleSearchPage(){
-    var id = window.location.pathname.split('/')[2];
-    //console.log(window.location.pathname.split('/')[2])
-    window.location.href='/search/'+id;
+    window.location.href='/search/'+ this.state.userId;
   }
 
   render(){
@@ -371,6 +369,41 @@ class App extends Component{
             </Button>
           </Modal.Footer>
         </Modal>
+
+        {this.state.showQR ? (
+            <footer>
+              <Navbar
+                bg = "light" variant = "light"
+                expand = "lg" fixed ="bottom"
+                className = "copyright">
+                <Button onClick={this.handleQRShow}>QR Code</Button>
+                <Form>
+                  <Form.Text> Product of team LiMQA © QR</Form.Text>
+                </Form>
+              </Navbar>
+              <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
+                <Modal.Body className ="qr-code">
+                  <Image src={this.state.QRcode} rounded style ={{width: "15vmax", height: "15vmax"}} />
+                </Modal.Body>
+                <Modal.Footer>
+                <Button block variant="outline-dark" onClick={this.handleQRClose}>
+                  Close
+                </Button>
+                </Modal.Footer>
+              </Modal>
+            </footer>
+          ):(
+            <footer>
+              <Navbar
+                bg = "light" variant = "light"
+                expand = "lg" fixed ="bottom"
+                className = "copyright">
+                <Form>
+                  <Form.Text> Product of team LiMQA ©</Form.Text>
+                </Form>
+              </Navbar>
+            </footer>
+          )}
       </div>
     )
   }
