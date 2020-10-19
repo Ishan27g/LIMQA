@@ -202,7 +202,8 @@ class DocMode extends Component {
               docViewer: false,
               DocEditor: false,
               uploadMode: false
-            })
+            });
+            window.location.href = '/manage/'+ this.props.doc.id;
           })
         },1500);
       });

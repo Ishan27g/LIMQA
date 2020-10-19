@@ -12,7 +12,6 @@ import Container from 'react-bootstrap/Container';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
 import Tag from './../Tags/Tag.js';
@@ -131,7 +130,6 @@ class ManagePage extends Component {
     };
 
     onChangeProfileImage(e){
-      console.log(e.target.files[0]);
       this.setState({
         updateProfile: e.target.files[0]
       }, ()=>{
@@ -151,7 +149,7 @@ class ManagePage extends Component {
           const tempProfile = URL.createObjectURL(this.state.updateProfile);
           this.setState({
             profileImg: tempProfile
-          }, ()=>{console.log(this.state.profileImg)})
+          })
         })
         .catch(function(error) {
           console.log(error);
@@ -160,7 +158,6 @@ class ManagePage extends Component {
     }
 
     onChangeCoverImage(e){
-      console.log(e.target.files);
       this.setState({
         updateCover: e.target.files
       }, ()=>{
@@ -177,25 +174,15 @@ class ManagePage extends Component {
         var i;
         var tempCover = [];
         for(i=0; i<this.state.updateCover.length; i++){
-          console.log(this.state.updateCover[i])
           covImg.append('files', this.state.updateCover[i]);
           tempCover.push(URL.createObjectURL(this.state.updateCover[i]));
         }
 
         axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
         .then( res => {
-          console.log(res);
-          if(this.state.cover.length<5){
-            var tempCo = [];
-            var i;
-            for (i=0; i<this.state.updateCover.length; i++){
-              tempCo.push(URL.createObjectURL(this.state.updateCover[i]));
-            }
-
-            this.setState({
-              cover: tempCo
-            })
-          }
+          this.setState({
+            cover: tempCover
+          })
         })
         .catch(function(error) {
           console.log(error);

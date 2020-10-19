@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import './App.css';
 
 import Alert from 'react-bootstrap/Alert';
@@ -8,7 +8,6 @@ import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
 import Image from 'react-bootstrap/Image';
 import Modal from 'react-bootstrap/Modal';
 import Nav from 'react-bootstrap/Nav';
@@ -59,11 +58,26 @@ class App extends Component{
         AlertLogin: '',
         loginInfo: true,
         userId: '',
-
+        QRcode: null,
+        front: false,
+        showQR: false,
       /*Login Values*/
         email: '',
         password: '',
 
+    }
+  }
+
+  componentWillUnmount(){
+    if(window.location.pathname !== '/' && window.location.pathname !== '/notfound' && window.location.pathname !== '/forget'){
+      this.setState({
+        front: false
+      })
+    }else{
+      this.setState({
+        front: true,
+        userId: window.location.pathname.split("/")[2]
+      })
     }
   }
 
@@ -80,6 +94,18 @@ class App extends Component{
           })
         }
     })
+
+    var path = window.location.pathname.split("/")[1];
+    console.log(path)
+    if(path==='home' || path==='manage' || path === 'view'){
+      this.setState({
+        showQR: true
+      })
+    }else{
+      this.setState({
+        showQR: false
+      })
+    }
   };
 
   handleSignClose = () => {
@@ -91,7 +117,23 @@ class App extends Component{
   }
 
   handleQRShow = () => {
-    this.setState({ QRButton: true });
+    const obj = {
+      url: http+"/home/"+ window.location.pathname.split("/")[2]
+    }
+    console.log(obj);
+    const url = http + '/api/users/QRCode';
+    axios.post(url, obj)
+    .then(res =>{
+      this.setState({
+        QRcode: res.data
+      },()=>{
+        this.setState({ QRButton: true });
+      })
+    })
+    .catch(function(error){
+      console.log(error)
+    })
+    
   }
 
   handleQRClose = () => {
@@ -179,22 +221,13 @@ class App extends Component{
   }
 
   handleSearchPage(){
-    var id = window.location.pathname.split('/')[2];
-    //console.log(window.location.pathname.split('/')[2])
-    window.location.href='/search/'+id;
+    window.location.href='/search/'+ this.state.userId;
   }
 
   render(){
-    var front = true;
-    if(window.location.pathname !== '/' && window.location.pathname !== '/notfound'){
-      front = false;
-    }else{
-      front = true;
-    }
-
     return (
       <div>
-          {front && !this.state.login ? (
+          {this.state.front && !this.state.login ? (
             <div>
               <header>
                 <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
@@ -231,7 +264,7 @@ class App extends Component{
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className ="mr-auto">
                     <Nav.Item class = "nav-item">
-                    <Nav.Link href="/">About me</Nav.Link>
+                    <Nav.Link href={"/home/"+this.state.userId}>About me</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
                     <Nav.Link href="/">Experience</Nav.Link>
@@ -264,7 +297,6 @@ class App extends Component{
                       </Button>)
                       }
                       <Form inline>
-                        <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                         <Button variant="outline-dark" onClick={this.handleSearchPage}>Search</Button>
                       </Form>
                     </Nav>
@@ -337,6 +369,41 @@ class App extends Component{
             </Button>
           </Modal.Footer>
         </Modal>
+
+        {this.state.showQR ? (
+            <footer>
+              <Navbar
+                bg = "light" variant = "light"
+                expand = "lg" fixed ="bottom"
+                className = "copyright">
+                <Button onClick={this.handleQRShow}>QR Code</Button>
+                <Form>
+                  <Form.Text> Product of team LiMQA © QR</Form.Text>
+                </Form>
+              </Navbar>
+              <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
+                <Modal.Body className ="qr-code">
+                  <Image src={this.state.QRcode} rounded style ={{width: "15vmax", height: "15vmax"}} />
+                </Modal.Body>
+                <Modal.Footer>
+                <Button block variant="outline-dark" onClick={this.handleQRClose}>
+                  Close
+                </Button>
+                </Modal.Footer>
+              </Modal>
+            </footer>
+          ):(
+            <footer>
+              <Navbar
+                bg = "light" variant = "light"
+                expand = "lg" fixed ="bottom"
+                className = "copyright">
+                <Form>
+                  <Form.Text> Product of team LiMQA ©</Form.Text>
+                </Form>
+              </Navbar>
+            </footer>
+          )}
       </div>
     )
   }
