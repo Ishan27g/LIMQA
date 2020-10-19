@@ -18,8 +18,7 @@ const addTagsForUser = async (req, res, next) => {
         name : req.body.name,
         color : req.body.color,
         files : [],
-        owner : userId,
-        dateAdded: req.body.dateAdded
+        owner : userId
       })
     try {
         await newTag.save();
@@ -65,8 +64,7 @@ const addTagsToUserFile = async (req, res, next) => {
         name : req.body.name,
         color : req.body.color,
         files : [],
-        owner : userId,
-        dateAdded : req.body.dateAdded
+        owner : userId
       })
     try {
         await newTag.save();

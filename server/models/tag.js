@@ -9,7 +9,7 @@ const tagSchema = new Schema({
     color: {type : String, required: true},
     files: [{type: mongoose.Schema.Types.ObjectId, ref: 'File'}],
     owner: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},    
-    dateAdded: {type : Date}
+    dateAdded: {type : Date, default: Date.now}
 });
 
 module.exports = mongoose.model('Tag', tagSchema);
