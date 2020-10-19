@@ -9,6 +9,8 @@ const MIME_TYPE_MAP = {
     'image/png': 'png',
     'image/jpeg': 'jpeg',
     'image/jpg': 'jpg',
+    'application/msword' : 'doc',
+    'application/vnd.ms-powerpoint' : 'ppt'
 }
 
 /*
