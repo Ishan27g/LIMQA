@@ -71,7 +71,11 @@ class Timeline extends Component {
     getUserCoverImages(){
       axios.get(http + '/api/users/coverImages/' + this.state.userid)
       .then(response => {
-        this.setState({userCoverImages: response.data.coverImages.coverImages});
+        var coverImagesbyId = [];
+        for (var i = 0; i < response.data.coverImages.coverImages.length; i++){
+          coverImagesbyId.push(http + '/api/users/coverImages/' + this.state.userid +'/'+ i)
+        }
+        this.setState({userCoverImages: coverImagesbyId});
       })
       .catch(function(error) {
         console.log(error);
@@ -141,12 +145,12 @@ class Timeline extends Component {
         icon: <Image className = "icon-hover" alt = "document" src = {docIcon}
                      style = {{height:"65px", width: "50px"}}
                      onClick = {event =>  window.location.href= '/documents/'+ event._id}/>,
-        datetime: event.dateModified,
+                   datetime: event.dateModified,
         photo : ""
       })
     });
 
-    var profilePhotoEvent = {
+    var profilePhotoEvent = [{
       type: "photo",
       label: this.state.username + ' updated their profile photo',
       icon: <Image className = "icon-hover" alt = "photo" src = {photoIcon}
@@ -156,7 +160,7 @@ class Timeline extends Component {
       description: "",
       photo : this.state.userProfilePhoto
       /*Send photo to create card */
-    };
+    }];
 
     var coverImagesEvent = this.state.userCoverImages.map(event => {
       return ({
@@ -165,7 +169,7 @@ class Timeline extends Component {
       icon: <Image className = "icon-hover" alt = "photo" src = {photoIcon}
                    style = {{height:"50px", width: "50px"}}
                    onClick = {event =>  window.location.href= '/manage/' + this.state.userid}/>,
-                 datetime: "",/*Add DateAdded after response.data structure is created*/
+      datetime: "",/*Add DateAdded after response.data structure is created*/
       description: "",
       photo : event
       /*Send photo to create card */
@@ -210,7 +214,7 @@ class Timeline extends Component {
     return (
       <div className = "timeline-body">
         <h2>Recent Activity</h2>
-        <ActivityTimeline>
+        <ActivityTimeline style = {{ }}>
           {timelineMarker}
         </ActivityTimeline>
       </div>
