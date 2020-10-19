@@ -60,7 +60,7 @@ class singleDoc extends Component {
             docViewer: true,
             /*Document Properties*/
             docname: "Untitled",
-            docdate: "Document Date",
+            docdate: "",
             tags: [],
             highlighted: false,
             docdesc: "",
@@ -88,15 +88,14 @@ class singleDoc extends Component {
             }
             var parts = res.data.document.path.split('.');
             var pathParts = res.data.document.path.split('/');
-            console.log(pathParts);
             this.setState({
                 docname: res.data.document.name,
-                docdate: res.data.document.dateCreated,
+                docdate: res.data.document.dateCreated.split("T")[0],
                 highlighted: res.data.document.highlighted,
                 docdesc: res.data.document.description,
                 achievement: res.data.document.achivement,
                 acinst: res.data.document.institution,
-                acdate: res.data.document.dateAchieved,
+                acdate: res.data.document.dateAchieved.split("T")[0],
                 tags: tempTag,
                 owner: res.data.document.owner,
                 filePath: pathParts[pathParts.length-1],
