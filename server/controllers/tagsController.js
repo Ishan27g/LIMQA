@@ -18,8 +18,7 @@ const addTagsForUser = async (req, res, next) => {
         name : req.body.name,
         color : req.body.color,
         files : [],
-        owner : userId,
-        dateAdded: req.body.dateAdded
+        owner : userId
       })
     try {
         await newTag.save();
@@ -65,8 +64,7 @@ const addTagsToUserFile = async (req, res, next) => {
         name : req.body.name,
         color : req.body.color,
         files : [],
-        owner : userId,
-        dateAdded : req.body.dateAdded
+        owner : userId
       })
     try {
         await newTag.save();
@@ -93,7 +91,7 @@ const addTagsToUserFile = async (req, res, next) => {
     res.status(201).json({tag: user.toObject({ getters : true}).tags});
 }
 const getTagsForUser = async (req, res, next) => {
-    let userId = req.params.uid
+    let userId = req.params.uid;
     let user;
     try {
         user = await User.findById(userId);
