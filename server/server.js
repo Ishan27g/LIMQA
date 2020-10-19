@@ -50,7 +50,7 @@ app.use((req, res, next) => {
 // set the respond headers to make sure the communication between backend and browser works.
 app.use((req, res, next) => {
 //    res.setHeader('Access-Control-Allow-Origin', 'http://13.82.97.219:3000');
-    res.setHeader('Access-Control-Allow-Origin', 'http://limqa.eastus.cloudapp.azure.com:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader(
       'Access-Control-Allow-Headers',
       'Origin, X-Requested-With, Content-Type, Accept, Authorization'

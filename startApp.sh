@@ -11,10 +11,10 @@ echo ""
 echo "CREATING A FRESH DATABASE, ctrl + c to exit now"
 sleep 6
 echo ""
-sudo rm -rf server/MongoDB
-sudo rm -rf server/uploads
+rm -rf server/MongoDB
+rm -rf server/uploads
 echo "Stopping all apps"
-sudo ./stopApp.sh
+./stopApp.sh
 
 cd $SERVER_DIR
 if [ ! -d "$DB_DIR" ]; then
@@ -26,7 +26,7 @@ if [ ! -d "$DB_DIR$PERSISTENT_DIR" ]; then
     echo -e "${NC}"
     cd $DB_DIR
     mkdir $PERSISTENT_DIR
-    sudo docker volume create --name=$PERSISTENT_DIR
+    docker volume create --name=$PERSISTENT_DIR
     cd ..
     echo -e "${GREEN}"
     echo "Mounting uploads/ directory for File uploads"
@@ -35,8 +35,8 @@ if [ ! -d "$DB_DIR$PERSISTENT_DIR" ]; then
     cd $UPLOADS_DIR
     mkdir images
     cd ..
-    sudo docker volume create --name=$UPLOADS_DIR
-    #sudo rm .env
+    docker volume create --name=$UPLOADS_DIR
+    #rm .env
     #echo "MONGO_HOSTNAME=mongo
 #MONGO_DB=app_db
 #MONGO_PORT=27017" >> .env
@@ -46,7 +46,7 @@ fi
 echo -e "${GREEN}"
 echo "Starting MONGO DB and Express Server"
 echo -e "${NC}"
-sudo docker-compose up --build --detach
+docker-compose up --build --detach
 
 cd ..
 
@@ -54,13 +54,13 @@ cd ..
 echo -e "${GREEN}"
 echo "Starting React"
 echo -e "${NC}"
-sudo docker-compose up --build --detach
+docker-compose up --build --detach
 
 echo -e "${GREEN}"
 echo "Following containers are now running ->"
-sudo docker ps -a --format '{{.Names}}'
+docker ps -a --format '{{.Names}}'
 echo ""
 echo "To see the logs for a container, add 'container's name' from above to the following command ->"
 echo ""
-echo "sudo docker logs -f -t 'container's name'"
+echo "docker logs -f -t 'container's name'"
 echo -e "${NC}"
