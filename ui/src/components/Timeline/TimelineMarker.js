@@ -14,8 +14,8 @@ class CustomMarker extends Component{
       label: this.props.event.label,
       icon: this.props.event.icon,
       datetime: this.props.event.datetime,
-      description: this.props.event.description
-      //photo: this.props.event.photo
+      description: this.props.event.description,
+      photo: this.props.event.photo
     }
   }
   render(){
@@ -26,9 +26,15 @@ class CustomMarker extends Component{
         label= {this.state.label}
         icon = {this.state.icon}
         datetime = {this.state.datetime} /*Add System Clock*/
-        description= {this.state.description}
-        //Card element to add photo
-        />
+        description= {this.state.description} >
+        {this.state.type === "photo"?
+          (<Card>
+             <img src = {this.state.photo}
+                  alt = {this.state.type}
+                  style = {{height: "15vmax", width:"auto"}}/>
+         </Card>)
+         :(<div></div>)}
+       </TimelineMarker>
     )
   }
 } export default CustomMarker;

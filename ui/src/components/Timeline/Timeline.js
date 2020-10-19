@@ -24,31 +24,15 @@ class Timeline extends Component {
   constructor(props){
     super(props);
     this.state = {
-      username: "Abhilash",
-      userDocuments:[{ _id: "1",
-                      name: "Resume" ,
-                      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmodtempor incidunt ut labore et dolore magna aliqua." ,
-                      dateCreated: "18-01-21",
-                      dateModified: "19-01-21",
-                      highlighted: false,
-                      achivement: false,
-                      institution: "",
-                      dateAchieved: "",
-                      tags: [{
-                        name: "Default",
-                        color: "red",
-
-                        }]
-                      }],
-      userProfilePhoto: "",
-      userCoverImages: [{image: ""}],
-      userTags:[{name: "Default",color: "red", dateAdded: "16-01-2019"},
-                {name: "Default 2", color: "blue", dateAdded: "17-01-2019"}],
+      username: "",
+      userDocuments:[],
+      userProfilePhoto:  http+'/api/users/profilePhoto/'+this.props.match.params.id,
+      userCoverImages:[],
+      userTags:[],
       userid: this.props.match.params.id
     };
     this.getUsername = this.getUsername.bind(this);
     this.getUserDocs = this.getUserDocs.bind(this);
-    this.getUserProfilePhoto = this.getUserProfilePhoto.bind(this);
     this.getUserCoverImages = this.getUserCoverImages.bind(this);
     this.getUserTags = this.getUserTags.bind(this);
   }
@@ -56,15 +40,15 @@ class Timeline extends Component {
     componentDidMount(){
       this.getUsername();
       this.getUserDocs();
-      this.getUserProfilePhoto();
       this.getUserCoverImages();
       this.getUserTags();
     };
 
     getUsername(){
-      axios.post(http + '/api/' + this.state.userid)
+      const accurl = http + '/api/accSetting/' + this.state.userid;
+      axios.get(accurl, {withCredentials: true })
       .then(response => {
-        console.log(response.data);
+        this.setState({username: response.data.user.name});
       })
       .catch(function(error) {
         console.log(error);
@@ -72,29 +56,22 @@ class Timeline extends Component {
     }
 
     getUserDocs(){
-      axios.post(http + '/api/documents/' + this.state.userid)
+      const docurl =  http + '/api/documents/' + this.state.userid;
+      axios.get(docurl)
       .then(response => {
-        console.log(response.data);
+        this.setState({userDocuments: response.data.documents});
+        console.log(response.data.documents);
       })
       .catch(function(error) {
         console.log(error);
       });
     }
 
-    getUserProfilePhoto(){
-      axios.post(http + '/api/profilePhoto/' + this.state.userid)
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-    }
 
     getUserCoverImages(){
-      axios.post(http + '/api/coverImages/' + this.state.userid)
+      axios.get(http + '/api/users/coverImages/' + this.state.userid)
       .then(response => {
-        console.log(response.data);
+        this.setState({userCoverImages: response.data.coverImages.coverImages});
       })
       .catch(function(error) {
         console.log(error);
@@ -102,9 +79,9 @@ class Timeline extends Component {
     }
 
     getUserTags(){
-      axios.post(http + '/api/tags/' + this.state.userid)
+      axios.get(http + '/api/tags/' + this.state.userid)
       .then(response => {
-        console.log(response.data);
+        this.setState({userTags: response.data});
       })
       .catch(function(error) {
         console.log(error);
@@ -119,7 +96,7 @@ class Timeline extends Component {
       });
       return ({
         type: "document",
-        label: this.state.username + ' uploaded ' + event.name,
+        label: this.state.username + ' uploaded ' + event.name.split(".")[0],
         description: <Container>
                       <Row>
                         {event.description}
@@ -136,8 +113,8 @@ class Timeline extends Component {
                      onClick = {event =>  window.location.href = '/documents/'+ event._id }/>,
                    //remove onCLick when MArker onclick works
         datetime: event.dateCreated,
-        clickEvent:  '/documents/'+ event._id
-        //photo : ""
+        clickEvent:  '/documents/'+ event._id,
+        photo : ""
       })
     });
 
@@ -149,7 +126,7 @@ class Timeline extends Component {
       });
       return ({
         type: "document",
-        label: this.state.username + ' modified ' + event.name,
+        label: this.state.username + ' modified ' + event.name.split(".")[0],
         description: <Container>
                       <Row>
                         {event.description}
@@ -164,22 +141,22 @@ class Timeline extends Component {
         icon: <Image className = "icon-hover" alt = "document" src = {docIcon}
                      style = {{height:"65px", width: "50px"}}
                      onClick = {event =>  window.location.href= '/documents/'+ event._id}/>,
-        datetime: event.dateModified
-        //photo : ""
+        datetime: event.dateModified,
+        photo : ""
       })
     });
 
-    var profilePhotoEvent = [{
+    var profilePhotoEvent = {
       type: "photo",
       label: this.state.username + ' updated their profile photo',
       icon: <Image className = "icon-hover" alt = "photo" src = {photoIcon}
                    style = {{height:"50px", width: "50px"}}
                    onClick = {event =>  window.location.href= '/manage/' + this.state.userid}/>,
       datetime: "", /*Add DateAdded after response.data structure is created*/
-      description: ""
-      //photo : ""
+      description: "",
+      photo : this.state.userProfilePhoto
       /*Send photo to create card */
-    }];
+    };
 
     var coverImagesEvent = this.state.userCoverImages.map(event => {
       return ({
@@ -188,9 +165,9 @@ class Timeline extends Component {
       icon: <Image className = "icon-hover" alt = "photo" src = {photoIcon}
                    style = {{height:"50px", width: "50px"}}
                    onClick = {event =>  window.location.href= '/manage/' + this.state.userid}/>,
-      datetime: event.dateAdded ,/*Add DateAdded after response.data structure is created*/
-      description: ""
-      //photo : ""
+                 datetime: "",/*Add DateAdded after response.data structure is created*/
+      description: "",
+      photo : event
       /*Send photo to create card */
       })
     });
@@ -205,8 +182,8 @@ class Timeline extends Component {
                    style = {{height:"50px", width: "50px"}}
                    onClick = {event =>  window.location.href= "/experience/" + this.state.userid}/>,
       datetime: event.dateAdded, /*Add DateAdded after response.data structure is created*/
-      description: ""
-      //photo : ""
+      description: "",
+      photo : ""
       })
     });
 
@@ -216,7 +193,7 @@ class Timeline extends Component {
                                            .concat(profilePhotoEvent)
                                            .concat(coverImagesEvent)
                                            .concat(newTagEvent)
-                                           .sort((a,b) => Date(b.datetime) - Date(a.datetime));
+                                           .sort((a,b) => -(b.datetime - a.datetime));
 
 
     var timelineMarker = flattenedEvents.map( event => {
