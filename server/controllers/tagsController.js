@@ -91,7 +91,7 @@ const addTagsToUserFile = async (req, res, next) => {
     res.status(201).json({tag: user.toObject({ getters : true}).tags});
 }
 const getTagsForUser = async (req, res, next) => {
-    let userId = req.params.uid
+    let userId = req.params.uid;
     let user;
     try {
         user = await User.findById(userId);
