@@ -77,6 +77,12 @@ padding-bottom: 1vmax; /* orignal padding - bottom margin of badge*/
   justify-content: space-between;
 }
 
+.update-achievement{
+  margin-right: 1vmax;
+}
+.doc-achievement-form {
+  margin-bottom: 0.6vmax;
+}
 .docedit,
   .docedit-header,
     .doc-highlighted,

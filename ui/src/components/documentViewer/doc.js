@@ -258,9 +258,10 @@ class DocMode extends Component {
 
     let showtagButtons = tags.map(tags =>{
         return(
-          <Button
+          <Button className = "tag-button"
             variant = "outline-danger"
-            style = {{border: "0px solid red"}}>
+            //style = {{border: "0px solid red"}}
+            >
             <Tag note={tags} />
           </Button>
         )
@@ -323,7 +324,8 @@ class DocMode extends Component {
                       <Col  xs ={5} md = {5}>
                         {/*Change Image Src to document preview */}
                         <Row className = "docview-image">
-                        <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
+                        <Image src ={doc} //style = {{height:"100%", width: "100%"}}
+                        />
                         </Row>
                         <Row>
                           { this.state.uploadMode?
@@ -384,19 +386,19 @@ class DocMode extends Component {
                         }
                         <Row>
                           {this.state.achievement ? (
-                            <Button variant='outline-warning' onClick={this.handleRemoveAchievement} style={{marginRight: "1vmax"}}> Remove  </Button>
+                            <Button className="update-achievement" variant='outline-warning' onClick={this.handleRemoveAchievement} /*style={{marginRight: "1vmax"}}*/> Remove  </Button>
                           ):(
-                            <Button variant='outline-success' onClick={this.handleAchievement} style={{marginRight: "1vmax"}}> Add </Button>
+                            <Button className="update-achievement" variant='outline-success' onClick={this.handleAchievement} /*style={{marginRight: "1vmax"}}*/> Add </Button>
                           )}
                           <h4>Achievement Details</h4>
                         </Row>
                         {/* only show this row when document is an achievement is checked out */}
                         <Collapse in={this.state.achievement}>
                           <Row className = "doc-achievement">
-                            <FormControl
+                            <FormControl className = "doc-achievement-form"
                               placeholder = "Issuing Institution"
                               defaultValue = {this.state.acinst}
-                              style ={{marginBottom: "0.6vmax"}}
+                              //style ={{marginBottom: "0.6vmax"}}
                               onChange = {this.onChangeInstitution}/>
                               <DatePicker
                                onChange={value => this.setState({acdate: value})}
@@ -491,7 +493,7 @@ class DocMode extends Component {
                   <Row>
                     <Col className = "docview-image" xs ={5} md = {5}>
                       {/*Change Image Src to document preview */}
-                      <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
+                      <Image src ={doc} /*style = {{height:"100%", width: "100%"}}*//>
                     </Col>
                     <Col className = "docview-properties">
                       <Row>
@@ -512,7 +514,7 @@ class DocMode extends Component {
                       <Row>
                           {this.state.achievement ?
                             (<h4>Achievement Details</h4>):
-                            (<h4 style = {{color: "rgba(200,200,200,0.6)", textDecoration: "line-through"}}>
+                            (<h4 id="achievement-deets" /*style = {{color: "rgba(200,200,200,0.6)", textDecoration: "line-through"}}*/>
                                 Achievement Details
                              </h4>)
                           }

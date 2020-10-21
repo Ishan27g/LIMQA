@@ -25,6 +25,11 @@
 .docview-image{
   padding: 2vmax;
 }
+
+.docview-image img {
+  height: 100%;
+  width: 100%; 
+}
 .doc-highlighted > h4{
   background-color: rgba(245,233,109,0.3);
   font-style: italic;
@@ -71,6 +76,15 @@ padding-bottom: 0.6vmax; /* orignal padding - bottom margin of badge*/
 .docview-footer{
   display: flex;
   justify-content: space-between;
+}
+
+.tag-button{
+  border: 0px solid red;
+}
+
+#achievement-deets{
+  color: rgba(200,200,200,0.6); 
+  text-decoration: line-through;
 }
 
 .docview,
