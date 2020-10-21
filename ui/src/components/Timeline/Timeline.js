@@ -89,11 +89,12 @@ class Timeline extends Component {
     }
 
   render (){
-
+    var date;
     var docCreationEvents = this.state.userDocuments.map(event => {
       var docTags = event.tags.map(tag =>{
           return (<Tag note = {tag.name}/>)
       });
+      date = event.dateCreated.split("T")[0]
       return ({
         type: "document",
         label: this.state.username + ' uploaded ' + event.name.split(".")[0],
@@ -112,7 +113,7 @@ class Timeline extends Component {
                      style = {{height:"65px", width: "50px"}}
                      onClick = {event =>  window.location.href = '/documents/'+ event._id }/>,
                    //remove onCLick when MArker onclick works
-        datetime: event.dateCreated,
+        datetime: date,
         clickEvent:  '/documents/'+ event._id,
         photo : ""
       })
