@@ -12,3 +12,17 @@ body {
 .copyright{
   color: grey;
 }
+
+.mr-auto img{
+  width: 9vmax; 
+  height: 2.5vmax;
+}
+
+.d-inline-block, .align-top{
+  width: 9vmax;
+  height: 2.5vmax;
+} 
+
+.text-center, .font-size-15px{
+  color: black;
+}

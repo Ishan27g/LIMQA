@@ -198,7 +198,7 @@ class App extends Component{
               <header>
                 <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
                 <Navbar.Brand href="/" className = "mr-auto">
-                  <Image alt="Logo" src = {logo} style = {{width: "9vmax", height: "2.5vmax"}}/>
+                  <Image alt="Logo" src = {logo} /*style = {{width: "9vmax", height: "2.5vmax"}}*//>
                 </Navbar.Brand>
                   <Button
                     variant="primary-info"
@@ -223,7 +223,7 @@ class App extends Component{
             <header>
               <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
               <Navbar.Brand href="/">
-                <img alt="Logo" src = {logo} style = {{width: "9vmax", height: "2.5vmax"}}
+                <img alt="Logo" src = {logo} /*style = {{width: "9vmax", height: "2.5vmax"}}*/
                   className="d-inline-block align-top"/>
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -296,7 +296,7 @@ class App extends Component{
         <Modal show={this.state.loginButton} onHide={this.handleSignClose} >
           <Modal.Body >
             <form>
-              <h3 className ="text-center font-size-15px" style={{ color: 'black' }}>
+              <h3 className ="text-center font-size-15px" /*style={{ color: 'black' }}*/>
               Welcome back!
               </h3>
 
