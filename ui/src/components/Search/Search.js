@@ -146,7 +146,6 @@ class Search extends Component{
         })
       }
     }
-
   }
 
 render(){

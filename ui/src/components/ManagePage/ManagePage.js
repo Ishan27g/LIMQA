@@ -59,8 +59,7 @@ class ManagePage extends Component {
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
         this.handleFilterOnTitle = this.handleFilterOnTitle.bind(this);
-        this.handleFilterOnTime = this.handleFilterOnTime.bind(this);
-        this.handleFilterOnElse = this.handleFilterOnElse.bind(this);
+        this.handleFilterOnTag = this.handleFilterOnTag.bind(this);
         this.onChangBioInfo = this.onChangBioInfo.bind(this);
         this.onChangeProfileImage = this.onChangeProfileImage.bind(this);
         this.onChangeCoverImage = this.onChangeCoverImage.bind(this);
@@ -75,6 +74,7 @@ class ManagePage extends Component {
         this.handleAddTagShow = this.handleAddTagShow.bind(this);
         this.createNewTag = this.createNewTag.bind(this);
         this.onChangeTagName = this.onChangeTagName.bind(this);
+        this.onChangeTag = this.onChangeTag.bind(this);
     }
 
     componentDidMount(){
@@ -213,15 +213,19 @@ class ManagePage extends Component {
     }
 
     handleFilterOnTitle = () => {
-        this.setState({filter: "Title"});
+        this.setState({
+          filter: "Title",
+          search: "",
+          searching: false
+        });
     }
 
-    handleFilterOnTime = () => {
-        this.setState({filter: "Time"});
-    }
-
-    handleFilterOnElse = () => {
-        this.setState({filter: "Else"});
+    handleFilterOnTag = () => {
+        this.setState({
+          filter: "Tag",
+          search: "",
+          searching: false
+        });
     }
 
     handleAddTagShow(){
@@ -333,12 +337,83 @@ class ManagePage extends Component {
       });
     }
 
+    intersection() {
+      var result = [];
+      var lists;
+      
+      if(arguments.length === 1) {
+        lists = arguments[0];
+      } else {
+        lists = arguments;
+      }
+      
+      for(var i = 0; i < lists.length; i++) {
+        var currentList = lists[i];
+        for(var y = 0; y < currentList.length; y++) {
+          var currentValue = currentList[y];
+          if(result.indexOf(currentValue) === -1) {
+            if(lists.filter(function(obj) { return obj.indexOf(currentValue) === -1 }).length === 0) {
+              result.push(currentValue);
+            }
+          }
+        }
+      }
+      return result;
+    }
+
+    onChangeTag(e){
+      if (this.state.search === ""){
+        this.setState({
+          searching: true,
+          search: e.target.innerHTML + ';'
+        })
+      }else{
+        var tempTag = this.state.search.split(";");
+        tempTag.pop();
+        if (tempTag.includes(e.target.innerHTML)){
+          var index = tempTag.indexOf(e.target.innerHTML);
+          tempTag.splice(index, 1);
+          var i;
+          var tempString = tempTag[0];
+          for(i=1; i<tempTag.length; i++){
+            tempString = tempString + ";" + tempTag[i]
+          }
+          tempString = tempString + ";"
+          this.setState({
+            search: tempString
+          })
+        }else{
+          this.setState({
+            searching: true,
+            search: this.state.search + e.target.innerHTML + ';'
+          })
+        }
+      }
+    }
+
 
     render(){
       var doc = {doc: this.state.updateDoc, id: this.state.userid};
       //const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
-      var documents = this.state.documents;
-      let docCards = documents.map(card =>{
+      var searchDocs = this.state.documents;
+
+      var tags = this.state.tags;
+
+      let tagsMap = tags.map(tags =>{
+          return(
+              <Tag note={tags.name}/>
+          )
+      })
+
+      var tagNames = [];
+      let tagsButtonMap = tags.map(tags =>{
+        tagNames.push(tags.name);
+          return(
+              <Button onClick={this.onChangeTag}>{tags.name}</Button>
+          )
+      })
+
+      let docCards = searchDocs.map(card =>{
         return(
           <Col sm='4'>
             <div>
@@ -355,29 +430,50 @@ class ManagePage extends Component {
         )
       });
 
-      var searchDocs = this.state.documents.filter(doc => {
-        if (this.state.search === "") {
-
+      if(this.state.filter === "Title"){
+        searchDocs = this.state.documents.filter(doc => {
+          if (this.state.search === "") {
+    
             return("")
-
-        } else {
-
-          var name = doc.name;
-          const pattern = this.state.search.split("").map(letter => {
-                    if(!("\\+*()?.,".includes(letter))) {
-                      return `(?=.*${letter})`
-                    } else {
-                      return ""
-                    }
-                  }).join("");
-
-          const regex = new RegExp(`${pattern}`, "g");
-
-          return (name.toLowerCase().includes(this.state.search.toLowerCase())
-                  || name.match(regex))
-
+    
+          } else {
+    
+            var name = doc.name;
+            const pattern = this.state.search.split("").map(letter => {
+              if(!("\\+*()?.,".includes(letter))) {
+                return `(?=.*${letter})`
+              } else {
+                return ""
+              }
+            }).join("");
+    
+            const regex = new RegExp(`${pattern}`, "g");
+    
+            return (name.toLowerCase().includes(this.state.search.toLowerCase()) || name.match(regex))
+    
+          }
+        }).sort((a,b)=> b["name"] - a["name"]).slice(0,7);
+    
+      }else{
+        if (this.state.search !== ""){
+          var selectTags = this.state.search.split(";");
+          var tempTagWithDoc = [];
+          var i;
+          for(i=0; i<selectTags.length; i++){
+            var j;
+            for(j=0; j<tagNames.length; j++){
+              if(selectTags[i] === tagNames[j]){
+                tempTagWithDoc.push(this.state.tags[j].files);
+              }
+            }
+          }
+          tempTagWithDoc = this.intersection(tempTagWithDoc);
+          searchDocs = this.state.documents.filter(function(document){
+            return tempTagWithDoc.includes(document._id)
+          });
+    
         }
-      }).sort((a,b)=> b["name"] - a["name"]).slice(0,7);
+      }
 
     let showDocs = searchDocs.map( searchedDoc => {
         return (
@@ -404,14 +500,6 @@ class ManagePage extends Component {
           </Carousel.Item>
         )
       });
-
-      var tags = this.state.tags;
-
-      let tagsMap = tags.map(tags =>{
-          return(
-              <Tag note={tags.name}/>
-          )
-      })
 
       return(
         <body>
@@ -509,34 +597,45 @@ class ManagePage extends Component {
 
                       <Container fluid style={{height:'45rem'}}>
                         <Row>
-                          <Col style = {{textAlign: "center"}}>
+                        <Col style = {{textAlign: "center"}}>
                             <Form inline>
-                                <FormControl type="text" placeholder="Search for documents" className="mr-sm-2" onChange={this.onChangeSearch}/>
+                                {this.state.filter === "Title" ? (
+                                  <FormControl type="text" placeholder="Search for documents by names" className="mr-sm-2" value = {this.state.search} onChange={this.onChangeSearch}/>
+                                ):(
+                                  <FormControl type="text" placeholder="Search for documents by tags" className="mr-sm-2" value = {this.state.search} onChange={this.onChangeSearch} readOnly/>
+                                )}
+                                
                                 <Dropdown>
                                   <Dropdown.Toggle variant="success" id="dropdown-basic">
                                       {this.state.filter}
                                   </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     <Dropdown.Item onClick={this.handleFilterOnTitle}>Title</Dropdown.Item>
-                                    <Dropdown.Item onClick={this.handleFilterOnTime}>Time</Dropdown.Item>
-                                    <Dropdown.Item onClick={this.handleFilterOnElse}>something else</Dropdown.Item>
+                                    <Dropdown.Item onClick={this.handleFilterOnTag}>Tags</Dropdown.Item>
                                 </Dropdown.Menu>
                                 </Dropdown>
                             </Form>
                           </Col>
-                        </Row>
-                        <Container fluid style={{overflow:"auto", height:'40rem', marginTop: '3rem'}}>
-                          {this.state.searching ? (
-                            <Row>
-                              {showDocs}
-                            </Row>
+                          {this.state.filter === "Title" ? (
+                            <Row></Row>
                           ):(
                             <Row>
-                              {docCards}
+                              {tagsButtonMap}
                             </Row>
                           )}
 
-                        </Container>
+                        </Row>
+                          <Container fluid style={{overflow:"auto", height:'40rem', marginTop: '3rem'}}>
+                            {this.state.searching ? (
+                              <Row>
+                                {showDocs}
+                              </Row>
+                            ):(
+                              <Row>
+                                {docCards}
+                              </Row>
+                            )}
+                          </Container>
                       </Container>
                       </Col>
                   </Row>
