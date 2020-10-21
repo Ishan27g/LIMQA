@@ -139,12 +139,11 @@ class Home extends Component {
                     </Row>
 
                     <Row>
-                        <Col style = {{textAlign: "center"}}>
-                          <Image src={this.state.profileImg}
+                        <Col>
+                          <Image className = "img-bioinfo-row" src={this.state.profileImg}
                                  onError={(e)=>{e.target.onerror = null;
                                                           e.target.src=profile}}
-                                roundedCircle
-                                style = {{height: "20vmax", width: "20vmax"}}/>
+                                roundedCircle/>
                         </Col>
                         <Col className = "bioinfo">
                             {this.state.bioinfo}
@@ -154,7 +153,7 @@ class Home extends Component {
             </div>
 
             <div class = "highlighted-documents">
-                <Row style = {{marginBottom: "3vmax"}}>
+                <Row className = "highlighted_document_row">
                   <Col>
                     <h3> Highlighted Documents </h3>
                   </Col>

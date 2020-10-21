@@ -26,9 +26,17 @@
 
 }
 
+.highlighted_document_row{
+  margin-bottom: 3vmax;
+}
+
+.img-bioinfo-row{
+  height: 20vmax;
+  width: 20vmax;
+}
 
 h1, h2, h3{
-  font-family: 'Kavoon', cursive;
+  font-family: "Noto Sans", sans-serif;
   font-size: 4em;
   text-align: center;
   color: white;
@@ -45,7 +53,7 @@ h3{
 p{
   line-height: 2em;
   font-size: 1.2em;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Noto Sans", sans-serif;
   font-weight: bolder;
   color: white;
 
@@ -64,7 +72,7 @@ p{
   color: white;
   text-align: center;
   font-size: 2em;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Noto Sans", sans-serif;
   font-weight: bolder;
 }
 
@@ -73,8 +81,7 @@ p{
   height: 5vmax;
 }
 .welcome-sign{
-  line-height: 2;
-  font-family: 'Kavoon', cursive;
+  font-family: "Noto Sans", sans-serif ;
   font-size: 3.85em;
   text-align: center;
   color: white;

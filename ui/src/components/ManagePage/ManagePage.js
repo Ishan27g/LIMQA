@@ -432,9 +432,9 @@ class ManagePage extends Component {
           <Carousel Fluid>
             {coverImage}
           <Carousel.Item>
-            <input
+            <input id="add-cover-image" 
              type="file"
-             style={{display: "none"}}
+             //style={{display: "none"}}
              onChange={this.onChangeCoverImage}
              ref={coverInput=>this.coverInput=coverInput}
              multiple="multiple"/>
@@ -442,11 +442,12 @@ class ManagePage extends Component {
              src = {uploadCoverImageBg}
              onClick = {() => this.coverInput.click()} />
            <Carousel.Caption>
-             <img
+             <img class = "new-Upload"
               src = {uploadIcon}
               alt ="Upload Icon"
               onClick = {() => this.coverInput.click()}
-              style = {{height: "7vmax", width: "9vmax", marginBottom: "1vmax"}}/>
+              //style = {{height: "7vmax", width: "9vmax", marginBottom: "1vmax"}}
+              />
             <h3>Uplaod Cover Image</h3>
            </Carousel.Caption>
           </Carousel.Item>
@@ -461,12 +462,12 @@ class ManagePage extends Component {
                     </Col>
                   </Row>
                   <Row>
-                      <Col style = {{textAlign: "center"}}>
-                          <Image src={this.state.profileImg} roundedCircle style = {{height: "20vmax", width: "20vmax"}} onError={(e)=>{e.target.onerror = null; e.target.src=profile}}/>
+                      <Col id="photo-select"/*style = {{textAlign: "center"}}*/>
+                          <Image id="photo-profile" src={this.state.profileImg} roundedCircle /*style = {{height: "20vmax", width: "20vmax"}}*/ onError={(e)=>{e.target.onerror = null; e.target.src=profile}}/>
                           <input
                            type="file"
                            onChange={this.onChangeProfileImage}
-                           style={{display: 'none'}}
+                           //style={{display: 'none'}}
                            ref={profileInput=>this.profileInput=profileInput} />
                       <Col>
                         <Button variant="info" onClick={() => this.profileInput.click()}>Select photo</Button> {' '}
@@ -474,7 +475,7 @@ class ManagePage extends Component {
                       </Col>
                       <Col className = "bioinfo">
                           {this.state.editBio ? (
-                              <Form style ={{textAlign: "center", color: "white"}}>
+                              <Form id = "bioinfo-form" /*style ={{textAlign: "center", color: "white"}}*/>
                                   <h5>Enter your new bio here</h5>
                                   <Form.Control
                                     as="textarea"
@@ -498,19 +499,19 @@ class ManagePage extends Component {
               <Docview doc={doc} ref={this.docView}/>
 
               <div class = "document-arena">
-                <h2 style = {{marginBottom: "3vmax"}}>Document Arena</h2>
+                <h2 /*style = {{marginBottom: "3vmax"}}*/>Document Arena</h2>
                 <Container>
                   <Row>
                       <Col className = "upload-doc-input">
                         <Row>
                         <input
                          type="file"
-                         style={{display: "none"}}
+                         //style={{display: "none"}}
                          onChange={this.onChangeDocUpload}
                          ref={docInput=>this.docInput=docInput}/>
-                        <Image
+                        <Image 
                          src={uploadDocuments}
-                         style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}
+                         //style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}
                          onClick = {() => this.docInput.click()}/>
                         </Row>
                         <Row>
@@ -520,9 +521,10 @@ class ManagePage extends Component {
 
                       <Col xs={6} md={8}>
 
-                      <Container fluid style={{height:'45rem'}}>
+                      <Container id="document-edit" fluid /*style={{height:'45rem'}}*/>
                         <Row>
-                          <Col style = {{textAlign: "center"}}>
+                          <Col //style = {{textAlign: "center"}}
+                          >
                             <Form inline>
                                 <FormControl type="text" placeholder="Search for documents" className="mr-sm-2" onChange={this.onChangeSearch}/>
                                 <Dropdown>
@@ -556,9 +558,9 @@ class ManagePage extends Component {
                 </Container>
               </div>
               <div class = "document-arena">
-                <h2 style = {{marginBottom: "3vmax"}}>Tags Management</h2>
+                <h2 /*style = {{marginBottom: "3vmax"}}*/>Tags Management</h2>
                 <Container>
-                  <Row style = {{height: "10vmax"}}>
+                  <Row id="tag-manage" /*style = {{height: "10vmax"}}*/>
                     <Col>
                       {this.state.newTag? (
                         <Form>
@@ -584,7 +586,7 @@ class ManagePage extends Component {
                   <Row className = "mt-3">
                     <input
                           type="file"
-                          style={{display: "none"}}
+                          //style={{display: "none"}}
                           onChange={this.onChangeBgImg}
                           ref={bgInput=>this.bgInput=bgInput}/>
                     <Button block variant="info" onClick = {() => this.docInput.click()}>

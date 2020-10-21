@@ -11,21 +11,32 @@
 }
 .welcome-sign{
   line-height: 2;
-  font-family: 'Kavoon', cursive;
+  font-family: "Noto Sans", sans-serif;
   font-size: 3.85em;
   text-align: center;
   color: white;
 }
 
 
+#add-cover-image{
+  display: none;
+}
+
 .manage-cover-image > .carousel{
   width: 90%;
+  display: "none";
 }
 
 .carousel-item > img {
   display: block;
   width: 100%;
-  height: 20vmax;
+  height: 30vmax;
+}
+
+.new-Upload{
+  height: 7vmax;
+  width: 9vmax; 
+  margin-bottom: 1vmax;
 }
 
 .carousel-item {
@@ -82,6 +93,14 @@
   margin-bottom: 5vmax;
   text-align: center;
 }
+
+#tag-manage{
+  height: 10vmax;
+}
+
+.document-arena > h2 {
+  margin-bottom: 3vmax;
+}
 .upload-doc-input{
   margin-top: 15vmax;
   margin-bottom: 10vmax;
@@ -91,4 +110,32 @@
   display: flex;
   justify-content: center;
   border: 1px solid red;
+}
+
+.upload-doc-input .row img{
+  height: 20vmax;
+  width: 15vmax;
+  background-color: rgba(200,200,200,0.4);
+}
+
+.col{
+  text-Align: center;
+}
+
+#photo-profile{
+  height: 20vmax;
+  width: 20vmax;
+}
+
+input{
+  display: none;
+}
+
+#bioinfo-form{
+  text-align: center;
+  color: white
+}
+
+#document-edit{
+  height: 45rem;
 }
