@@ -148,3 +148,8 @@
   margin-right: 2vmax;
 
 }
+
+.edit-image-display img{
+  height: 10vmax; 
+  width: 10vmax;
+}

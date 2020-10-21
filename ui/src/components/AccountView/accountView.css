@@ -141,6 +141,11 @@
   margin-right: 2vmax;
 }
 
+.acc-image img{
+  height: 10vmax; 
+  width: 10vmax;
+}
+
 .acc-set > .container,
   .acc-header,
   .acc-info,
