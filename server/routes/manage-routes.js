@@ -8,14 +8,16 @@ const { ensureAuthenticated } = require('../middlerware/auth');
 
 router.get('/bioinfo/:uid',  manageController.getBioinfo);
 // expect json data send from front-end.
-router.put('/bioinfo/:uid', ensureAuthenticated, [ check("bioinfo").not().isEmpty() ], manageController.updateBioinfo);
+router.put('/bioinfo/:uid', ensureAuthenticated, [ check("bioinfo").not().isEmpty(),
+                                                    check("bioinfo").isLength({max: 100}) ], manageController.updateBioinfo);
 
 router.get('/accSetting/:uid', ensureAuthenticated, manageController.getAcc);
 // expect form data 
 router.put('/accSetting/:uid', ensureAuthenticated, fileUpload.single('profileimg'), manageController.updateAcc);
 
 // document related routes below.
-router.post('/documents/:uid', ensureAuthenticated, fileUpload.single("document"), manageController.uploadFiles);
+router.post('/documents/:uid', ensureAuthenticated, fileUpload.single("document"), [ check("description").not().isEmpty(),
+check("description").isLength({max: 100}) ], manageController.uploadFiles);
 
 router.get('/documents/:uid', manageController.getFiles);
 

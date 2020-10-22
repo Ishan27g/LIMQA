@@ -68,7 +68,7 @@ class DocMode extends Component {
       docdesc: "",
       achievement: false,
       acinst: "",
-      acdate: new Date().toLocaleDateString(),
+      acdate: "2000-01-01",
 
        /*All Tags Created*/
       allTags: [],
@@ -194,7 +194,7 @@ class DocMode extends Component {
       .catch(function(error) {
         console.log(error);
       });
-   
+
       this.setState({alertSuccess:true},()=>{
         window.setTimeout(()=>{
           this.setState({alertSuccess:false}, ()=>{
@@ -202,7 +202,8 @@ class DocMode extends Component {
               docViewer: false,
               DocEditor: false,
               uploadMode: false
-            })
+            });
+            window.location.href = '/manage/'+ this.props.doc.id;
           })
         },1500);
       });

@@ -116,10 +116,10 @@ class Landing extends Component{
     });
 
     var setUsers =[];
-    for(var i= 0; i < allUsers.length; i=i+2){
+    for(var i= 0; i < allUsers.length; i=i+1){
       setUsers.push(
           <CardDeck className = "user-cards-columns">
-            {allUsers.slice(i,i+2)}
+            {allUsers.slice(i,i+1)}
           </CardDeck>
       )
     }
@@ -129,7 +129,7 @@ class Landing extends Component{
     });
 
     return (
-      <body>
+      <div style={{overflowY:"scroll"}}>
         <Container className = "app-body">
           <Row className = "landing-header">
               Discover New Talents
@@ -156,7 +156,7 @@ class Landing extends Component{
           </Fade>
           </Row>
         </Container>
-      </body>
+      </div>
     )
   }
 }

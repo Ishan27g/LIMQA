@@ -14,9 +14,11 @@ router.get('/check', userController.check);
 
 router.post('/signup', fileUpload.array('files',10), [
     check("name").not().isEmpty(),
+    check("name").isLength({ max: 20 }),
     check("email").normalizeEmail().isEmail(),
+    check("email").isLength({ max:  50}),
     check("password").not().isEmpty(), 
-    check("password").isLength({ min: 6 }), ] , userController.signup);
+    check("password").isLength({ min: 6 }) ] , userController.signup);
 
 router.post('/login', check('email').normalizeEmail(),userController.login);
 

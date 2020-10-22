@@ -12,21 +12,20 @@ import Container from 'react-bootstrap/Container';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
-import Tag from './../Tags/Tag.js';
+import Modal from 'react-bootstrap/Modal';
 
+import Tag from './../Tags/Tag.js';
 import CoverImage from '../CoverImage/coverImage.js';
 import Docview from '../documentViewer/doc.js';
-
 import docImage from '../../Image/documents.png';
 import profile from '../../Image/profile.png';
 import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import uploadIcon from '../../Image/uploadIcon.png';
-import uploadDocuments from '../../Image/uploadDocuments.svg';
+import uploadDocuments from '../../Image/uploadDocuments.png';
 import uploadCoverImageBg from '../../Image/bioContentBackground.jpg';
 import {pathForRequest} from '../http.js';
 let http = pathForRequest();
@@ -56,12 +55,12 @@ class ManagePage extends Component {
           tags: [],
           newTag: false,
           tagName: "",
+          tagManagement: false,
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
         this.handleFilterOnTitle = this.handleFilterOnTitle.bind(this);
-        this.handleFilterOnTime = this.handleFilterOnTime.bind(this);
-        this.handleFilterOnElse = this.handleFilterOnElse.bind(this);
+        this.handleFilterOnTag = this.handleFilterOnTag.bind(this);
         this.onChangBioInfo = this.onChangBioInfo.bind(this);
         this.onChangeProfileImage = this.onChangeProfileImage.bind(this);
         this.onChangeCoverImage = this.onChangeCoverImage.bind(this);
@@ -76,6 +75,9 @@ class ManagePage extends Component {
         this.handleAddTagShow = this.handleAddTagShow.bind(this);
         this.createNewTag = this.createNewTag.bind(this);
         this.onChangeTagName = this.onChangeTagName.bind(this);
+        this.onChangeTag = this.onChangeTag.bind(this);
+        this.handleTagShow = this.handleTagShow.bind(this);
+        this.handleTagClose = this.handleTagClose.bind(this);
     }
 
     componentDidMount(){
@@ -131,7 +133,6 @@ class ManagePage extends Component {
     };
 
     onChangeProfileImage(e){
-      console.log(e.target.files[0]);
       this.setState({
         updateProfile: e.target.files[0]
       }, ()=>{
@@ -151,7 +152,7 @@ class ManagePage extends Component {
           const tempProfile = URL.createObjectURL(this.state.updateProfile);
           this.setState({
             profileImg: tempProfile
-          }, ()=>{console.log(this.state.profileImg)})
+          })
         })
         .catch(function(error) {
           console.log(error);
@@ -160,7 +161,6 @@ class ManagePage extends Component {
     }
 
     onChangeCoverImage(e){
-      console.log(e.target.files);
       this.setState({
         updateCover: e.target.files
       }, ()=>{
@@ -177,25 +177,15 @@ class ManagePage extends Component {
         var i;
         var tempCover = [];
         for(i=0; i<this.state.updateCover.length; i++){
-          console.log(this.state.updateCover[i])
           covImg.append('files', this.state.updateCover[i]);
           tempCover.push(URL.createObjectURL(this.state.updateCover[i]));
         }
 
         axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
         .then( res => {
-          console.log(res);
-          if(this.state.cover.length<5){
-            var tempCo = [];
-            var i;
-            for (i=0; i<this.state.updateCover.length; i++){
-              tempCo.push(URL.createObjectURL(this.state.updateCover[i]));
-            }
-
-            this.setState({
-              cover: tempCo
-            })
-          }
+          this.setState({
+            cover: tempCover
+          })
         })
         .catch(function(error) {
           console.log(error);
@@ -226,15 +216,19 @@ class ManagePage extends Component {
     }
 
     handleFilterOnTitle = () => {
-        this.setState({filter: "Title"});
+        this.setState({
+          filter: "Title",
+          search: "",
+          searching: false
+        });
     }
 
-    handleFilterOnTime = () => {
-        this.setState({filter: "Time"});
-    }
-
-    handleFilterOnElse = () => {
-        this.setState({filter: "Else"});
+    handleFilterOnTag = () => {
+        this.setState({
+          filter: "Tag",
+          search: "Default;",
+          searching: false
+        });
     }
 
     handleAddTagShow(){
@@ -302,17 +296,17 @@ class ManagePage extends Component {
     }
 
     onChangeSearch(e){
-      if (e.target.value === ""){	
-        this.setState({	
-          search: e.target.value,	
-          searching: false	
-        });	
-      } else {	
-        this.setState({	
-          search: e.target.value,	
-          searching: true	
-        });	
-      }	
+      if (e.target.value === ""){
+        this.setState({
+          search: e.target.value,
+          searching: false
+        });
+      } else {
+        this.setState({
+          search: e.target.value,
+          searching: true
+        });
+      }
     }
 
     onChangeTagName(e){
@@ -322,36 +316,125 @@ class ManagePage extends Component {
     }
 
     createNewTag(){
-      const obj = {
-        name: this.state.tagName,
-        color: 'green'
-      }
-      const tagUrl = http+'/api/tags/'+this.state.userid;
-      axios.post(tagUrl, obj, { withCredentials: true })
-      .then( res => {
-        console.log(res);
-        const gettagUrl = http+'/api/tags/' + this.state.userid;
-        axios.get(gettagUrl)
-        .then(res =>{
-          this.setState({
-            tags: res.data
+      if(this.state.tagName !== ""){
+        const obj = {
+          name: this.state.tagName,
+          color: 'green'
+        }
+        const tagUrl = http+'/api/tags/'+this.state.userid;
+        axios.post(tagUrl, obj, { withCredentials: true })
+        .then( res => {
+          console.log(res);
+          const gettagUrl = http+'/api/tags/' + this.state.userid;
+          axios.get(gettagUrl)
+          .then(res =>{
+            this.setState({
+              tags: res.data
+            })
+          })
+          .catch(function(error) {
+            console.log(error);
           })
         })
         .catch(function(error) {
           console.log(error);
+        });
+      }
+    }
+
+    intersection() {
+      var result = [];
+      var lists;
+
+      if(arguments.length === 1) {
+        lists = arguments[0];
+      } else {
+        lists = arguments;
+      }
+
+      for(var i = 0; i < lists.length; i++) {
+        var currentList = lists[i];
+        for(var y = 0; y < currentList.length; y++) {
+          var currentValue = currentList[y];
+          if(result.indexOf(currentValue) === -1) {
+            if(lists.filter(function(obj) { return obj.indexOf(currentValue) === -1 }).length === 0) {
+              result.push(currentValue);
+            }
+          }
+        }
+      }
+      return result;
+    }
+
+    onChangeTag(e){
+      if (this.state.search === ""){
+        this.setState({
+          searching: true,
+          search: e.target.innerHTML + ';'
         })
+      }else{
+        var tempTag = this.state.search.split(";");
+        tempTag.pop();
+        if (tempTag.includes(e.target.innerHTML)){
+          if(e.target.innerHTML !== "Default"){
+            var index = tempTag.indexOf(e.target.innerHTML);
+            tempTag.splice(index, 1);
+            var i;
+            var tempString = tempTag[0];
+            for(i=1; i<tempTag.length; i++){
+              tempString = tempString + ";" + tempTag[i]
+            }
+            tempString = tempString + ";"
+            this.setState({
+              search: tempString
+            })
+          }
+        }else{
+          this.setState({
+            searching: true,
+            search: this.state.search + e.target.innerHTML + ';'
+          })
+        }
+      }
+    }
+
+    handleTagShow(){
+      this.setState({
+        tagManagement: true
       })
-      .catch(function(error) {
-        console.log(error);
-      });
+    }
+
+    handleTagClose(){
+      this.setState({
+        tagManagement: false
+      })
     }
 
 
     render(){
       var doc = {doc: this.state.updateDoc, id: this.state.userid};
       //const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
-      var documents = this.state.documents;
-      let docCards = documents.map(card =>{
+      var searchDocs = this.state.documents;
+
+      var tags = this.state.tags;
+
+      let tagsMap = tags.map(tags =>{
+          return(
+            <Row>
+              <Tag note={tags.name}/>
+            </Row>
+          )
+      })
+
+      var tagNames = [];
+      let tagsButtonMap = tags.map(tags =>{
+        tagNames.push(tags.name);
+          return(
+              <Button onClick={this.onChangeTag}>{tags.name}</Button>
+          )
+      })
+
+      let docCards = searchDocs.map(card =>{
         return(
           <Col sm='4'>
             <div>
@@ -368,29 +451,50 @@ class ManagePage extends Component {
         )
       });
 
-      var searchDocs = this.state.documents.filter(doc => {
-        if (this.state.search === "") {
+      if(this.state.filter === "Title"){
+        searchDocs = this.state.documents.filter(doc => {
+          if (this.state.search === "") {
 
             return("")
 
-        } else {
+          } else {
 
-          var name = doc.name;
-          const pattern = this.state.search.split("").map(letter => {
-                    if(!("\\+*()?.,".includes(letter))) {
-                      return `(?=.*${letter})`
-                    } else {
-                      return ""
-                    }
-                  }).join("");
+            var name = doc.name;
+            const pattern = this.state.search.split("").map(letter => {
+              if(!("\\+*()?.,".includes(letter))) {
+                return `(?=.*${letter})`
+              } else {
+                return ""
+              }
+            }).join("");
 
-          const regex = new RegExp(`${pattern}`, "g");
+            const regex = new RegExp(`${pattern}`, "g");
 
-          return (name.toLowerCase().includes(this.state.search.toLowerCase())
-                  || name.match(regex))
+            return (name.toLowerCase().includes(this.state.search.toLowerCase()) || name.match(regex))
+
+          }
+        }).sort((a,b)=> b["name"] - a["name"]).slice(0,7);
+
+      }else{
+        if (this.state.search !== ""){
+          var selectTags = this.state.search.split(";");
+          var tempTagWithDoc = [];
+          var i;
+          for(i=0; i<selectTags.length; i++){
+            var j;
+            for(j=0; j<tagNames.length; j++){
+              if(selectTags[i] === tagNames[j]){
+                tempTagWithDoc.push(this.state.tags[j].files);
+              }
+            }
+          }
+          tempTagWithDoc = this.intersection(tempTagWithDoc);
+          searchDocs = this.state.documents.filter(function(document){
+            return tempTagWithDoc.includes(document._id)
+          });
 
         }
-      }).sort((a,b)=> b["name"] - a["name"]).slice(0,7);
+      }
 
     let showDocs = searchDocs.map( searchedDoc => {
         return (
@@ -417,14 +521,6 @@ class ManagePage extends Component {
           </Carousel.Item>
         )
       });
-
-      var tags = this.state.tags;
-
-      let tagsMap = tags.map(tags =>{
-          return(
-              <Tag note={tags.name}/>
-          )
-      })
 
       return(
         <body>
@@ -510,77 +606,67 @@ class ManagePage extends Component {
                          ref={docInput=>this.docInput=docInput}/>
                         <Image
                          src={uploadDocuments}
-                         style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}
+                         style = {{height: "11max", width: "9vmax"}}
                          onClick = {() => this.docInput.click()}/>
                         </Row>
                         <Row>
                           <p>Upload Documents</p>
                         </Row>
+                        <Row>
+                          <Button variant="info" block onClick={this.handleTagShow}>Manage tags</Button>
+                        </Row>
+
                       </Col>
 
                       <Col xs={6} md={8}>
 
                       <Container fluid style={{height:'45rem'}}>
                         <Row>
-                          <Col style = {{textAlign: "center"}}>
+                        <Col style = {{textAlign: "center"}}>
                             <Form inline>
-                                <FormControl type="text" placeholder="Search for documents" className="mr-sm-2" onChange={this.onChangeSearch}/>
+                                {this.state.filter === "Title" ? (
+                                  <FormControl type="text" placeholder="Search for documents by names" className="mr-sm-2" value = {this.state.search} onChange={this.onChangeSearch}/>
+                                ):(
+                                  <FormControl type="text" placeholder="Search for documents by tags" className="mr-sm-2" value = {this.state.search} onChange={this.onChangeSearch} readOnly/>
+                                )}
+
                                 <Dropdown>
                                   <Dropdown.Toggle variant="success" id="dropdown-basic">
                                       {this.state.filter}
                                   </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     <Dropdown.Item onClick={this.handleFilterOnTitle}>Title</Dropdown.Item>
-                                    <Dropdown.Item onClick={this.handleFilterOnTime}>Time</Dropdown.Item>
-                                    <Dropdown.Item onClick={this.handleFilterOnElse}>something else</Dropdown.Item>
+                                    <Dropdown.Item onClick={this.handleFilterOnTag}>Tags</Dropdown.Item>
                                 </Dropdown.Menu>
                                 </Dropdown>
                             </Form>
                           </Col>
-                        </Row>
-                        <Container fluid style={{overflow:"auto", height:'40rem', marginTop: '3rem'}}>
-                          {this.state.searching ? (
-                            <Row>
-                              {showDocs}
-                            </Row>
+                          {this.state.filter === "Title" ? (
+                            <Row></Row>
                           ):(
                             <Row>
-                              {docCards}
+                              {tagsButtonMap}
                             </Row>
                           )}
 
-                        </Container>
+                        </Row>
+                          <Container fluid style={{overflow:"auto", height:'40rem', marginTop: '3rem'}}>
+                            {this.state.searching ? (
+                              <Row>
+                                {showDocs}
+                              </Row>
+                            ):(
+                              <Row>
+                                {docCards}
+                              </Row>
+                            )}
+                          </Container>
                       </Container>
                       </Col>
                   </Row>
-                </Container>
-              </div>
-              <div class = "document-arena">
-                <h2 style = {{marginBottom: "3vmax"}}>Tags Management</h2>
-                <Container>
-                  <Row style = {{height: "10vmax"}}>
-                    <Col>
-                      {this.state.newTag? (
-                        <Form>
-                          <Form.Group controlId="formBasicEmail">
-                            <Form.Control type="tag" placeholder="Enter new tag name" onChange={this.onChangeTagName}/>
-                          </Form.Group>
-                          <Button variant="primary" type="submit" onClick={this.createNewTag}>
-                            Create
-                          </Button>
-                        </Form>
-                        
-                      ):(
-                        <Button variant="info" onClick={this.handleAddTagShow}>Add new tag</Button>
-                      )}
-                    </Col>
-                    <Col>
-                      {tagsMap}
-                    </Col>
-                  </Row>
+                  <Row style={{marginTop: '1rem'}}>
 
-                </Container>
-                <Container>
+                  </Row>
                   <Row className = "mt-3">
                     <input
                           type="file"
@@ -590,9 +676,47 @@ class ManagePage extends Component {
                     <Button block variant="info" onClick = {() => this.docInput.click()}>
                       Select Background Gradient</Button>
                   </Row>
+
+                  <Modal
+                    show={this.state.tagManagement}
+                    onHide={this.handleTagClose}
+                    backdrop="static"
+                    keyboard={false}
+                    dialogClassName ="manage-tags"
+                  >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Tags Management</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                  {this.state.newTag? (
+                        <Form>
+                          <Form.Group controlId="formBasicEmail">
+                            <Form.Control type="tag" placeholder="Enter new tag name" onChange={this.onChangeTagName}/>
+                          </Form.Group>
+                          <Button variant="primary" type="submit" onClick={this.createNewTag}>
+                            Create
+                          </Button>{' '}
+                          <Button variant="primary" type="submit" onClick={this.handleAddTagClose}>
+                            Close
+                          </Button>
+                        </Form>
+
+                  ):(
+                    <Container fluid className = "manage-tags-list">
+                      {tagsMap}
+                    </Container>
+                  )}
+
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={this.handleTagClose}>
+                      Close
+                    </Button>
+                    <Button variant="primary" onClick={this.handleAddTagShow}>Add new Tag</Button>
+                  </Modal.Footer>
+                </Modal>
                 </Container>
               </div>
-
             </body>
         )
     }

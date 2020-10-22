@@ -93,7 +93,7 @@ const signup = async (req, res, next) => {
     documents: [],
     password: hashedPassword,
     social: [], 
-    bioinfo: "This is bioinfo message",
+    bioinfo: "Describe yourself in a few words.",
     semail: "",
     officeAddress: "",
     tags: [],
@@ -116,7 +116,7 @@ const signup = async (req, res, next) => {
     owner : createdUser.id,
     profilePhoto: "",
     coverImages: "",
-    bgImage: ""
+    bgImage: ["#182848", "#4B6CB7"]
   })
   try {
     await createdPhotos.save();
@@ -265,6 +265,7 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
+  console.log("User signed up.");
   res.status(201).json({user: createdUser.toObject({ getters : true})});
 };
 // use passport middle ware to authenticate user.
@@ -281,6 +282,7 @@ const login = (req, res, next) => {
       if (loginErr) {
         return next(loginErr);
       }
+      console.log("User logged in.")
       return res.send({ success : true, message : 'authentication succeeded' });
     });
   })(req, res, next);
@@ -359,6 +361,7 @@ const forgotPassword = async (req, res, next) => {
       res.json({user : user.toObject({getters: true})});
     }
   })
+  console.log("Email sent to user.")
 }
 
 // check if token has expired or not.
@@ -453,6 +456,7 @@ const resetPassowrd = async (req, res, next) => {
       });
     }
   })
+  console.log("User password reset complete.")
 }
 
 
@@ -499,7 +503,7 @@ const updatePassword = async (req, res, next) => {
     );
     return next(error);
   }
-
+  console.log("User update password complete.")
   res.json({success:true})
 }
 
@@ -535,6 +539,7 @@ const generateQRCode = (req, res, next) => {
       console.log(err);
       res.send("error occured.");
     }
+    console.log("QR code generated.")
     res.send(src);
   })
 
