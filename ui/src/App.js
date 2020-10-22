@@ -134,7 +134,7 @@ class App extends Component{
 
   handleQRShow = () => {
     const obj = {
-      url: http+"/home/"+ window.location.pathname.split("/")[2]
+      url: "https://limqa.eastus.cloudapp.azure.com:3000/home/"+ window.location.pathname.split("/")[2]
     }
     const url = http + '/api/users/QRCode';
     axios.post(url, obj)
