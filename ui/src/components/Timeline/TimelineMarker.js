@@ -3,8 +3,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Timeline.css';
 
 import { Card, TimelineMarker } from 'react-rainbow-components';
+import Image from 'react-bootstrap/Image';
 
- /* Fallback Icon */
+import profile from '../../Image/profile.png';
+
 class CustomMarker extends Component{
   constructor(props){
     super(props);
@@ -29,9 +31,10 @@ class CustomMarker extends Component{
         description= {this.state.description} >
         {this.state.type === "photo"?
           (<Card>
-             <img src = {this.state.photo}
+             <Image src = {this.state.photo}
                   alt = {this.state.type}
-                  style = {{height: "15vmax", width:"auto"}}/>
+                  style = {{height: "15vmax", width:"auto"}}
+                  onError={(e)=>{e.target.onerror = null; e.target.src=profile}}/>
          </Card>)
          :(<div></div>)}
        </TimelineMarker>

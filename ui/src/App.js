@@ -133,7 +133,7 @@ class App extends Component{
     .catch(function(error){
       console.log(error)
     })
-    
+
   }
 
   handleQRClose = () => {
@@ -374,11 +374,11 @@ class App extends Component{
             <footer>
               <Navbar
                 bg = "light" variant = "light"
-                expand = "lg" fixed ="bottom"
+                expand = "lg" sticky ="bottom"
                 className = "copyright">
                 <Button onClick={this.handleQRShow}>QR Code</Button>
                 <Form>
-                  <Form.Text> Product of team LiMQA © QR</Form.Text>
+                  <Form.Text> Product of team LiMQA ©</Form.Text>
                 </Form>
               </Navbar>
               <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
@@ -396,7 +396,7 @@ class App extends Component{
             <footer>
               <Navbar
                 bg = "light" variant = "light"
-                expand = "lg" fixed ="bottom"
+                expand = "lg" sticky = "bottom"
                 className = "copyright">
                 <Form>
                   <Form.Text> Product of team LiMQA ©</Form.Text>
