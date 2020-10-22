@@ -29,6 +29,11 @@ import forgetPass from './components/Password/forgetPass.js';
 
 import logo from './Image/logo.png';
 import loginButton from './Image/loginButton.svg';
+import iconFacebook from './Image/Facebook.png';
+import iconInstagram from './Image/Instagram.png';
+import iconLinkedin from './Image/Linkedin.png';
+import iconGithub from './Image/Github.png';
+import iconWechat from './Image/Wechat.png';
 
 import {pathForRequest} from './components/http.js';
 import Home from './components/Home/Home';
@@ -61,6 +66,8 @@ class App extends Component{
         QRcode: null,
         front: false,
         showQR: false,
+        socialLinks: [],
+        slinksAlert: true,
       /*Login Values*/
         email: '',
         password: '',
@@ -95,9 +102,11 @@ class App extends Component{
         }
     })
 
+
+
     var path = window.location.pathname.split("/")[1];
     console.log(path)
-    if(path==='home' || path==='manage' || path === 'view'){
+    if(path!=='' && path!=='register' && path !== 'reset' && path !== 'notfound' && path!== 'forget'){
       this.setState({
         showQR: true
       })
@@ -106,6 +115,15 @@ class App extends Component{
         showQR: false
       })
     }
+
+    axios.get( http+'/api/social/' + this.state.userId)
+      .then(response => {
+        this.setState({socialLinks: response.data.socials},
+           () =>{this.setState({slinksAlert: false}) })
+      })
+      .catch(function(error) {
+          console.log(error);
+      })
   };
 
   handleSignClose = () => {
@@ -198,6 +216,7 @@ class App extends Component{
                       loginButton: false,
                       login: true,
                       userId: response.data.userid
+
                     },()=>{
                       window.location.href='/manage/'+this.state.userId;
                     })
@@ -215,6 +234,8 @@ class App extends Component{
       }
   }
 
+
+
   handleSignin = () => {
     this.setState({ login: true });
     this.setState({ loginButton: false });
@@ -224,7 +245,28 @@ class App extends Component{
     window.location.href='/search/'+ this.state.userId;
   }
 
+
+
   render(){
+    if(this.state.slinksAlert === false){
+    var socials = this.state.socialLinks;
+
+    var Linkedin = socials.filter( social =>
+        {return social.name === "Linkedin"}
+    )[0].url;
+    var Facebook = socials.filter( social =>
+        {return social.name === "Facebook"}
+    )[0].url;
+    var Instagram = socials.filter(social =>
+          {return social.name === "Instagram"}
+    )[0].url;
+    var Github = socials.filter(social =>
+          {return social.name === "Github"}
+    )[0].url;
+    var WeChat = socials.filter(social =>
+          {return social.name === "Wechat"}
+    )[0].url;
+  }
     return (
       <div>
           {this.state.front && !this.state.login ? (
@@ -375,12 +417,42 @@ class App extends Component{
               <Navbar
                 bg = "light" variant = "light"
                 expand = "lg" sticky ="bottom"
-                className = "copyright">
-                <Button onClick={this.handleQRShow}>QR Code</Button>
-                <Form>
-                  <Form.Text> Product of team LiMQA ©</Form.Text>
-                </Form>
+                className = "profile-footer">
+                <Nav  className = "profile-nav">
+                  <Nav.Item>
+                    <Form>
+                      <Form.Text> Product of team LiMQA ©</Form.Text>
+                    </Form>
+
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Button block onClick={this.handleQRShow}>QR Code</Button>
+
+                  </Nav.Item>
+                  { this.state.slinksAlert? (<div></div>):
+                  (
+                  <Nav.Item>
+                    <Image onClick= {event => window.location.href = Facebook}
+                            src = {iconFacebook}
+                            style = {{width: "2vmax", height: "2vmax"}} />
+                    <Image onClick= {event => window.location.href = Instagram}
+                            src = {iconInstagram}
+                            style = {{width: "2vmax", height: "2vmax"}} />
+                    <Image onClick= {event => window.location.href = Linkedin}
+                            src = {iconLinkedin}
+                            style = {{width: "2vmax", height: "2vmax"}} />
+                    <Image onClick= {event => window.location.href = Github}
+                            src = {iconGithub}
+                            style = {{width: "2vmax", height: "2vmax"}} />
+                    <Image onClick= {event => window.location.href = WeChat}
+                            src = {iconWechat}
+                            style = {{width: "2vmax", height: "2vmax"}} />
+                  </Nav.Item>   )
+                }
+
+                </Nav>
               </Navbar>
+
               <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
                 <Modal.Body className ="qr-code">
                   <Image src={this.state.QRcode} rounded style ={{width: "15vmax", height: "15vmax"}} />
@@ -396,7 +468,7 @@ class App extends Component{
             <footer>
               <Navbar
                 bg = "light" variant = "light"
-                expand = "lg" sticky = "bottom"
+                expand = "lg" fixed = "bottom"
                 className = "copyright">
                 <Form>
                   <Form.Text> Product of team LiMQA ©</Form.Text>
