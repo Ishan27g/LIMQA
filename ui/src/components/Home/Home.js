@@ -12,8 +12,6 @@ import Container from 'react-bootstrap/Container';
 import CoverImage from '../CoverImage/coverImage.js';
 import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
-import Navbar from 'react-bootstrap/Navbar';
-import Form from 'react-bootstrap/Form';
 
 import docImage from '../../Image/documents.png';
 import sampleImage1 from '../../Image/sampleImage1.jpg';

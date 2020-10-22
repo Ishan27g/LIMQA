@@ -12,8 +12,6 @@ import Image from 'react-bootstrap/Image';
 import Modal from 'react-bootstrap/Modal';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Row from 'react-bootstrap/Row';
 
 import AccountView from './components/AccountView/accountView.js';
 import Landing from './components/LandingPage/landingPage.js';
@@ -59,7 +57,7 @@ class App extends Component{
         loginInfo: true,
         userId: '',
         QRcode: null,
-        front: false,
+        front: true,
         showQR: false,
       /*Login Values*/
         email: '',
@@ -68,20 +66,19 @@ class App extends Component{
     }
   }
 
-  componentWillUnmount(){
+  componentDidMount(){
+
     if(window.location.pathname !== '/' && window.location.pathname !== '/notfound' && window.location.pathname !== '/forget'){
       this.setState({
-        front: false
+        front: false,
+        userId: window.location.pathname.split("/")[2]
       })
     }else{
       this.setState({
         front: true,
-        userId: window.location.pathname.split("/")[2]
       })
     }
-  }
-
-  componentDidMount(){
+    
     const check = http+'/api/users/check';
     axios.get(check, { withCredentials: true })
       .then(response => {
@@ -96,8 +93,7 @@ class App extends Component{
     })
 
     var path = window.location.pathname.split("/")[1];
-    console.log(path)
-    if(path==='home' || path==='manage' || path === 'view'){
+    if(path ==='home' || path ==='manage' || path === 'view'){
       this.setState({
         showQR: true
       })
@@ -120,7 +116,6 @@ class App extends Component{
     const obj = {
       url: http+"/home/"+ window.location.pathname.split("/")[2]
     }
-    console.log(obj);
     const url = http + '/api/users/QRCode';
     axios.post(url, obj)
     .then(res =>{
@@ -144,7 +139,6 @@ class App extends Component{
     axios.get(http+'/api/users/logout', { withCredentials: true })
     .then(res=>{
       window.location.href='/';
-      console.log(res);
       this.setState({
         login: false,
       });
@@ -192,7 +186,6 @@ class App extends Component{
               if (response.data.success){
                 axios.get(check, { withCredentials: true })
                 .then(response => {
-                  console.log(response.data.logIn);
                   if (response.data.logIn){
                     this.setState({
                       loginButton: false,
@@ -227,7 +220,7 @@ class App extends Component{
   render(){
     return (
       <div>
-          {this.state.front && !this.state.login ? (
+          {this.state.front && !this.state.login? (
             <div>
               <header>
                 <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
@@ -242,16 +235,6 @@ class App extends Component{
                   </Button>
                 </Navbar>
               </header>
-              <footer>
-                <Navbar
-                  bg = "light" variant = "light"
-                  expand = "lg" fixed ="bottom"
-                  className = "copyright">
-                  <Form>
-                    <Form.Text> Product of team LiMQA ©</Form.Text>
-                  </Form>
-                </Navbar>
-              </footer>
             </div>
           ):(
             <header>
