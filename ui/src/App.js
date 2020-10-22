@@ -86,7 +86,7 @@ class App extends Component{
             axios.get( http+'/api/social/' + this.state.userId)
             .then(response => {
               this.setState({socialLinks: response.data.socials},
-                 () =>{this.setState({slinksAlert: false}) })
+                 () =>{this.setState({slinksAlert: false}); console.log("changed")})
             })
             .catch(function(error) {
                 console.log(error);
@@ -231,6 +231,7 @@ class App extends Component{
 
 
   render(){
+    console.log(this.state.slinksAlert);
     if(this.state.slinksAlert === false){
       var socials = this.state.socialLinks;
 
