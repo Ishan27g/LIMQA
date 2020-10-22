@@ -93,7 +93,6 @@ class Search extends Component{
     }
   }
 
-  
   intersection() {
     var result = [];
     var lists;
