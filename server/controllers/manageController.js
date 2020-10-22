@@ -475,6 +475,7 @@ const editFile = async (req, res, next) => {
   document.achivement = achivement;
   document.institution = institution;
   document.dateAchieved = dateAchieved;
+  document.dateModified = Date.now();
   // first remove file id from tags' array.
   try {
     await Tag.updateMany(
