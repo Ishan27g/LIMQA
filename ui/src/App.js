@@ -74,10 +74,10 @@ class App extends Component{
   }
 
   componentDidMount(){
-    if(window.location.pathname !== '/' && window.location.pathname !== '/notfound'
-                                && window.location.pathname !== '/forget'
-                                && window.location.pathname !== '/register'){
+    var path = window.location.pathname.split("/")[1];
+    if(path!=='' && path!=='register' && path !== 'reset' && path !== 'notfound' && path!== 'forget'){
       this.setState({
+        showQR: true,
         front: false,
         userId: window.location.pathname.split("/")[2]
       }, () => {
@@ -92,6 +92,7 @@ class App extends Component{
     }else{
       this.setState({
         front: true,
+        showQR: false,
       })
     }
 
@@ -107,21 +108,6 @@ class App extends Component{
           })
         }
     })
-
-
-
-    var path = window.location.pathname.split("/")[1];
-    if(path!=='' && path!=='register' && path !== 'reset' && path !== 'notfound' && path!== 'forget'){
-      this.setState({
-        showQR: true
-      })
-    }else{
-      this.setState({
-        showQR: false
-      })
-    }
-
-
   };
 
   handleSignClose = () => {
