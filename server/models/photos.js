@@ -7,7 +7,7 @@ const photoSchema = new Schema({
     profilePhoto: {type : String, required: false},
     coverImages: [{type : String, required: false}],
     bgImage: {type : String, required: false}
-}, { timestamps: true });
+});
 
 photoSchema.plugin(uniqueValidator);
 
