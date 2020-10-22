@@ -140,7 +140,7 @@ class singleDoc extends Component {
 
     handleViewerShow = () => {
         this.setState({ docViewer: true });
-        
+
     }
     handleViewerClose = () => {
         this.setState({ docViewer: false});
@@ -196,12 +196,12 @@ class singleDoc extends Component {
         .then(res => {
             console.log(res);
             this.setState({
-                checkDelete: false, 
-                docEditor: false, 
+                checkDelete: false,
+                docEditor: false,
                 docViewer: false
             }, ()=>{
                 this.props.history.goBack();
-            }); 
+            });
         });
     }
 
@@ -309,12 +309,12 @@ class singleDoc extends Component {
     })
 
     var path = this.state.filePath;
-    
+
     // To access database one use this route
-    //let docPath = require("/usr/src/uploads/images/"+path);
+    let docPath = require("/usr/src/uploads/images/"+path);
 
     // for local testing use this routes
-    let docPath = require("./"+path);
+    //let docPath = require("./"+path);
 
     return(
         <body>
@@ -554,7 +554,7 @@ class singleDoc extends Component {
                     ):(
                         <div></div>
                     )}
-                    
+
                 </Modal.Footer>
             </Modal>
         )}
