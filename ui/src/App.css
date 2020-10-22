@@ -27,3 +27,15 @@ body {
   align-self: center;
   justify-content: center;
 }
+
+.profile-socials{
+  width: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.qr-button{
+  width: 200%;
+  height: auto;
+}

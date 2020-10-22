@@ -77,7 +77,7 @@ class ManagePage extends Component {
         this.onChangeTagName = this.onChangeTagName.bind(this);
         this.onChangeTag = this.onChangeTag.bind(this);
         this.handleTagShow = this.handleTagShow.bind(this);
-        this.handleTagClose = this.handleTagClose.bind(this);    
+        this.handleTagClose = this.handleTagClose.bind(this);
     }
 
     componentDidMount(){
@@ -296,17 +296,17 @@ class ManagePage extends Component {
     }
 
     onChangeSearch(e){
-      if (e.target.value === ""){	
-        this.setState({	
-          search: e.target.value,	
-          searching: false	
-        });	
-      } else {	
-        this.setState({	
-          search: e.target.value,	
-          searching: true	
-        });	
-      }	
+      if (e.target.value === ""){
+        this.setState({
+          search: e.target.value,
+          searching: false
+        });
+      } else {
+        this.setState({
+          search: e.target.value,
+          searching: true
+        });
+      }
     }
 
     onChangeTagName(e){
@@ -345,13 +345,13 @@ class ManagePage extends Component {
     intersection() {
       var result = [];
       var lists;
-      
+
       if(arguments.length === 1) {
         lists = arguments[0];
       } else {
         lists = arguments;
       }
-      
+
       for(var i = 0; i < lists.length; i++) {
         var currentList = lists[i];
         for(var y = 0; y < currentList.length; y++) {
@@ -452,11 +452,11 @@ class ManagePage extends Component {
       if(this.state.filter === "Title"){
         searchDocs = this.state.documents.filter(doc => {
           if (this.state.search === "") {
-    
+
             return("")
-    
+
           } else {
-    
+
             var name = doc.name;
             const pattern = this.state.search.split("").map(letter => {
               if(!("\\+*()?.,".includes(letter))) {
@@ -465,14 +465,14 @@ class ManagePage extends Component {
                 return ""
               }
             }).join("");
-    
+
             const regex = new RegExp(`${pattern}`, "g");
-    
+
             return (name.toLowerCase().includes(this.state.search.toLowerCase()) || name.match(regex))
-    
+
           }
         }).sort((a,b)=> b["name"] - a["name"]).slice(0,7);
-    
+
       }else{
         if (this.state.search !== ""){
           var selectTags = this.state.search.split(";");
@@ -490,7 +490,7 @@ class ManagePage extends Component {
           searchDocs = this.state.documents.filter(function(document){
             return tempTagWithDoc.includes(document._id)
           });
-    
+
         }
       }
 
@@ -604,11 +604,11 @@ class ManagePage extends Component {
                          ref={docInput=>this.docInput=docInput}/>
                         <Image
                          src={uploadDocuments}
-                         style = {{height: "20vmax", width: "15vmax", backgroundColor: "rgba(200,200,200,0.4)"}}
+                         style = {{height: "15vmax", width: "10vmax", backgroundColor: "rgba(200,200,200,0.4)"}}
                          onClick = {() => this.docInput.click()}/>
                         </Row>
                         <Row>
-                          <p>Upload Documents</p>
+
                         </Row>
                       </Col>
 
@@ -623,7 +623,7 @@ class ManagePage extends Component {
                                 ):(
                                   <FormControl type="text" placeholder="Search for documents by tags" className="mr-sm-2" value = {this.state.search} onChange={this.onChangeSearch} readOnly/>
                                 )}
-                                
+
                                 <Dropdown>
                                   <Dropdown.Toggle variant="success" id="dropdown-basic">
                                       {this.state.filter}
@@ -658,7 +658,7 @@ class ManagePage extends Component {
                       </Container>
                       </Col>
                   </Row>
-                  <Row style={{marginTop: '1rem'}}> 
+                  <Row style={{marginTop: '1rem'}}>
                     <Button variant="info" block onClick={this.handleTagShow}>Manage tags</Button>
                   </Row>
                   <Row className = "mt-3">
@@ -692,13 +692,13 @@ class ManagePage extends Component {
                             Close
                           </Button>
                         </Form>
-                        
+
                   ):(
                     <Container>
                       {tagsMap}
                     </Container>
                   )}
-                    
+
                   </Modal.Body>
                   <Modal.Footer>
                     <Button variant="secondary" onClick={this.handleTagClose}>

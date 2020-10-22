@@ -89,6 +89,5 @@
 
 .upload-doc-input > .row{
   display: flex;
-  justify-content: center;
-  border: 1px solid red;
+  justify-content: flex-start;
 }

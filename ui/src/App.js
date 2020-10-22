@@ -74,18 +74,27 @@ class App extends Component{
   }
 
   componentDidMount(){
-
-    if(window.location.pathname !== '/' && window.location.pathname !== '/notfound' && window.location.pathname !== '/forget'){
+    if(window.location.pathname !== '/' && window.location.pathname !== '/notfound'
+                                && window.location.pathname !== '/forget'
+                                && window.location.pathname !== '/register'){
       this.setState({
         front: false,
         userId: window.location.pathname.split("/")[2]
-      })
+      }, () => {
+            axios.get( http+'/api/social/' + this.state.userId)
+            .then(response => {
+              this.setState({socialLinks: response.data.socials},
+                 () =>{this.setState({slinksAlert: false}) })
+            })
+            .catch(function(error) {
+                console.log(error);
+            })} )
     }else{
       this.setState({
         front: true,
       })
     }
-    
+
     const check = http+'/api/users/check';
     axios.get(check, { withCredentials: true })
       .then(response => {
@@ -112,14 +121,7 @@ class App extends Component{
       })
     }
 
-    axios.get( http+'/api/social/' + this.state.userId)
-      .then(response => {
-        this.setState({socialLinks: response.data.socials},
-           () =>{this.setState({slinksAlert: false}) })
-      })
-      .catch(function(error) {
-          console.log(error);
-      })
+
   };
 
   handleSignClose = () => {
@@ -409,12 +411,14 @@ class App extends Component{
 
                   </Nav.Item>
                   <Nav.Item>
-                    <Button block onClick={this.handleQRShow}>QR Code</Button>
+                    <Button className = "qr-button"
+                            variant = "outline-dark"
+                            onClick={this.handleQRShow}>QR Code</Button>
 
                   </Nav.Item>
                   { this.state.slinksAlert? (<div></div>):
                   (
-                  <Nav.Item>
+                  <Nav.Item className = "profile-socials">
                     <Image onClick= {event => window.location.href = Facebook}
                             src = {iconFacebook}
                             style = {{width: "2vmax", height: "2vmax"}} />
