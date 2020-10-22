@@ -294,16 +294,10 @@ class App extends Component{
                     <Nav.Link href={"/home/"+this.state.userId}>About me</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
-                    <Nav.Link href="/">Experience</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item class = "nav-item">
                       <Nav.Link href="/">Achievements</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
                       <Nav.Link href={'/timeline/'+this.state.userId}>Timeline</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item class = "nav-item">
-                      <Nav.Link href="/">Contact me</Nav.Link>
                     </Nav.Item>
                     </Nav>
                     <Nav>

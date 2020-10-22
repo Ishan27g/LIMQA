@@ -25,7 +25,7 @@ import sampleImage1 from '../../Image/sampleImage1.jpg';
 import sampleImage2 from '../../Image/sampleImage2.jpg';
 import sampleImage3 from '../../Image/sampleImage3.jpg';
 import uploadIcon from '../../Image/uploadIcon.png';
-import uploadDocuments from '../../Image/uploadDocuments.svg';
+import uploadDocuments from '../../Image/uploadDocuments.png';
 import uploadCoverImageBg from '../../Image/bioContentBackground.jpg';
 import {pathForRequest} from '../http.js';
 let http = pathForRequest();
@@ -420,7 +420,9 @@ class ManagePage extends Component {
 
       let tagsMap = tags.map(tags =>{
           return(
+            <Row>
               <Tag note={tags.name}/>
+            </Row>
           )
       })
 
@@ -604,12 +606,16 @@ class ManagePage extends Component {
                          ref={docInput=>this.docInput=docInput}/>
                         <Image
                          src={uploadDocuments}
-                         style = {{height: "15vmax", width: "10vmax", backgroundColor: "rgba(200,200,200,0.4)"}}
+                         style = {{height: "11max", width: "9vmax"}}
                          onClick = {() => this.docInput.click()}/>
                         </Row>
                         <Row>
-
+                          <p>Upload Documents</p>
                         </Row>
+                        <Row>
+                          <Button variant="info" block onClick={this.handleTagShow}>Manage tags</Button>
+                        </Row>
+
                       </Col>
 
                       <Col xs={6} md={8}>
@@ -659,7 +665,7 @@ class ManagePage extends Component {
                       </Col>
                   </Row>
                   <Row style={{marginTop: '1rem'}}>
-                    <Button variant="info" block onClick={this.handleTagShow}>Manage tags</Button>
+
                   </Row>
                   <Row className = "mt-3">
                     <input
@@ -670,11 +676,13 @@ class ManagePage extends Component {
                     <Button block variant="info" onClick = {() => this.docInput.click()}>
                       Select Background Gradient</Button>
                   </Row>
+
                   <Modal
                     show={this.state.tagManagement}
                     onHide={this.handleTagClose}
                     backdrop="static"
                     keyboard={false}
+                    dialogClassName ="manage-tags"
                   >
                   <Modal.Header closeButton>
                     <Modal.Title>Tags Management</Modal.Title>
@@ -694,7 +702,7 @@ class ManagePage extends Component {
                         </Form>
 
                   ):(
-                    <Container>
+                    <Container fluid className = "manage-tags-list">
                       {tagsMap}
                     </Container>
                   )}
