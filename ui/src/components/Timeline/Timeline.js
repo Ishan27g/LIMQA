@@ -98,10 +98,7 @@ class Timeline extends Component {
     }
 
   render (){
-<<<<<<< HEAD
-=======
     var date;
->>>>>>> parent of 00af65e7... Revert "Merge remote-tracking branch 'origin/front-end' into abhi-ui-fixes"
     var docCreationEvents = this.state.userDocuments.map(event => {
       var docTags = event.tags.map(tag =>{
           return (<Tag note = {tag.name}/>)
