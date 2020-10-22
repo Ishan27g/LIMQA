@@ -356,6 +356,7 @@ class App extends Component{
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
               </Form.Group>
+              <a href = "/forget">Forgot password?</a>
               {
                 ((this.state.loginInfo === false) ||
                     (this.state.Alertpassword === true)) ?
