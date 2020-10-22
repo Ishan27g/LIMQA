@@ -15,6 +15,8 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 import profile from '../../Image/profile.png';
 import iconFacebook from '../../Image/Facebook.png';
@@ -62,6 +64,12 @@ class AccountView extends Component {
       alertUsername: false,
       alertEmail: false,
       alertSEmail: false,
+      alertInstagram: false,
+      alertFacebook: false,
+      alertLinkedin: false,
+      alertGithub: false,
+      alertWechat: false,
+
       userid: this.props.match.params.id
     }
     this.handleEditingOpen = this.handleEditingOpen.bind(this);
@@ -185,7 +193,15 @@ class AccountView extends Component {
         instagram:tempinstagram,
         facebook: tempfacebook,
         github: tempgithub,
-        wechat: tempwechat
+        wechat: tempwechat,
+        alertUsername: false,
+        alertEmail: false,
+        alertSEmail: false,
+        alertInstagram: false,
+        alertFacebook: false,
+        alertLinkedin: false,
+        alertGithub: false,
+        alertWechat: false
       })
     })
     .catch(function(error) {
@@ -226,66 +242,82 @@ class AccountView extends Component {
   }
 
   onChangeInstagram(e){
-    if (e.target.value.length > 0){
+    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+
+    if (regex_url.test(e.target.value)){
       this.setState({
-        UpdateInstagram: e.target.value
+        UpdateInstagram: e.target.value,
+        alertInstagram: false
       });
     }else{
       var ins = this.state.instagram;
       this.setState({
-        UpdateInstagram: ins
+        UpdateInstagram: ins,
+        alertInstagram: true
       });
     }
   }
 
   onChangeLinkedin(e){
+    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
     console.log(e.target.value);
-    if (e.target.value.length > 0){
+    if (regex_url.test(e.target.value)){
       this.setState({
-        UpdateLinkedin: e.target.value
+        UpdateLinkedin: e.target.value,
+        alertLinkedin: false
       });
     }else{
       var lin = this.state.linkedin;
       this.setState({
-        UpdateLinkedin: lin
+        UpdateLinkedin: lin,
+        alertLinkedin: true
       });
     }
   }
 
   onChangeFacebook(e){
-    if (e.target.value.length > 0){
+    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+    if (regex_url.test(e.target.value)){
       this.setState({
-        UpdateFacebook: e.target.value
+        UpdateFacebook: e.target.value,
+        alertFacebook: false
       });
     }else{
       var face = this.state.facebook;
       this.setState({
-        UpdateFacebook: face
+        UpdateFacebook: face,
+        alertFacebook: true
       });
     }
   }
   onChangeGithub(e){
-    if (e.target.value.length > 0){
+    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+    if (regex_url.test(e.target.value)){
       this.setState({
-        UpdateGithub: e.target.value
+        UpdateGithub: e.target.value,
+        alertGithub: false
       });
     }else{
       var git = this.state.facebook;
       this.setState({
-        UpdateGithub: git
+        UpdateGithub: git,
+        alertGithub: true
       });
     }
   }
 
   onChangeWechat(e){
-    if (e.target.value.length > 0){
+    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+    if (regex_url.test(e.target.value)){
       this.setState({
-        UpdateWechat: e.target.value
+        UpdateWechat: e.target.value,
+        alertWechat: false
       });
     }else{
       var we = this.state.facebook;
       this.setState({
-        UpdateWechat: we
+        UpdateWechat: we,
+        alertWechat: true
       });
     }
   }
@@ -343,30 +375,89 @@ class AccountView extends Component {
   }
 
     render(){
-        var socials = [{name: "Linkedin",url: this.state.linkedin, onChange: this.onChangeLinkedin },
-                       {name: "Instagram",url: this.state.instagram, onChange: this.onChangeInstagram},
-                       {name: "Facebook",url: this.state.facebook,  onChange: this.onChangeFacebook},
-                       {name: "GitHub",url: this.state.GitHub,  onChange: this.onChangeGithub},
-                       {name: "WeChat",url: this.state.WeChat,  onChange: this.onChangeWechat}];
+        var socials = [{name: "Linkedin",url: this.state.linkedin,
+                        alert: this.state.alertLinkedin, onChange: this.onChangeLinkedin,
+                        imgsrc: iconLinkedin},
+                       {name: "Instagram",url: this.state.instagram,
+                        alert: this.state.alertInstagram, onChange: this.onChangeInstagram,
+                        imgsrc: iconInstagram},
+                       {name: "Facebook",url: this.state.facebook,
+                        alert: this.state.alertFacebook, onChange: this.onChangeFacebook,
+                        imgsrc: iconFacebook},
+                       {name: "GitHub",url: this.state.GitHub,
+                        alert: this.state.alertGithub, onChange: this.onChangeGithub,
+                        imgsrc: iconGithub},
+                       {name: "WeChat",url: this.state.WeChat,
+                        alert: this.state.alertWechat, onChange: this.onChangeWechat,
+                        imgsrc: iconWechat}
+                      ];
 
         var editSocials = socials.map(social =>{
           return(
             <ListGroup.Item>
-                <h4>{social.name}</h4>
-                <FormControl
-                  placeholder = "URL"
-                  defaultValue = {social.url}
-                  aria-label= {social.name + '-url'}
-                  aria-describedby="basic-addon1"
-                  onChange={social.onChange}/>
+                <InputGroup>
+                  <InputGroup.Prepend>
+                    <InputGroup.Text>{social.name}</InputGroup.Text>
+                  </InputGroup.Prepend>
+                  <FormControl
+                    size = "lg"
+                    placeholder = "URL"
+                    defaultValue = {social.url}
+                    aria-label= {social.name + '-url'}
+                    aria-describedby="basic-addon1"
+                    onChange={social.onChange}/ >
+                    <InputGroup.Append>
+                      <OverlayTrigger placement="top"
+                                      delay={{ hide: 100 }}
+                                      overlay={
+                                        <Tooltip>Redirect</Tooltip>
+                                      }>
+                        <Button variant = "light">
+                          <img src = {social.imgsrc}
+                               alt = {'icon ' + social.name}
+                               style ={{width: "25px", height:"25px"}}
+                               onClick = { () => {window.location.href = social.url}}
+                               />
+                        </Button>
+                      </OverlayTrigger>
+                      { social.alert? (
+                        <InputGroup.Text className = "bg-danger"></InputGroup.Text>
+                      ):(<InputGroup.Text className = "bg-success"></InputGroup.Text>)
+                    }
+                    </InputGroup.Append>
+                </InputGroup>
             </ListGroup.Item>
           )
         });
         var displaySocials = socials.map(social =>{
           return(
             <ListGroup.Item>
-                <h4>{social.name}</h4>
-                <p>&nbsp;&nbsp;URL: <span><label>{social.url}</label></span></p>
+                <InputGroup>
+                  <InputGroup.Prepend>
+                    <InputGroup.Text>{social.name}</InputGroup.Text>
+                  </InputGroup.Prepend>
+                  <FormControl
+                    size = "lg"
+                    defaultValue = {social.url}
+                    aria-describedby="basic-addon1"
+                    disabled
+                    / >
+                  <InputGroup.Append>
+                    <OverlayTrigger placement="top"
+                                    delay={{ hide: 50 }}
+                                    overlay={
+                                      <Tooltip>Redirect</Tooltip>
+                                    }>
+                      <Button variant = "light">
+                        <img src = {social.imgsrc}
+                             alt = {'icon ' + social.name}
+                             style ={{width: "25px", height:"25px"}}
+                             onClick = { () => {window.location.href = social.url}}
+                             />
+                      </Button>
+                    </OverlayTrigger>
+                  </InputGroup.Append>
+                </InputGroup>
             </ListGroup.Item>
           )
         });

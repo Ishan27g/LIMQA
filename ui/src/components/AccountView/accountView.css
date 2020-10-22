@@ -107,12 +107,12 @@
   margin-right: 10%;
 }
 
-.acc-social-list > .list-group-item,
+.acc-social-list > .list-group-item > .input-group,
 .acc-contact-list > .list-group-item{
   width: 40vmax;
 }
 
-.acc-social-list > .list-group-item > p,
+.acc-social-list > .list-group-item > .input-group > p,
 .acc-contact-list > .list-group-item > p{
   color: black;
   font-size: 1.25em;
@@ -120,13 +120,13 @@
   text-align: left;
 }
 
-.acc-social-list > .list-group-item > h4,
+.acc-social-list > .list-group-item > .input-group > h4,
 .acc-contact-list > .list-group-item > h4{
   font-family: "Roboto", sans-serif;
   font-size: 1.25em;
   font-weight: bolder;
 }
-.acc-social-list > .list-group-item > p > span:hover{
+.acc-social-list > .list-group-item > .input-group > p > span:hover{
   color: blue;
 }
 
