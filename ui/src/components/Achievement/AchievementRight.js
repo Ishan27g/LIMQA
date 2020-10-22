@@ -1,9 +1,8 @@
-import { render } from '@testing-library/react';
-import React from 'react';
+import React, {Component} from "react";
 import Card from "react-bootstrap/Card";
-import docIcon from './documents.png';
+import docIcon from '../../Image/documents.png';
 
-class CardRight extends React.Component{
+class CardRight extends Component{
   constructor(props){
     super(props);
     this.state = {
@@ -13,14 +12,15 @@ class CardRight extends React.Component{
     dateAchieved: this.props.dateAchieved
     }
   }
-  render(){   
+
+  render(){
     return (
       <Card style={{
-          position:'relative', 
-          backgroundColor: '#F5F5DC', 
+          position:'relative',
+          backgroundColor: '#F5F5DC',
           width: "1000px",
-          height: "250px", 
-          top: "50px", 
+          height: "250px",
+          top: "50px",
           margin: "0 auto"}}>
       <Card.Img src={docIcon} style={{position:'relative', left:"740px", top:"50px"}} width="120" height="150"/>
       <Card.Body>
@@ -35,8 +35,8 @@ class CardRight extends React.Component{
         </Card.Text>
       </Card.Body>
       </Card>
-    );          
+    );
   }
 }
-  
+
 export default CardRight;

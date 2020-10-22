@@ -17,6 +17,7 @@ import AccountView from './components/AccountView/accountView.js';
 import Landing from './components/LandingPage/landingPage.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import Timeline from './components/Timeline/Timeline.js';
+import Achievements from './components/Achievement/Achievement.js';
 import NotFound from './components/NotFound.js';
 import Register from './components/SignUp/register.js';
 import singleDoc from './components/documentViewer/singleDoc.js';
@@ -284,7 +285,7 @@ class App extends Component{
                     <Nav.Link href={"/home/"+this.state.userId}>About me</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
-                      <Nav.Link href="/">Achievements</Nav.Link>
+                      <Nav.Link href={"/Achievements/"+this.state.userId}>Achievements</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
                       <Nav.Link href={'/timeline/'+this.state.userId}>Timeline</Nav.Link>
@@ -321,6 +322,7 @@ class App extends Component{
             <Route path="/register" component={Register}/>
             <Route path="/home/:id" component={Home}/>
             <Route path="/timeline/:id" component={Timeline}/>
+            <Route path="/Achievements/:id" component={Achievements}/>
             <Route path="/documents/:id" component={singleDoc}/>
             <Route path="/search/:id" component={Search}/>
             <Route path="/forget" component={forgetPassEmail}/>

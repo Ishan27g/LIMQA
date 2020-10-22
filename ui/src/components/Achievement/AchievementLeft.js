@@ -1,8 +1,9 @@
-import React from 'react';
-import Card from "react-bootstrap/Card";
-import docIcon from './documents.png';
+import React, {Component} from "react";
 
-class CardLeft extends React.Component{
+import Card from "react-bootstrap/Card";
+import docIcon from '../../Image/documents.png';
+
+class CardLeft extends Component{
   constructor(props){
     super(props);
     this.state = {
@@ -12,13 +13,13 @@ class CardLeft extends React.Component{
     dateAchieved: this.props.dateAchieved
     }
   }
-  render(){   
+  render(){
     return (
       <Card style={{
-          position:'relative', 
-          backgroundColor: '#d9b382', 
+          position:'relative',
+          backgroundColor: '#d9b382',
           width: "1000px",
-          height: "250px", 
+          height: "250px",
           top: "50px",
           margin: "0 auto",
           marginBottom: "30px"}}>
@@ -29,14 +30,14 @@ class CardLeft extends React.Component{
         {this.state.description}
         </Card.Text>
         <Card.Text style = {{position:'relative', left:"270px", bottom:"160px", "font-size":"20px" }}>
-        <b>Institution</b>: {this.state.institution} 
+        <b>Institution</b>: {this.state.institution}
         <br/>
         <b>Date</b>: {this.state.dateAchieved}
         </Card.Text>
       </Card.Body>
       </Card>
-    );          
+    );
   }
 }
-  
+
 export default CardLeft;

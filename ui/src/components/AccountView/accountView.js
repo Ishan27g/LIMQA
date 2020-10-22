@@ -242,7 +242,7 @@ class AccountView extends Component {
   }
 
   onChangeInstagram(e){
-    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/;
 
     if (regex_url.test(e.target.value)){
       this.setState({
@@ -259,7 +259,7 @@ class AccountView extends Component {
   }
 
   onChangeLinkedin(e){
-    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/;
     console.log(e.target.value);
     if (regex_url.test(e.target.value)){
       this.setState({
@@ -276,7 +276,7 @@ class AccountView extends Component {
   }
 
   onChangeFacebook(e){
-    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/;
     if (regex_url.test(e.target.value)){
       this.setState({
         UpdateFacebook: e.target.value,
@@ -291,7 +291,7 @@ class AccountView extends Component {
     }
   }
   onChangeGithub(e){
-    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/;
     if (regex_url.test(e.target.value)){
       this.setState({
         UpdateGithub: e.target.value,
@@ -307,7 +307,7 @@ class AccountView extends Component {
   }
 
   onChangeWechat(e){
-    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+    var regex_url = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/;
     if (regex_url.test(e.target.value)){
       this.setState({
         UpdateWechat: e.target.value,
