@@ -17,6 +17,11 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 
 import profile from '../../Image/profile.png';
+import iconFacebook from '../../Image/Facebook.png';
+import iconInstagram from '../../Image/Instagram.png';
+import iconLinkedin from '../../Image/Linkedin.png';
+import iconGithub from '../../Image/Github.png';
+import iconWechat from '../../Image/Wechat.png';
 
 import {pathForRequest} from '../http.js';
 let http = pathForRequest();
@@ -34,6 +39,8 @@ class AccountView extends Component {
       linkedin: '',
       instagram: '',
       facebook: '',
+      github: '',
+      wechat: '',
       officeAddress: '',
       SupplymentaryEmail: '',
       mobile: '',
@@ -45,10 +52,16 @@ class AccountView extends Component {
       UpdateLinkedin: '',
       UpdateInstagram: '',
       UpdateFacebook: '',
+      UpdateGithub: '',
+      UpdateWechat: '',
       UpdateOfficeAddress: '',
       UpdataSupplymentaryEmail: '',
       updataMobile: '',
 
+      /*Alerts*/
+      alertUsername: false,
+      alertEmail: false,
+      alertSEmail: false,
       userid: this.props.match.params.id
     }
     this.handleEditingOpen = this.handleEditingOpen.bind(this);
@@ -58,6 +71,8 @@ class AccountView extends Component {
     this.onChangeLinkedin = this.onChangeLinkedin.bind(this);
     this.onChangeInstagram = this.onChangeInstagram.bind(this);
     this.onChangeFacebook = this.onChangeFacebook.bind(this);
+    this.onChangeGithub = this.onChangeGithub.bind(this);
+    this.onChangeWechat = this.onChangeWechat.bind(this);
     this.onChangeOfficeAddress = this.onChangeOfficeAddress.bind(this);
     this.onChangeSupplymentaryEmail = this.onChangeSupplymentaryEmail.bind(this);
     this.onChangeMobile = this.onChangeMobile.bind(this);
@@ -82,6 +97,7 @@ class AccountView extends Component {
         updateName: res.data.user.name,
         media: res.data.user.social
       })
+      console.log(this.state.media);
       var i
       for(i=0; i<this.state.media.length; i++){
         if (this.state.media[i].name === 'Facebook'){
@@ -100,6 +116,18 @@ class AccountView extends Component {
           this.setState({
             linkedin: this.state.media[i].url,
             UpdateLinkedin: this.state.media[i].url
+          })
+        }
+        if (this.state.media[i].name === 'Github'){
+          this.setState({
+            github: this.state.media[i].url,
+            UpdateGithub: this.state.media[i].url
+          })
+        }
+        if (this.state.media[i].name === 'Wechat'){
+          this.setState({
+            wechat: this.state.media[i].url,
+            UpdateWechat: this.state.media[i].url
           })
         }
       }
@@ -127,6 +155,10 @@ class AccountView extends Component {
     form.append('Facebookurl', this.state.UpdateFacebook);
     form.append('InstagramName', 'Instagram');
     form.append('Instagramurl', this.state.UpdateInstagram);
+    form.append('GithubName', 'Github');
+    form.append('Githuburl', this.state.UpdateGithub);
+    form.append('WechatName', 'Wechat');
+    form.append('Wechaturl', this.state.UpdateWechat);
     form.append('Username', this.state.updateName);
     const updateUrl = http+'/api/accSetting/'+ this.state.userid;
     axios.put(updateUrl, form, { withCredentials: true })
@@ -140,6 +172,8 @@ class AccountView extends Component {
       var templinkedin = this.state.UpdateLinkedin;
       var tempinstagram =this.state.UpdateInstagram;
       var tempfacebook = this.state.UpdateFacebook;
+      var tempgithub = this.state.UpdateGithub;
+      var tempwechat =this.state.UpdateWechat;
 
       this.setState({
         email: tempemail,
@@ -150,6 +184,8 @@ class AccountView extends Component {
         linkedin: templinkedin,
         instagram:tempinstagram,
         facebook: tempfacebook,
+        github: tempgithub,
+        wechat: tempwechat
       })
     })
     .catch(function(error) {
@@ -159,14 +195,17 @@ class AccountView extends Component {
   }
 
   onChangeEmail(e){
-    if (e.target.value.length > 0){
+    var regex_email = /^[\w-.]+@([\w-]+.)+[\w-]{2,4}$/;
+    if (regex_email.test(e.target.value)){
       this.setState({
-        updateEmail: e.target.value
+        updateEmail: e.target.value,
+        alertEmail: false
       });
     }else{
       var email = this.state.email;
       this.setState({
-        updateEmail: email
+        updateEmail: email,
+        alertEmail: true
       });
     }
   }
@@ -174,12 +213,14 @@ class AccountView extends Component {
   onChangeName(e){
     if (e.target.value.length > 0){
       this.setState({
-        updateName: e.target.value
+        updateName: e.target.value,
+        alertUsername: false
       });
     }else{
       var name = this.state.name;
       this.setState({
-        updateName: name
+        updateName: name,
+        alertUsername: true
       });
     }
   }
@@ -223,7 +264,31 @@ class AccountView extends Component {
       });
     }
   }
+  onChangeGithub(e){
+    if (e.target.value.length > 0){
+      this.setState({
+        UpdateGithub: e.target.value
+      });
+    }else{
+      var git = this.state.facebook;
+      this.setState({
+        UpdateGithub: git
+      });
+    }
+  }
 
+  onChangeWechat(e){
+    if (e.target.value.length > 0){
+      this.setState({
+        UpdateWechat: e.target.value
+      });
+    }else{
+      var we = this.state.facebook;
+      this.setState({
+        UpdateWechat: we
+      });
+    }
+  }
   onChangeOfficeAddress(e){
     if (e.target.value.length > 0){
       this.setState({
@@ -238,14 +303,17 @@ class AccountView extends Component {
   }
 
   onChangeSupplymentaryEmail(e){
-    if (e.target.value.length > 0){
+    var regex_email = /^[\w-.]+@([\w-]+.)+[\w-]{2,4}$/;
+    if (regex_email.test(e.target.value)){
       this.setState({
-        UpdataSupplymentaryEmail: e.target.value
+        UpdataSupplymentaryEmail: e.target.value,
+        alertSEmail: false
       });
     }else{
       var smail = this.state.SupplymentaryEmail;
       this.setState({
-        UpdataSupplymentaryEmail: smail
+        UpdataSupplymentaryEmail: smail,
+        alertSEmail: true
       });
     }
   }
@@ -275,6 +343,34 @@ class AccountView extends Component {
   }
 
     render(){
+        var socials = [{name: "Linkedin",url: this.state.linkedin, onChange: this.onChangeLinkedin },
+                       {name: "Instagram",url: this.state.instagram, onChange: this.onChangeInstagram},
+                       {name: "Facebook",url: this.state.facebook,  onChange: this.onChangeFacebook},
+                       {name: "GitHub",url: this.state.GitHub,  onChange: this.onChangeGithub},
+                       {name: "WeChat",url: this.state.WeChat,  onChange: this.onChangeWechat}];
+
+        var editSocials = socials.map(social =>{
+          return(
+            <ListGroup.Item>
+                <h4>{social.name}</h4>
+                <FormControl
+                  placeholder = "URL"
+                  defaultValue = {social.url}
+                  aria-label= {social.name + '-url'}
+                  aria-describedby="basic-addon1"
+                  onChange={social.onChange}/>
+            </ListGroup.Item>
+          )
+        });
+        var displaySocials = socials.map(social =>{
+          return(
+            <ListGroup.Item>
+                <h4>{social.name}</h4>
+                <p>&nbsp;&nbsp;URL: <span><label>{social.url}</label></span></p>
+            </ListGroup.Item>
+          )
+        });
+
         return(
             <body>
               {this.state.editVersion ? (
@@ -290,8 +386,8 @@ class AccountView extends Component {
                       <Col className = "edit-image">
                         <Container>
                           <Row className = "edit-image-display">
-                          <Image src={this.state.profileImage} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "10vmax", width: "10vmax"}}/>
-                     
+                          <Image src={this.state.profileImage} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle /*style = {{height: "10vmax", width: "10vmax"}}*//>
+
                           </Row>
                         </Container>
                       </Col>
@@ -305,7 +401,10 @@ class AccountView extends Component {
                               aria-describedby="basic-addon1"
                               onChange={this.onChangeName}/>
                             <InputGroup.Append>
-                              <InputGroup.Text id = "username-success" className = "bg-success"></InputGroup.Text>
+                              { this.state.alertUsername ? (
+                                <InputGroup.Text className = "bg-danger"></InputGroup.Text>
+                              ):(<InputGroup.Text className = "bg-success"></InputGroup.Text>)
+                            }
                             </InputGroup.Append>
                           </InputGroup>
                         </Row>
@@ -318,8 +417,10 @@ class AccountView extends Component {
                               aria-describedby="basic-addon1"
                               onChange={this.onChangeEmail}/>
                             <InputGroup.Append>
-                              <InputGroup.Text id = "username-success" className = "bg-success"></InputGroup.Text>
-                            </InputGroup.Append>
+                              { this.state.alertEmail ? (
+                                <InputGroup.Text className = "bg-danger"></InputGroup.Text>
+                              ):(<InputGroup.Text className = "bg-success"></InputGroup.Text>)
+                            }                            </InputGroup.Append>
                           </InputGroup>
                         </Row>
                       </Col>
@@ -339,33 +440,7 @@ class AccountView extends Component {
                       </Row>
                       <Row className = "edit-social justify-content-left-center">
                           <ListGroup  className = "edit-social-list">
-                            <ListGroup.Item>
-                                <h4>Linkedin</h4>
-                                <FormControl
-                                  placeholder = "URL"
-                                  defaultValue = {this.state.linkedin}
-                                  aria-label= "linkedin-url"
-                                  aria-describedby="basic-addon1"
-                                  onChange={this.onChangeLinkedin}/>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                <h4>Instagram</h4>
-                                  <FormControl
-                                    placeholder = "URL"
-                                    defaultValue = {this.state.instagram}
-                                    aria-label= "instagram-url"
-                                    aria-describedby="basic-addon1"
-                                    onChange={this.onChangeInstagram}/>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                <h4>Facebook</h4>
-                                  <FormControl
-                                    placeholder = "URL"
-                                    defaultValue = {this.state.facebook}
-                                    aria-label= "facebook-url"
-                                    aria-describedby="basic-addon1"
-                                    onChange={this.onChangeFacebook}/>
-                            </ListGroup.Item>
+                            {editSocials}
                           </ListGroup>
                       </Row>
                     <Row className = "edit-contact-header">
@@ -401,8 +476,11 @@ class AccountView extends Component {
                                   aria-describedby="basic-addon1"
                                   onChange={this.onChangeSupplymentaryEmail}/>
                                 <InputGroup.Append>
-                                  <InputGroup.Text id = "username-success" className = "bg-success"></InputGroup.Text>
-                                </InputGroup.Append>
+                                  { this.state.alertSEmail ? (
+                                    <InputGroup.Text className = "bg-danger"></InputGroup.Text>
+                                  ):(<InputGroup.Text className = "bg-success"></InputGroup.Text>)
+                                }
+                              </InputGroup.Append>
                               </InputGroup>
                         </ListGroup.Item>
                         </ListGroup>
@@ -420,8 +498,8 @@ class AccountView extends Component {
                   <Row className = "acc-info justify-content-md-center">
 
                     <Col className = "acc-image">
-                     <Image src={this.state.profileImage} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "10vmax", width: "10vmax"}}/>
-                       
+                     <Image src={this.state.profileImage} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle /*style = {{height: "10vmax", width: "10vmax"}}*//>
+
                     </Col>
 
                     <Col className = "acc-basic-info">
@@ -449,18 +527,7 @@ class AccountView extends Component {
                     </Row>
                     <Row className = "acc-social justify-content-left-center">
                         <ListGroup  className = "acc-social-list">
-                          <ListGroup.Item>
-                              <h4>Linkedin</h4>
-                              <p>&nbsp;&nbsp;URL: <span><label>{this.state.linkedin}</label></span></p>
-                          </ListGroup.Item>
-                          <ListGroup.Item>
-                              <h4>Instagram</h4>
-                              <p>&nbsp;&nbsp;URL: <span><label>{this.state.instagram}</label></span></p>
-                          </ListGroup.Item>
-                          <ListGroup.Item>
-                              <h4>Facebook</h4>
-                              <p>&nbsp;&nbsp;URL: <span><label>{this.state.facebook}</label></span></p>
-                          </ListGroup.Item>
+                          {displaySocials}
                         </ListGroup>
                     </Row>
                   <Row className = "acc-contact-header">

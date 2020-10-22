@@ -263,6 +263,10 @@ class App extends Component{
                     className="mr-2">
                     <img alt="Login" src = {loginButton}/>
                   </Button>
+                  <Button variant ="outline-dark"
+                          onClick = {() => {window.location.href = "/register"}}>
+                          Register Now!
+                  </Button>
                 </Navbar>
               </header>
             </div>
