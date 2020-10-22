@@ -10,8 +10,7 @@ WORKDIR /usr/src/app
 # Install Dependencies
 COPY package*.json ./
 
-RUN npm i nodemailer
-RUN npm install https
+Run npm i nodemailer
 RUN npm i
 
 # Copy app source code

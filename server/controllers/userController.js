@@ -28,8 +28,8 @@ const getUsers = async (req, res, next) => {
         populate: {
           path: 'tags',
           model: 'Tag'
-        },
-      }).populate("social").populate("tags").populate("photos");
+        } 
+      }).populate("social").populate("tags");
   } catch (err) {
     const error = new HttpError(
       'Fetching users failed please try again later.',
@@ -116,7 +116,7 @@ const signup = async (req, res, next) => {
     owner : createdUser.id,
     profilePhoto: "",
     coverImages: "",
-    bgImage: ""
+    bgImage: ["#182848", "#4B6CB7"]
   })
   try {
     await createdPhotos.save();

@@ -10,7 +10,6 @@ services:
       - '3000:3000'
     volumes:
       - ./server/uploads:/usr/src/uploads
-      - ./.sslCerts:/usr/src/app/.sslCerts
 
 volumes:
   uploads:
