@@ -311,10 +311,10 @@ class singleDoc extends Component {
     var path = this.state.filePath;
 
     // To access database one use this route
-    //let docPath = require("/usr/src/uploads/images/"+path);
+    let docPath = require("/usr/src/uploads/images/"+path);
 
     // for local testing use this routes
-    let docPath = require("./"+path);
+    //let docPath = require("./"+path);
 
     return(
         <body>
