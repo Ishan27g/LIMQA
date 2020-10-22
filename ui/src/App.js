@@ -75,7 +75,7 @@ class App extends Component{
 
   componentDidMount(){
     var path = window.location.pathname.split("/")[1];
-    if(path!=='' && path!=='register' && path !== 'reset' && path !== 'notfound' && path!== 'forget'){
+    if(path !=='' && path!=='register' && path !== 'reset' && path !== 'notfound' && path!== 'forget'){
       this.setState({
         showQR: true,
         front: false,
@@ -84,7 +84,7 @@ class App extends Component{
             axios.get( http+'/api/social/' + this.state.userId)
             .then(response => {
               this.setState({socialLinks: response.data.socials},
-                 () =>{this.setState({slinksAlert: false}) })
+                 () =>{this.setState({slinksAlert: false})})
             })
             .catch(function(error) {
                 console.log(error);
@@ -230,24 +230,25 @@ class App extends Component{
 
   render(){
     if(this.state.slinksAlert === false){
-    var socials = this.state.socialLinks;
+      var socials = this.state.socialLinks;
 
-    var Linkedin = socials.filter( social =>
-        {return social.name === "Linkedin"}
-    )[0].url;
-    var Facebook = socials.filter( social =>
-        {return social.name === "Facebook"}
-    )[0].url;
-    var Instagram = socials.filter(social =>
-          {return social.name === "Instagram"}
-    )[0].url;
-    var Github = socials.filter(social =>
-          {return social.name === "Github"}
-    )[0].url;
-    var WeChat = socials.filter(social =>
-          {return social.name === "Wechat"}
-    )[0].url;
-  }
+      var Linkedin = socials.filter( social =>
+          {return social.name === "Linkedin"}
+      )[0].url;
+      var Facebook = socials.filter( social =>
+          {return social.name === "Facebook"}
+      )[0].url;
+      var Instagram = socials.filter(social =>
+            {return social.name === "Instagram"}
+      )[0].url;
+      var Github = socials.filter(social =>
+            {return social.name === "Github"}
+      )[0].url;
+      var WeChat = socials.filter(social =>
+            {return social.name === "Wechat"}
+      )[0].url;
+    }
+
     return (
       <div>
           {this.state.front && !this.state.login? (
