@@ -129,7 +129,7 @@ class Landing extends Component{
     });
 
     return (
-      <body>
+      <div style={{overflowY:"scroll"}}> 
         <Container className = "app-body">
           <Row className = "landing-header">
               Discover New Talents
@@ -156,7 +156,7 @@ class Landing extends Component{
           </Fade>
           </Row>
         </Container>
-      </body>
+      </div>
     )
   }
 }

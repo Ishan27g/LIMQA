@@ -87,7 +87,7 @@ class Search extends Component{
     if(e.target.innerHTML === 'Tag'){
       this.setState({
         searchMethod: "Tag",
-        search: "",
+        search: "Default;",
         searching: false
       })
     }
@@ -128,17 +128,19 @@ class Search extends Component{
       var tempTag = this.state.search.split(";");
       tempTag.pop();
       if (tempTag.includes(e.target.innerHTML)){
-        var index = tempTag.indexOf(e.target.innerHTML);
-        tempTag.splice(index, 1);
-        var i;
-        var tempString = tempTag[0];
-        for(i=1; i<tempTag.length; i++){
-          tempString = tempString + ";" + tempTag[i]
+        if(e.target.innerHTML !== "Default"){
+          var index = tempTag.indexOf(e.target.innerHTML);
+          tempTag.splice(index, 1);
+          var i;
+          var tempString = tempTag[0];
+          for(i=1; i<tempTag.length; i++){
+            tempString = tempString + ";" + tempTag[i]
+          }
+          tempString = tempString + ";"
+          this.setState({
+            search: tempString
+          })
         }
-        tempString = tempString + ";"
-        this.setState({
-          search: tempString
-        })
       }else{
         this.setState({
           searching: true,
@@ -146,7 +148,6 @@ class Search extends Component{
         })
       }
     }
-
   }
 
 render(){
