@@ -14,11 +14,11 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
-import Tag from './../Tags/Tag.js';
+import Modal from 'react-bootstrap/Modal';
 
+import Tag from './../Tags/Tag.js';
 import CoverImage from '../CoverImage/coverImage.js';
 import Docview from '../documentViewer/doc.js';
-
 import docImage from '../../Image/documents.png';
 import profile from '../../Image/profile.png';
 import sampleImage1 from '../../Image/sampleImage1.jpg';
@@ -55,6 +55,7 @@ class ManagePage extends Component {
           tags: [],
           newTag: false,
           tagName: "",
+          tagManagement: false,
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -75,6 +76,8 @@ class ManagePage extends Component {
         this.createNewTag = this.createNewTag.bind(this);
         this.onChangeTagName = this.onChangeTagName.bind(this);
         this.onChangeTag = this.onChangeTag.bind(this);
+        this.handleTagShow = this.handleTagShow.bind(this);
+        this.handleTagClose = this.handleTagClose.bind(this);    
     }
 
     componentDidMount(){
@@ -313,28 +316,30 @@ class ManagePage extends Component {
     }
 
     createNewTag(){
-      const obj = {
-        name: this.state.tagName,
-        color: 'green'
-      }
-      const tagUrl = http+'/api/tags/'+this.state.userid;
-      axios.post(tagUrl, obj, { withCredentials: true })
-      .then( res => {
-        console.log(res);
-        const gettagUrl = http+'/api/tags/' + this.state.userid;
-        axios.get(gettagUrl)
-        .then(res =>{
-          this.setState({
-            tags: res.data
+      if(this.state.tagName !== ""){
+        const obj = {
+          name: this.state.tagName,
+          color: 'green'
+        }
+        const tagUrl = http+'/api/tags/'+this.state.userid;
+        axios.post(tagUrl, obj, { withCredentials: true })
+        .then( res => {
+          console.log(res);
+          const gettagUrl = http+'/api/tags/' + this.state.userid;
+          axios.get(gettagUrl)
+          .then(res =>{
+            this.setState({
+              tags: res.data
+            })
+          })
+          .catch(function(error) {
+            console.log(error);
           })
         })
         .catch(function(error) {
           console.log(error);
-        })
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+        });
+      }
     }
 
     intersection() {
@@ -391,6 +396,18 @@ class ManagePage extends Component {
           })
         }
       }
+    }
+
+    handleTagShow(){
+      this.setState({
+        tagManagement: true
+      })
+    }
+
+    handleTagClose(){
+      this.setState({
+        tagManagement: false
+      })
     }
 
 
@@ -641,34 +658,9 @@ class ManagePage extends Component {
                       </Container>
                       </Col>
                   </Row>
-                </Container>
-              </div>
-              <div class = "document-arena">
-                <h2 style = {{marginBottom: "3vmax"}}>Tags Management</h2>
-                <Container>
-                  <Row style = {{height: "10vmax"}}>
-                    <Col>
-                      {this.state.newTag? (
-                        <Form>
-                          <Form.Group controlId="formBasicEmail">
-                            <Form.Control type="tag" placeholder="Enter new tag name" onChange={this.onChangeTagName}/>
-                          </Form.Group>
-                          <Button variant="primary" type="submit" onClick={this.createNewTag}>
-                            Create
-                          </Button>
-                        </Form>
-                        
-                      ):(
-                        <Button variant="info" onClick={this.handleAddTagShow}>Add new tag</Button>
-                      )}
-                    </Col>
-                    <Col>
-                      {tagsMap}
-                    </Col>
+                  <Row style={{marginTop: '1rem'}}> 
+                    <Button variant="info" block onClick={this.handleTagShow}>Manage tags</Button>
                   </Row>
-
-                </Container>
-                <Container>
                   <Row className = "mt-3">
                     <input
                           type="file"
@@ -678,9 +670,45 @@ class ManagePage extends Component {
                     <Button block variant="info" onClick = {() => this.docInput.click()}>
                       Select Background Gradient</Button>
                   </Row>
+                  <Modal
+                    show={this.state.tagManagement}
+                    onHide={this.handleTagClose}
+                    backdrop="static"
+                    keyboard={false}
+                  >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Tags Management</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                  {this.state.newTag? (
+                        <Form>
+                          <Form.Group controlId="formBasicEmail">
+                            <Form.Control type="tag" placeholder="Enter new tag name" onChange={this.onChangeTagName}/>
+                          </Form.Group>
+                          <Button variant="primary" type="submit" onClick={this.createNewTag}>
+                            Create
+                          </Button>{' '}
+                          <Button variant="primary" type="submit" onClick={this.handleAddTagClose}>
+                            Close
+                          </Button>
+                        </Form>
+                        
+                  ):(
+                    <Container>
+                      {tagsMap}
+                    </Container>
+                  )}
+                    
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={this.handleTagClose}>
+                      Close
+                    </Button>
+                    <Button variant="primary" onClick={this.handleAddTagShow}>Add new Tag</Button>
+                  </Modal.Footer>
+                </Modal>
                 </Container>
               </div>
-
             </body>
         )
     }
