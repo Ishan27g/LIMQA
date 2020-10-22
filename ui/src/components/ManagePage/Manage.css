@@ -90,5 +90,14 @@
 .upload-doc-input > .row{
   display: flex;
   justify-content: center;
+  padding-right: 2vmax;
+}
+
+.manage-tags-list > .row{
+  padding: 0.5vmax;
+  padding-left: 0;
+}
+
+.manage-tags > .modal-footer{
   border: 1px solid red;
 }

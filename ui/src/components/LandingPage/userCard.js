@@ -17,7 +17,6 @@ let http = pathForRequest();
 class UserCard extends Component{
 
     render(){
-        const profileImage = http+'/api/user/profilePhoto'+this.props.id;
         var socials = this.props.social;
 
         var Linkedin = socials.filter( social =>

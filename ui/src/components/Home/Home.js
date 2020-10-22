@@ -12,8 +12,6 @@ import Container from 'react-bootstrap/Container';
 import CoverImage from '../CoverImage/coverImage.js';
 import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
-import Navbar from 'react-bootstrap/Navbar';
-import Form from 'react-bootstrap/Form';
 
 import docImage from '../../Image/documents.png';
 import sampleImage1 from '../../Image/sampleImage1.jpg';
@@ -92,7 +90,7 @@ class Home extends Component {
         });
 
         var hDoc = this.state.documents.filter(function(document){
-            return document.highlighted == true;
+            return document.highlighted === true;
         });
 
         let highlightedDoc = hDoc.map(doc =>{
@@ -182,16 +180,6 @@ class Home extends Component {
 
             </div>
           </body>
-          <footer>
-            <Navbar
-              bg = "light" variant = "light"
-              expand = "lg" sticky ="bottom"
-              className = "copyright">
-              <Form>
-                <Form.Text> Product of team LiMQA ©</Form.Text>
-              </Form>
-            </Navbar>
-          </footer>
         </div>
         )
     }

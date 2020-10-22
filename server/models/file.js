@@ -8,7 +8,7 @@ const fileSchema = new Schema({
     path: {type : String, required: true}, 
     owner:  {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},     
     dateCreated: {type : Date, default: Date.now},
-    dateModified: {type : Date},
+    dateModified: {type : Date, default: Date.now},
     highlighted: {type: Boolean, required: true},
     achivement: {type: Boolean, required: true},
     institution: {type : String},
