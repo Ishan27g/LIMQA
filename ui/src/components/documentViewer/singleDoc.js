@@ -14,6 +14,8 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
+import Spinner from 'react-bootstrap/Spinner';
+
 import doc from '../../Image/documents.png';
 import { DatePicker } from 'react-rainbow-components';
 import FileViewer from 'react-file-viewer';
@@ -71,8 +73,9 @@ class singleDoc extends Component {
             docId: this.props.match.params.id,
             /*All Tags Created*/
             allTags: [],
-            fileType: "pdf",
-            filePath: "testfile.pdf",
+            fileType: "",
+            filePath: "",
+            loaded: false,
         }
 
     }
@@ -102,6 +105,9 @@ class singleDoc extends Component {
                 fileType: parts[parts.length-1]
 
             },()=>{
+                this.setState({
+                    loaded: true
+                })
                 console.log(this.state.filePath);
                 const tagUrl = http+'/api/tags/' + this.state.owner;
                 axios.get(tagUrl)
@@ -309,12 +315,7 @@ class singleDoc extends Component {
     })
 
     var path = this.state.filePath;
-
-    // To access database one use this route
-    //let docPath = require("/usr/src/uploads/images/"+path);
-
-    // for local testing use this routes
-    let docPath = require("./"+path);
+    // change line 501 {require("/usr/src/uploads/images/"+path)}
 
     return(
         <body>
@@ -499,13 +500,20 @@ class singleDoc extends Component {
                     <Row>
                         <Col className = "docview-image" xs ={5} md = {5}>
                         {/*Change Image Src to document preview  <Image src ={doc} style = {{height:"100%", width: "100%"}}/>*/ }
-                        <FileViewer
-                        fileType={this.state.fileType}
-                        filePath={docPath}
-                        errorComponent={CustomErrorComponent}
-                        onError={this.onError}
-                        key={this.props.match.params.id}
-                        />
+                        {this.state.loaded? (
+                            <FileViewer
+                            fileType={this.state.fileType}
+                            filePath={require("./"+path)}
+                            errorComponent={CustomErrorComponent}
+                            onError={this.onError}
+                            key={this.props.match.params.id}
+                            />
+                        ):(
+                            <Spinner animation="border" variant="secondary" />
+                        )
+
+                        }
+
                         </Col>
                         <Col className = "docview-properties">
                         <Row>
