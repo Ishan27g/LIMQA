@@ -24,6 +24,7 @@ services:
     #env_file: server/.env
     volumes:
     - ./uploads:/usr/src/uploads
+    - ./.sslCerts:/usr/src/app/.sslCerts
     networks:
       - ePortfolio_nw
         

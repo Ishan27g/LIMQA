@@ -7,12 +7,15 @@ const dns = require('dns');
 const os = require('os');
 const passport = require("passport");
 const session = require("express-session");
+const https = require('https')
 dotenv.config();
 
-
-//init mongoDB
-//require('./src/db');
-
+var privateKey = fs.readFileSync('.sslCerts/privkey.pem')
+var certificate = fs.readFileSync('.sslCerts/fullchain.pem')
+var serverConfig = {
+	key : privateKey,
+	cert : certificate
+};
 
 const PORT = 8080;
 
@@ -113,7 +116,7 @@ function connect(){
         .connect(url, { useNewUrlParser: true, useUnifiedTopology: true , useFindAndModify: false})
     .then(() => {
         console.log("Connected to mongoDB")
-        app.listen(PORT, () => {
+        https.createServer(serverConfig,app).listen(PORT, () => {
             dns.lookup(os.hostname(), function (err, add, fam){
                 console.log(`Express server listening on `+ add + `:${PORT}`)
             })
