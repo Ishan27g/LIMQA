@@ -7,15 +7,12 @@ const dns = require('dns');
 const os = require('os');
 const passport = require("passport");
 const session = require("express-session");
-const https = require('https')
 dotenv.config();
 
-var privateKey = fs.readFileSync('.sslCerts/privkey.pem')
-var certificate = fs.readFileSync('.sslCerts/fullchain.pem')
-var serverConfig = {
-	key : privateKey,
-	cert : certificate
-};
+
+//init mongoDB
+//require('./src/db');
+
 
 const PORT = 8080;
 
@@ -51,8 +48,13 @@ app.use((req, res, next) => {
 
 // set the respond headers to make sure the communication between backend and browser works.
 app.use((req, res, next) => {
+<<<<<<< HEAD
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     //res.setHeader('Access-Control-Allow-Origin', 'https://limqa.eastus.cloudapp.azure.com:3000');
+=======
+//    res.setHeader('Access-Control-Allow-Origin', 'http://13.82.97.219:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'http://limqa.eastus.cloudapp.azure.com:3000');
+>>>>>>> parent of e34b8740... Enabled HTTPS using letsEncrypt cert
     res.setHeader(
       'Access-Control-Allow-Headers',
       'Origin, X-Requested-With, Content-Type, Accept, Authorization'
@@ -116,7 +118,7 @@ function connect(){
         .connect(url, { useNewUrlParser: true, useUnifiedTopology: true , useFindAndModify: false})
     .then(() => {
         console.log("Connected to mongoDB")
-        https.createServer(serverConfig,app).listen(PORT, () => {
+        app.listen(PORT, () => {
             dns.lookup(os.hostname(), function (err, add, fam){
                 console.log(`Express server listening on `+ add + `:${PORT}`)
             })
