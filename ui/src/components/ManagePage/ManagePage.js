@@ -5,6 +5,8 @@ import './Manage.css';
 
 import axios from "axios";
 import Button from 'react-bootstrap/Button';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import Card from 'react-bootstrap/Card';
 import Carousel from "react-bootstrap/Carousel";
 import Col from 'react-bootstrap/Col';
@@ -15,6 +17,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
 import Modal from 'react-bootstrap/Modal';
+import Alert from 'react-bootstrap/Alert';
 
 import Tag from './../Tags/Tag.js';
 import CoverImage from '../CoverImage/coverImage.js';
@@ -55,7 +58,9 @@ class ManagePage extends Component {
           tags: [],
           newTag: false,
           tagName: "",
+          tagColor: "",
           tagManagement: false,
+          alertCreateTag: false
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -78,6 +83,7 @@ class ManagePage extends Component {
         this.onChangeTag = this.onChangeTag.bind(this);
         this.handleTagShow = this.handleTagShow.bind(this);
         this.handleTagClose = this.handleTagClose.bind(this);
+        this.tagColorChange = this.tagColorChange.bind(this);
     }
 
     componentDidMount(){
@@ -311,7 +317,8 @@ class ManagePage extends Component {
 
     onChangeTagName(e){
       this.setState({
-        tagName: e.target.value
+        tagName: e.target.value,
+        alertCreateTag: false
       })
     }
 
@@ -319,7 +326,7 @@ class ManagePage extends Component {
       if(this.state.tagName !== ""){
         const obj = {
           name: this.state.tagName,
-          color: 'green'
+          color: this.state.tagColor
         }
         const tagUrl = http+'/api/tags/'+this.state.userid;
         axios.post(tagUrl, obj, { withCredentials: true })
@@ -339,6 +346,8 @@ class ManagePage extends Component {
         .catch(function(error) {
           console.log(error);
         });
+      } else {
+        this.setState({alertCreateTag: true});
       }
     }
 
@@ -410,6 +419,12 @@ class ManagePage extends Component {
       })
     }
 
+    tagColorChange(variant){
+
+      this.setState({
+        tagColor: variant
+      });
+    }
 
     render(){
       var doc = {doc: this.state.updateDoc, id: this.state.userid};
@@ -421,7 +436,8 @@ class ManagePage extends Component {
       let tagsMap = tags.map(tags =>{
           return(
             <Row>
-              <Tag note={tags.name}/>
+              <Tag note={tags.name}
+                   variant ={tags.color}/>
             </Row>
           )
       })
@@ -430,16 +446,17 @@ class ManagePage extends Component {
       let tagsButtonMap = tags.map(tags =>{
         tagNames.push(tags.name);
           return(
-              <Button onClick={this.onChangeTag}>{tags.name}</Button>
+              <Button onClick={this.onChangeTag} variant = {tags.color}className = "mt-sm-1 mr-sm-1">{tags.name}</Button>
           )
       })
 
       let docCards = searchDocs.map(card =>{
         return(
-          <Col sm='4'>
+          <Col sm='6' className = "mb-sm-3 justify-content-center">
             <div>
-              <Card className='documentsCard' >
-                <Card.Img variant='top' src={docImage}/>
+              <Card className='document-card' bg = "dark" text = "light">
+                <Card.Img variant='top' src={docImage}
+                          style ={{alignSelf: "center", width: "auto", height: "200px"}}/>
                 <Card.Body onClick = {event =>  window.location.href = '/documents/'+card._id }>
                 <Card.Title >
                   {card.name}
@@ -498,12 +515,14 @@ class ManagePage extends Component {
 
     let showDocs = searchDocs.map( searchedDoc => {
         return (
-            <Col sm='4' >
+            <Col sm='6' className = "mb-sm-3 justify-content-center">
                 <div>
-                <Card className='documentsCard' >
-                    <Card.Img variant='top' src={docImage}/>
-                    <Card.Body>
-                    <Card.Title onClick = {event =>  window.location.href = '/documents/'+ searchedDoc._id }>
+                <Card bg = "dark" text = "light" >
+                  <Card.Img variant='top' src={docImage}
+                            style ={{alignSelf: "center", width: "auto",
+                                    height: "250px"}}/>
+                    <Card.Body onClick = {event =>  window.location.href = '/documents/'+ searchedDoc._id }>
+                    <Card.Title>
                         {searchedDoc.name}
                     </Card.Title>
                     </Card.Body>
@@ -521,7 +540,13 @@ class ManagePage extends Component {
           </Carousel.Item>
         )
       });
-
+      var colorMap = [  'primary','secondary','success',  'danger', 'warning',
+                        'info', 'light','dark'].map(variant => {
+                          return(
+                            <ToggleButton size = "lg" className ="mr-sm-2"
+                                          variant = {variant} value = {variant}>
+                            </ToggleButton>)
+                        });
       return(
         <body>
         <div class = "manage-cover-image">
@@ -597,7 +622,7 @@ class ManagePage extends Component {
                 <h2 style = {{marginBottom: "3vmax"}}>Document Arena</h2>
                 <Container>
                   <Row>
-                      <Col className = "upload-doc-input">
+                      <Col className = "upload-doc-input justify-content-center">
                         <Row>
                         <input
                          type="file"
@@ -606,13 +631,13 @@ class ManagePage extends Component {
                          ref={docInput=>this.docInput=docInput}/>
                         <Image
                          src={uploadDocuments}
-                         style = {{height: "11max", width: "9vmax"}}
+                         style = {{height: "200px", width: "200px"}}
                          onClick = {() => this.docInput.click()}/>
                         </Row>
                         <Row>
                           <p>Upload Documents</p>
                         </Row>
-                        <Row>
+                        <Row className = "mt-sm-4">
                           <Button variant="info" block onClick={this.handleTagShow}>Manage tags</Button>
                         </Row>
 
@@ -620,43 +645,49 @@ class ManagePage extends Component {
 
                       <Col xs={6} md={8}>
 
-                      <Container fluid style={{height:'45rem'}}>
-                        <Row>
-                        <Col style = {{textAlign: "center"}}>
-                            <Form inline>
-                                {this.state.filter === "Title" ? (
-                                  <FormControl type="text" placeholder="Search for documents by names" className="mr-sm-2" value = {this.state.search} onChange={this.onChangeSearch}/>
-                                ):(
-                                  <FormControl type="text" placeholder="Search for documents by tags" className="mr-sm-2" value = {this.state.search} onChange={this.onChangeSearch} readOnly/>
-                                )}
+                      <Container fluid style={{height:'40rem'}}>
+                        <Row className = "justify-content-center">
+                          <Form inline className = "document-arena-search">
+                              {this.state.filter === "Title" ? (
+                                <FormControl  type="text"
+                                              placeholder="Search for documents by names"
+                                              className="mr-sm-2 w-75"
+                                              value = {this.state.search}
+                                              onChange={this.onChangeSearch}/>
+                              ):(
+                                <FormControl type="text"
+                                             placeholder="Search for documents by tags"
+                                             className="mr-sm-2 w-75"
+                                             defaultValue = "Select documents by tags" disabled/>
+                              )}
 
-                                <Dropdown>
-                                  <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                      {this.state.filter}
-                                  </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item onClick={this.handleFilterOnTitle}>Title</Dropdown.Item>
-                                    <Dropdown.Item onClick={this.handleFilterOnTag}>Tags</Dropdown.Item>
-                                </Dropdown.Menu>
-                                </Dropdown>
-                            </Form>
-                          </Col>
-                          {this.state.filter === "Title" ? (
-                            <Row></Row>
-                          ):(
-                            <Row>
-                              {tagsButtonMap}
-                            </Row>
-                          )}
-
+                              <Dropdown>
+                                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                    {this.state.filter}
+                                </Dropdown.Toggle>
+                              <Dropdown.Menu>
+                                  <Dropdown.Item onClick={this.handleFilterOnTitle}>Title</Dropdown.Item>
+                                  <Dropdown.Item onClick={this.handleFilterOnTag}>Tags</Dropdown.Item>
+                              </Dropdown.Menu>
+                              </Dropdown>
+                          </Form>
                         </Row>
-                          <Container fluid style={{overflow:"auto", height:'40rem', marginTop: '3rem'}}>
+                        {this.state.filter === "Title" ? (
+                          <Row className = "mt-sm-2 mb-sm-4"></Row>
+                        ):(
+                          <Row className = "mt-sm-1 justify-content-center">
+                            {tagsButtonMap}
+                          </Row>
+                        )}
+                          <Container fluid
+                                     style={{overflow:"auto",
+                                              height:'40rem'}}>
                             {this.state.searching ? (
-                              <Row>
+                              <Row className = "document-arena-row">
                                 {showDocs}
                               </Row>
                             ):(
-                              <Row>
+                              <Row className = "document-arena-row">
                                 {docCards}
                               </Row>
                             )}
@@ -693,12 +724,31 @@ class ManagePage extends Component {
                           <Form.Group controlId="formBasicEmail">
                             <Form.Control type="tag" placeholder="Enter new tag name" onChange={this.onChangeTagName}/>
                           </Form.Group>
-                          <Button variant="primary" type="submit" onClick={this.createNewTag}>
-                            Create
-                          </Button>{' '}
-                          <Button variant="primary" type="submit" onClick={this.handleAddTagClose}>
-                            Close
-                          </Button>
+                          <Form.Group>
+                            <Form.Text>Pick a Color</Form.Text>
+                          </Form.Group>
+                          <Form.Group>
+                            <ToggleButtonGroup type="radio" name="options" defaultValue="primary" onChange = {this.tagColorChange}>
+                              {colorMap}
+                            </ToggleButtonGroup>
+                          </Form.Group>
+                          <Form.Group >
+                            <Button variant="primary" type="submit" onClick={this.createNewTag}>
+                              Create
+                            </Button>{' '}
+                            <Button variant="warning" type="submit" onClick={this.handleAddTagClose}>
+                              Return
+                            </Button>
+                          </Form.Group>
+                          {
+                            this.state.createNewTag?(
+                              <Alert block variant = "danger">
+                                Name your Tag!
+                              </Alert>
+                            ):(
+                              <div></div>
+                            )
+                          }
                         </Form>
 
                   ):(
@@ -709,7 +759,7 @@ class ManagePage extends Component {
 
                   </Modal.Body>
                   <Modal.Footer>
-                    <Button variant="secondary" onClick={this.handleTagClose}>
+                    <Button variant="danger" onClick={this.handleTagClose}>
                       Close
                     </Button>
                     <Button variant="primary" onClick={this.handleAddTagShow}>Add new Tag</Button>

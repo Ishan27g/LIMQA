@@ -358,11 +358,13 @@ class App extends Component{
                   </Alert>
                 ) : (<section></section>)
               }
-              <Form.Group controlId="formBasicPassword">
+              <Form.Group   controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
               </Form.Group>
-              <a href = "/forget">Forgot password?</a>
+              <Form.Group  controlId ="formforgotPassword" style = {{textAlign: "right"}}>
+                <a href = "/forget">Forgot password?</a>
+              </Form.Group>
               {
                 ((this.state.loginInfo === false) ||
                     (this.state.Alertpassword === true)) ?
@@ -377,9 +379,6 @@ class App extends Component{
           <Modal.Footer>
             <Button size="lg" block variant="primary" onClick={this.Adminlogin}>
               Login
-            </Button>
-            <Button size="lg" block variant="primary" onClick={event =>  window.location.href='/register'}>
-              Register
             </Button>
           </Modal.Footer>
         </Modal>

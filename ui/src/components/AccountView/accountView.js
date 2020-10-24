@@ -24,6 +24,9 @@ import iconInstagram from '../../Image/Instagram.png';
 import iconLinkedin from '../../Image/Linkedin.png';
 import iconGithub from '../../Image/Github.png';
 import iconWechat from '../../Image/Wechat.png';
+import iconOA from '../../Image/officeAddress.png';
+import iconMobile from '../../Image/mobile.png';
+import iconEmail from '../../Image/email.png';
 
 import {pathForRequest} from '../http.js';
 let http = pathForRequest();
@@ -90,7 +93,7 @@ class AccountView extends Component {
   componentDidMount(){
 
     const accurl = http+'/api/accSetting/'+ this.state.userid;
-    axios.get(accurl, { withCredentials: true })
+    axios.get(accurl)
     .then(res => {
       this.setState({
         email: res.data.user.email,
@@ -502,7 +505,7 @@ class AccountView extends Component {
                         <Row md="auto" className = "edit-email">
                           <InputGroup size ="lg">
                             <FormControl
-                              placeholder = "email"
+                              placeholder ="email"
                               defaultValue = {this.state.email}
                               aria-label="email"
                               aria-describedby="basic-addon1"
@@ -538,43 +541,79 @@ class AccountView extends Component {
                       <h2>Contact Information</h2>
                     </Row>
                     <Row className = "edit-contact justify-content-left-center">
-                        <ListGroup className = "edit-contact-list">
-                          <ListGroup.Item>
-                            <h4>Office Address</h4>
-                              <FormControl
-                                placeholder = "Unit, Street, Suburb, City"
-                                defaultValue = {this.state.officeAddress}
-                                aria-label= "off-address"
-                                aria-describedby="basic-addon1"
-                                onChange={this.onChangeOfficeAddress}/>
-                        </ListGroup.Item>
+                      <ListGroup className = "edit-contact-list">
                         <ListGroup.Item>
-                            <h4>Mobile</h4>
-                              <FormControl
-                                placeholder = "+61 (420) 111111"
-                                defaultValue = {this.state.mobile}
-                                aria-label= "linkedin-url"
-                                aria-describedby="basic-addon1"
-                                onChange={this.onChangeMobile}/>
+                          <InputGroup>
+                            <InputGroup.Prepend>
+                              <InputGroup.Text>Office Adress</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <FormControl
+                              size = "lg"
+                              placeholder = "Unit, Street, Suburb, City"
+                              defaultValue = {this.state.officeAddress}
+                              onChange={this.onChangeOfficeAddress}
+                              aria-describedby="basic-addon1"
+                              />
+                            <InputGroup.Append>
+                              <Button variant = "outline-light">
+                              <img src = {iconOA}
+                                   alt = "officeAddress"
+                                   style = {{width: "25px", height:"25px"}}
+                                   />
+                               </Button>
+                            </InputGroup.Append>
+                          </InputGroup>
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        <InputGroup>
+                          <InputGroup.Prepend>
+                            <InputGroup.Text>Mobile Number</InputGroup.Text>
+                          </InputGroup.Prepend>
+                          <FormControl
+                            size = "lg"
+                            defaultValue = {this.state.mobile}
+                            placeholder = "+61 (420) 111111"
+                            aria-describedby="basic-addon1"
+                            onChange={this.onChangeMobile}
+
+                            />
+                          <InputGroup.Append>
+                            <Button variant = "outline-light">
+                              <img src = {iconMobile}
+                                   alt = "Mobile"
+                                   style = {{width: "25px", height:"25px"}}
+                                   />
+                            </Button>
+                          </InputGroup.Append>
+                        </InputGroup>
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        <InputGroup>
+                          <InputGroup.Prepend>
+                            <InputGroup.Text>Alternate Email</InputGroup.Text>
+                          </InputGroup.Prepend>
+                          <FormControl
+                            size = "lg"
+                            defaultValue = {this.state.SupplymentaryEmail}
+                            aria-describedby="basic-addon1"
+                            placeholder = "email"
+                            onChange={this.onChangeSupplymentaryEmail}
+                            />
+                          <InputGroup.Append>
+                            <Button variant = "outline-light">
+                              <img src = {iconEmail}
+                                 alt = "A-Email"
+                                 style = {{width: "25px", height:"25px"}}
+                                 />
+                             </Button>
+                             { this.state.alertSEmail ? (
+                               <InputGroup.Text className = "bg-danger"></InputGroup.Text>
+                             ):(<InputGroup.Text className = "bg-success"></InputGroup.Text>)
+                           }
+                          </InputGroup.Append>
+                        </InputGroup>
                         </ListGroup.Item>
-                        <ListGroup.Item>
-                            <h4>Supplymentary E-mail</h4>
-                              <InputGroup>
-                                <FormControl
-                                  placeholder = "email"
-                                  defaultValue = {this.state.SupplymentaryEmail}
-                                  aria-label="email"
-                                  aria-describedby="basic-addon1"
-                                  onChange={this.onChangeSupplymentaryEmail}/>
-                                <InputGroup.Append>
-                                  { this.state.alertSEmail ? (
-                                    <InputGroup.Text className = "bg-danger"></InputGroup.Text>
-                                  ):(<InputGroup.Text className = "bg-success"></InputGroup.Text>)
-                                }
-                              </InputGroup.Append>
-                              </InputGroup>
-                        </ListGroup.Item>
-                        </ListGroup>
+                      </ListGroup>
                     </Row>
                   </Container>
                 </div>
@@ -625,18 +664,71 @@ class AccountView extends Component {
                     <h2>Contact Information</h2>
                   </Row>
                   <Row className = "acc-contact justify-content-left-center">
+
                       <ListGroup className = "acc-contact-list">
                         <ListGroup.Item>
-                          <h4>Office Address</h4>
-                          <p>&nbsp;&nbsp;<span><label>{this.state.officeAddress}</label></span></p>
+                          <InputGroup>
+                            <InputGroup.Prepend>
+                              <InputGroup.Text>Office Adress</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <FormControl
+                              size = "lg"
+                              defaultValue = {this.state.officeAddress}
+                              aria-describedby="basic-addon1"
+                              disabled
+                              />
+                            <InputGroup.Append>
+                              <Button variant = "outline-light">
+                              <img src = {iconOA}
+                                   alt = "officeAddress"
+                                   style = {{width: "25px", height:"25px"}}
+                                   />
+                               </Button>
+                            </InputGroup.Append>
+                          </InputGroup>
                       </ListGroup.Item>
                       <ListGroup.Item>
-                          <h4>Mobile</h4>
-                          <p>&nbsp;&nbsp;<span><label>{this.state.mobile}</label></span></p>
+                        <InputGroup>
+                          <InputGroup.Prepend>
+                            <InputGroup.Text>Mobile Number</InputGroup.Text>
+                          </InputGroup.Prepend>
+                          <FormControl
+                            size = "lg"
+                            defaultValue = {this.state.mobile}
+                            aria-describedby="basic-addon1"
+                            disabled
+                            />
+                          <InputGroup.Append>
+                            <Button variant = "outline-light">
+                              <img src = {iconMobile}
+                                   alt = "Mobile"
+                                   style = {{width: "25px", height:"25px"}}
+                                   />
+                            </Button>
+                          </InputGroup.Append>
+                        </InputGroup>
                       </ListGroup.Item>
                       <ListGroup.Item>
-                          <h4>Supplymentary E-mail</h4>
-                            <p>&nbsp;&nbsp;<span><label>{this.state.SupplymentaryEmail}</label></span></p>
+                        <InputGroup>
+                          <InputGroup.Prepend>
+                            <InputGroup.Text>Alternate Email</InputGroup.Text>
+                          </InputGroup.Prepend>
+                          <FormControl
+                            size = "lg"
+                            defaultValue = {this.state.SupplymentaryEmail}
+                            aria-describedby="basic-addon1"
+                            disabled
+                            />
+                          <InputGroup.Append>
+                            <Button variant = "outline-light">
+                              <img src = {iconEmail}
+                                 alt = "A-Email"
+                                 style = {{width: "25px", height:"25px"}}
+                                 />
+                             </Button>
+
+                          </InputGroup.Append>
+                        </InputGroup>
                       </ListGroup.Item>
                       </ListGroup>
                   </Row>

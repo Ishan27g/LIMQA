@@ -52,17 +52,17 @@ class Search extends Component{
   }
 
   onChangeSearch(e){
-    if (e.target.value === ""){	
-      this.setState({	
-        search: e.target.value,	
-        searching: false	
-      });	
-    } else {	
-      this.setState({	
-        search: e.target.value,	
-        searching: true	
-      });	
-    }	
+    if (e.target.value === ""){
+      this.setState({
+        search: e.target.value,
+        searching: false
+      });
+    } else {
+      this.setState({
+        search: e.target.value,
+        searching: true
+      });
+    }
 
   }
 
@@ -96,13 +96,13 @@ class Search extends Component{
   intersection() {
     var result = [];
     var lists;
-    
+
     if(arguments.length === 1) {
       lists = arguments[0];
     } else {
       lists = arguments;
     }
-    
+
     for(var i = 0; i < lists.length; i++) {
       var currentList = lists[i];
       for(var y = 0; y < currentList.length; y++) {
@@ -150,13 +150,13 @@ class Search extends Component{
   }
 
 render(){
-  
+
   var tags = this.state.tags;
   var tagNames = [];
   let tagsMap = tags.map(tags =>{
     tagNames.push(tags.name);
       return(
-          <Button onClick={this.onChangeTag}>{tags.name}</Button>
+          <Button className = "mt-sm-1 mr-sm-1"onClick={this.onChangeTag} variant = {tags.color}>{tags.name}</Button>
       )
   })
 
@@ -206,8 +206,8 @@ render(){
 
       }
     }
-    
-      
+
+
     let showDocs = searchDocs.map( searchedDoc => {
         return (
             <Col sm='3' >
@@ -274,7 +274,7 @@ render(){
                   {tagsMap}
                   </Row>
                 )}
-               
+
                 {this.state.searching ? (
                     <Container>
                         <div class="row justify-content-md-center" style={{marginTop:"2rem"}}>

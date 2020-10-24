@@ -47,7 +47,7 @@ class Timeline extends Component {
 
     getUsername(){
       const accurl = http + '/api/accSetting/' + this.state.userid;
-      axios.get(accurl, {withCredentials: true })
+      axios.get(accurl)
       .then(response => {
         var local_counter = this.state.counter + 1;
         this.setState({username: response.data.user.name},() => {this.setState({counter:  local_counter})});

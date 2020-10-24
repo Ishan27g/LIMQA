@@ -11,8 +11,8 @@ router.get('/bioinfo/:uid',  manageController.getBioinfo);
 router.put('/bioinfo/:uid', ensureAuthenticated, [ check("bioinfo").not().isEmpty(),
                                                     check("bioinfo").isLength({max: 100}) ], manageController.updateBioinfo);
 
-router.get('/accSetting/:uid', ensureAuthenticated, manageController.getAcc);
-// expect form data 
+router.get('/accSetting/:uid', manageController.getAcc);
+// expect form data
 router.put('/accSetting/:uid', ensureAuthenticated, fileUpload.single('profileimg'), manageController.updateAcc);
 
 // document related routes below.
@@ -42,14 +42,14 @@ router.put('/social/:uid/:socialId', ensureAuthenticated, manageController.updat
 router.delete('/social/:uid/:socialId', ensureAuthenticated, manageController.deleteSocialLink);
 
 // create a new tag for a user
-/* json payload 
-    {"name":"testTag4","color":"black"} 
+/* json payload
+    {"name":"testTag4","color":"black"}
 */
 router.post('/tags/:uid', ensureAuthenticated, tagsController.addTagsForUser);
 
 // create a new tag and link to 1 document
 /* json payload
-    {"name":"testTag3","color":"green"} 
+    {"name":"testTag3","color":"green"}
 */
 router.post('/tags/:uid/:documentId', ensureAuthenticated, tagsController.addTagsToUserFile);
 
