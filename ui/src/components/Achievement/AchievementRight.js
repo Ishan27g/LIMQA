@@ -15,23 +15,17 @@ class CardRight extends Component{
 
   render(){
     return (
-      <Card style={{
-          position:'relative',
-          backgroundColor: '#F5F5DC',
-          width: "1000px",
-          height: "250px",
-          top: "50px",
-          margin: "0 auto"}}>
-      <Card.Img src={docIcon} style={{position:'relative', left:"740px", top:"50px"}} width="120" height="150"/>
+      <Card>
+      <Card.Img src={docIcon} style = {{width: "15vmax", height:"12vmax"}}/>
       <Card.Body>
-        <Card.Title style = {{position:'relative', left:"140px", bottom:"150px"}}><h2>{this.state.name}</h2></Card.Title>
-        <Card.Text style = {{position:'relative', left:"140px", bottom:"160px", "font-size":"20px", width:"590px" }}>
+        <Card.Title><h6>{this.state.name}</h6></Card.Title>
+        <Card.Text>
         {this.state.description}
         </Card.Text>
-        <Card.Text style = {{position:'relative', left:"140px", bottom:"160px", "font-size":"20px" }}>
-        <b>Institution</b>: {this.state.institution}
-        <br/>
-        <b>Date</b>: {this.state.dateAchieved}
+        <Card.Text>
+          <p>Institution</p>: {this.state.institution}
+          <br/>
+          <p>Date</p>: {this.state.dateAchieved}
         </Card.Text>
       </Card.Body>
       </Card>

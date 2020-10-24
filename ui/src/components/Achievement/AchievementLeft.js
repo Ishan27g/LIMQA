@@ -1,6 +1,8 @@
 import React, {Component} from "react";
-
-import Card from "react-bootstrap/Card";
+import './Achievement.css';
+import Row from "react-bootstrap/Row";
+import Col  from "react-bootstrap/Col";
+import Image from "react-bootstrap/Image";
 import docIcon from '../../Image/documents.png';
 
 class CardLeft extends Component{
@@ -15,27 +17,26 @@ class CardLeft extends Component{
   }
   render(){
     return (
-      <Card style={{
-          position:'relative',
-          backgroundColor: '#d9b382',
-          width: "1000px",
-          height: "250px",
-          top: "50px",
-          margin: "0 auto",
-          marginBottom: "30px"}}>
-      <Card.Img src={docIcon} style={{position:'relative', left:"140px", top:"50px"}} width="120" height="150"/>
-      <Card.Body>
-        <Card.Title style = {{position:'relative', left:"270px", bottom:"150px"}}><h2>{this.state.name}</h2></Card.Title>
-        <Card.Text style = {{position:'relative', left:"270px", bottom:"160px", "font-size":"20px", width: "590px" }}>
-        {this.state.description}
-        </Card.Text>
-        <Card.Text style = {{position:'relative', left:"270px", bottom:"160px", "font-size":"20px" }}>
-        <b>Institution</b>: {this.state.institution}
-        <br/>
-        <b>Date</b>: {this.state.dateAchieved}
-        </Card.Text>
-      </Card.Body>
-      </Card>
+          <Row>
+            <Col className = "ac-image" sm = {3}>
+              <Image src={docIcon} style = {{width: "10vmax", height:"14vmax"}}/>
+            </Col>
+            <Col sm = {7}>
+              <Row>
+                <h4>{this.state.name}</h4>
+              </Row>
+              <Row>
+                  <h5>{this.state.description}</h5>
+              </Row>
+              <Row>
+                <h5>Institution: {this.state.institution}</h5>
+              </Row>
+              <Row style ={{display: 'flex', alignItems: "center", justifyContent: "flex-start"}}>
+                <h5>Date: {this.state.dateAchieved}</h5>
+              </Row>
+
+            </Col>
+          </Row>
     );
   }
 }
