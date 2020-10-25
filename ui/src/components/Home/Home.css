@@ -66,11 +66,13 @@ p{
   font-size: 2em;
   font-family: 'Roboto', sans-serif;
   font-weight: bolder;
+  width: 70vw;
 }
 
 .card-body{
   background-color: rgba(180,180,180,0.5);
   height: 5vmax;
+  width: 70vw;
 }
 .welcome-sign{
   line-height: 2;

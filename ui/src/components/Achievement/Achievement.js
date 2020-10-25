@@ -1,8 +1,6 @@
-import { render } from '@testing-library/react';
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import Card from "react-bootstrap/Card";
 import CardLeft from './AchievementLeft';
 import CardRight from './AchievementRight';
 
@@ -28,7 +26,7 @@ class Achievements extends Component{
       .then(res =>{
           this.setState({
               documents: res.data.documents,
-          })
+          },() => {console.log(this.state.documents)}) 
       })
       .catch(function(error) {
           console.log(error);
@@ -47,20 +45,22 @@ class Achievements extends Component{
         counter = 1;
         return (
           <CardLeft name={doc.name} description={doc.description} institution={doc.Institution} dateAchieved={doc.dateAchieved} />
-      )
+      );
         }
       else {
         counter = 2;
         return (
           <CardRight name={doc.name} description={doc.description} institution={doc.Institution} dateAchieved={doc.dateAchieved} />
-      )
+      );
       }
     });
 
     return (
-      <CardDeck>
+      <h1> Heloo </h1>
+      /*<CardDeck style = {{marginRight: "10vw", marginLeft: "10vw"}}>
       {achievementDoc}
       </CardDeck>
+      */
     );
   }
 }
