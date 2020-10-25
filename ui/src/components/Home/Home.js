@@ -5,7 +5,7 @@ import './Home.css';
 
 import axios from "axios";
 import Card from 'react-bootstrap/Card';
-import CardColumns from 'react-bootstrap/CardColumns';
+import CardDeck from 'react-bootstrap/CardDeck'
 import Carousel from "react-bootstrap/Carousel";
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -95,22 +95,24 @@ class Home extends Component {
 
         let highlightedDoc = hDoc.map(doc =>{
             return (
-                <Card className='documentsCard' >
-                    <Card.Img variant='top' src={docImage}/>
-                    <Card.Body onClick = {event =>  window.location.href = '/documents/'+doc._id }>
-                      <Card.Title>
+                <Card className='documentsCard'  style={{ height: "auto"}} bg = "light">
+                  <Image variant="top" src={docImage}
+                            style = {{width: "8vmax", height: "10vmax", alignSelf: "center"}}/>
+                  <Card.Body onClick = {event =>  window.location.href = '/documents/'+doc._id }
+                      style = {{fontSize: ".6em", color: "black", height: "7rem"}} >
                         {doc.name}
-                      </Card.Title>
-                    </Card.Body>
+                  </Card.Body>
                 </Card>
             )
         });
 
         var setDoc =[];
-        for(var i= 0; i < highlightedDoc.length; i=i+3){
+        for(var i= 0; i < highlightedDoc.length; i=i+2){
             setDoc.push(
-            <CardColumns variant = "flush">{highlightedDoc.slice(i,i+3)}</CardColumns>
-        )
+                <CardDeck>
+                    {highlightedDoc.slice(i,i+2)}
+                </CardDeck>
+            )
         }
 
         let displayHDoc = setDoc.map(docDeck => {
@@ -158,7 +160,7 @@ class Home extends Component {
                   </Col>
                 </Row>
                     {hDoc.length < 1 ? (
-                        <Carousel indicators ={false}>
+                        <Carousel indicators = {false}>
                         <Carousel.Item>
                             <img
                             className="d-block w-100"
@@ -172,7 +174,8 @@ class Home extends Component {
                         </Carousel.Item>
                         </Carousel>
                     ):(
-                        <Carousel indicators ={false} interval = {10000}>
+                        <Carousel indicators ={false} interval = {10000}
+                                  style = {{paddingLeft: "10vmax", paddingRight: "10vmax"}}>
                             {displayHDoc}
                         </Carousel>
                     )}

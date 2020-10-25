@@ -178,7 +178,7 @@ const signup = async (req, res, next) => {
       await volunteering.save();
       await Leadership.save();
       await Curricular.save();
-      await createdUser.tags.push(Default);
+      await createdUser.tags.push(All);
       await createdUser.tags.push(work);
       await createdUser.tags.push(Academic);
       await createdUser.tags.push(volunteering);
