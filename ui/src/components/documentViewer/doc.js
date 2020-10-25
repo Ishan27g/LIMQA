@@ -125,7 +125,9 @@ class DocMode extends Component {
 
   /* Leaves abruptly w/o saving Changes */
   handleAbruptLeave = () => {
-    this.setState({docEditor:false, docViewer: false, checkEdit: false});
+    this.setState({
+      docEditor:false, docViewer: false, checkEdit: false
+    },()=>{window.location.href = '/manage/'+ this.props.doc.id;});
   }
 
   handleAddTags = () =>{
