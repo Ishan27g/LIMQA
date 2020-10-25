@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from "react-bootstrap/Card";
-import docIcon from './documents.png';
-import './Card.css'
+import docIcon from '../../Image/documents.png';
+import './Achievement.css'
 class CardLeft extends React.Component{
   constructor(props){
     super(props);
@@ -15,10 +15,10 @@ class CardLeft extends React.Component{
   render(){
     return (
       <Card className="outline left" /*style={{
-          position:'relative', 
-          backgroundColor: '#d9b382', 
+          position:'relative',
+          backgroundColor: '#d9b382',
           width: "70vw",
-          height: "30vh", 
+          height: "30vh",
           top: "50px",
           margin: "0 auto",
           marginBottom: "30px"}}*/>
@@ -29,13 +29,13 @@ class CardLeft extends React.Component{
         {this.state.description}
         </Card.Text>
         <Card.Text className="misc" /*style = {{position:'relative', left:"20%", bottom:"15vh", "font-size":"2vh" }}*/>
-        <b>Institution</b>: {this.state.institution} 
+        <b>Institution</b>: {this.state.institution}
         <br/>
         <b>Date</b>: {this.state.dateAchieved}
         </Card.Text>
       </Card.Body>
       </Card>
-    );          
+    );
   }
 }
 

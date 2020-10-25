@@ -1,22 +1,29 @@
 import { render } from '@testing-library/react';
-import React from 'react';
-import Card from "react-bootstrap/Card";
-import CardLeft from './CardLeft';
-import docIcon from './documents.png';
-import CardDeck from "react-bootstrap/CardDeck";
-import CardRight from './CardRight';
+import React, { Component } from 'react';
+import axios from 'axios';
 
-class CardApp extends React.Component{
+import Card from "react-bootstrap/Card";
+import CardLeft from './AchievementLeft';
+import CardRight from './AchievementRight';
+
+
+import CardDeck from "react-bootstrap/CardDeck";
+
+
+import {pathForRequest} from '../http.js';
+let http = pathForRequest();
+class Achievements extends Component{
   constructor(props){
     super(props);
     this.state = {
-      documents: [{name: 'A', description: 'alot has happened in te lst dor djkwqufdwebdebvwhjfdge ehqwkfruwf wfejwhfuhuhdekjwenc hfwkjafj.rjfareigs jfaljfijresvnjkewjoidjdw dljwio', achivement: true, Institution: 'SPV', dateAchieved:'11-12-14', highlighted: false },
-        {name: 'B', description: 'b', achivement: true, Institution: 'Unimelb', dateAchieved: '12-13-14', highlighted: false}],
-      //userId: this.props.match.params.id,
+      /*{name: 'A', description: 'alot has happened in te lst dor djkwqufdwebdebvwhjfdge ehqwkfruwf wfejwhfuhuhdekjwenc hfwkjafj.rjfareigs jfaljfijresvnjkewjoidjdw dljwio', achivement: true, Institution: 'SPV', dateAchieved:'11-12-14', highlighted: false },
+        {name: 'B', description: 'b', achivement: true, Institution: 'Unimelb', dateAchieved: '12-13-14', highlighted: false}*/
+      documents: [],
+      userId: this.props.match.params.id,
     }
   }
 
-  /*componentDidMount(){
+  componentDidMount(){
     axios.get(http+'/api/documents/'+this.state.userId)
       .then(res =>{
           this.setState({
@@ -26,7 +33,7 @@ class CardApp extends React.Component{
       .catch(function(error) {
           console.log(error);
       })
-  }*/
+  }
 
 
   render(){
@@ -58,4 +65,4 @@ class CardApp extends React.Component{
   }
 }
 
-export default CardApp;
+export default Achievements;
