@@ -151,7 +151,7 @@ const deleteTag = async (req, res, next) => {
         );
         return next(error);
     }
-    if(tag.name === "Default") {
+    if(tag.name === "All") {
         return next(new HttpError("Cannot delete default tag."));
     }
 
