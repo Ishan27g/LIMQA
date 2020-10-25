@@ -41,7 +41,7 @@ class ManagePage extends Component {
         super(props);
         this.docView = React.createRef();
         this.state = {
-           
+
           editBio : false,
           filter : "Title",
           bio: 'tester',
@@ -207,12 +207,10 @@ class ManagePage extends Component {
               cover: tempCover
             })
           })
-        })
         .catch(function(error) {
           console.log(error);
         });
-      };
-
+      }
     }
 
     handleEditBio = () => {
@@ -346,7 +344,6 @@ class ManagePage extends Component {
         const tagUrl = http +'/api/tags/' + this.state.userid;
         axios.post(tagUrl, obj, { withCredentials: true })
         .then( res => {
-          console.log(res);
           const gettagUrl = http +'/api/tags/' + this.state.userid;
           axios.get(gettagUrl)
           .then(res =>{
@@ -445,7 +442,6 @@ class ManagePage extends Component {
     deleteTag(){
 
       var tagId = this.state.delTag;
-      console.log(tagId);
       if(this.state.delTag !== ""){
       axios.delete(http + '/api/deleteTag/' + tagId, {withCredentials: true})
       .then(response => {
@@ -486,7 +482,6 @@ class ManagePage extends Component {
       let tagsMap = tags.filter(tag => {
           return (tag.name !== "All")
       }).map(tags =>{
-        console.log(tags);
           return(
             <Row>
               <Button
