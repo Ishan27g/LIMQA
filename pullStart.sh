@@ -8,6 +8,8 @@ then
 	echo "Already up to date." >> /home/limqa/deploy/cronLogs.txt
 else
 	echo "Restarting App " >> /home/limqa/deploy/cronLogs.txt
-	./restart-ui.sh && ./restart-express.sh
+	./restart-ui.sh 
+	sleep 5
+	./restart-express.sh
 fi
 

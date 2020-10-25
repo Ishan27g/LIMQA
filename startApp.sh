@@ -8,7 +8,9 @@ UPLOADS_DIR=uploads
 
 sudo rm -rf .sslCerts
 sudo rm -rf server/.sslCerts
-../installCert.sh
+cd ..
+./installCert.sh
+cd -
 
 echo ""
 echo "CREATING A FRESH DATABASE, ctrl + c to exit now"
