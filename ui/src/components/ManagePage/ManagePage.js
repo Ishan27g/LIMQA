@@ -161,7 +161,7 @@ class ManagePage extends Component {
     uploadProfileImage(){
       if (this.state.updateProfile !== null){
         const proImg = new FormData();
-        proImg.append('file', this.state.updateProfile)
+        proImg.append('file', this.state.updateProfile);
         axios.post(http+'/api/users/profilePhoto/'+this.state.userid, proImg, { withCredentials: true })
         .then( res => {
           console.log(res);
@@ -188,12 +188,20 @@ class ManagePage extends Component {
 
     uploadCoverImage(){
       if (this.state.updateCover !== null){
-        var length = this.state.cover.length + this.state.updateCover.length;
+        var length
+        if(this.state.cover[0]!==sampleImage1){
+          length = this.state.cover.length + this.state.updateCover.length;
+        }else{
+          length = this.state.updateCover.length;
+        }
+        
         if(length < 6){
           const covImg = new FormData();
           var i;
           var tempCover = [];
-          if(this.state.cover !== [sampleImage1, sampleImage2, sampleImage3]){
+
+          if(this.state.cover[0]!==sampleImage1){
+            console.log("uptohere")
             for(i=0; i<this.state.cover.length; i++){
               tempCover.push(this.state.cover[i]);
             }
@@ -212,7 +220,8 @@ class ManagePage extends Component {
           })
           .catch(function(error) {
             console.log(error);
-          });
+          }); 
+
         }else{
           this.setState({alertCover:true},()=>{
             window.setTimeout(()=>{
