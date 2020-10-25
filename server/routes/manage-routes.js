@@ -45,7 +45,8 @@ router.delete('/social/:uid/:socialId', ensureAuthenticated, manageController.de
 /* json payload
     {"name":"testTag4","color":"black"}
 */
-router.post('/tags/:uid', ensureAuthenticated, tagsController.addTagsForUser);
+router.post('/tags/:uid', ensureAuthenticated, [ check("name").not().isEmpty(),
+                        check("name").isLength({max: 20}) ],tagsController.addTagsForUser);
 
 // create a new tag and link to 1 document
 /* json payload

@@ -28,7 +28,7 @@ const getUsers = async (req, res, next) => {
         populate: {
           path: 'tags',
           model: 'Tag'
-        }
+        } 
       }).populate("social").populate("tags").populate("photos");
   } catch (err) {
     const error = new HttpError(
