@@ -5,7 +5,7 @@ import './Home.css';
 
 import axios from "axios";
 import Card from 'react-bootstrap/Card';
-import CardColumns from 'react-bootstrap/CardColumns';
+import CardDeck from 'react-bootstrap/CardDeck'
 import Carousel from "react-bootstrap/Carousel";
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -107,10 +107,12 @@ class Home extends Component {
         });
 
         var setDoc =[];
-        for(var i= 0; i < highlightedDoc.length; i=i+3){
+        for(var i= 0; i < highlightedDoc.length; i=i+1){
             setDoc.push(
-            <CardColumns variant = "flush">{highlightedDoc.slice(i,i+3)}</CardColumns>
-        )
+                <CardDeck>
+                    {highlightedDoc.slice(i,i+1)}
+                </CardDeck>
+            )   
         }
 
         let displayHDoc = setDoc.map(docDeck => {
