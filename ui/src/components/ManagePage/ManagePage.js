@@ -18,7 +18,6 @@ import FormControl from 'react-bootstrap/FormControl';
 import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
 import Modal from 'react-bootstrap/Modal';
-import Alert from 'react-bootstrap/Alert';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -199,12 +198,12 @@ class ManagePage extends Component {
               tempCover.push(this.state.cover[i]);
             }
           }
-          
+
           for(i=0; i<this.state.updateCover.length; i++){
             covImg.append('files', this.state.updateCover[i]);
             tempCover.push(URL.createObjectURL(this.state.updateCover[i]));
           }
-  
+
           axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
           .then( res => {
             this.setState({
@@ -622,7 +621,7 @@ class ManagePage extends Component {
         <div class = "manage-cover-image">
           {this.state.alertCover?(
             <Alert variant="danger" show={this.state.alertCover} block>
-            Upload cover image failed, the limit of total cover image is 5! 
+            Upload cover image failed, the limit of total cover image is 5!
             </Alert>
           ):(
             <Carousel Fluid>
@@ -648,7 +647,7 @@ class ManagePage extends Component {
             </Carousel.Item>
             </Carousel>
           )}
-          
+
         </div>
 
             <div class = "manage-basic-info">
