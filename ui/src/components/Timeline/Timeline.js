@@ -99,11 +99,12 @@ class Timeline extends Component {
 
   render (){
     var date;
+    var id;
     var docCreationEvents = this.state.userDocuments.map(event => {
       var docTags = event.tags.map(tag =>{
           return (<Tag note = {tag.name}/>)
       });
-      date = event.dateCreated.split("T")[0]
+      date = event.dateCreated.split("T")[0];
       return ({
         type: "document",
         label: this.state.username + ' uploaded ' + event.name.split(".")[0],
@@ -151,7 +152,7 @@ class Timeline extends Component {
         icon: <Image className = "icon-hover" alt = "document" src = {docIcon}
                      style = {{height:"65px", width: "50px"}}
                      onClick = {event =>  window.location.href= '/documents/'+ event._id}/>,
-        datetime: event.dateModified,
+        datetime: event.dateModified.split("T")[0],
         photo : ""
       })
     });
