@@ -1,6 +1,8 @@
 const HttpError = require('../models/http-error');
 const Tags = require('../models/tag');
 const User = require('../models/user');
+const File = require('../models/file');
+const { deleteOne } = require('../models/user');
 
 const addTagsForUser = async (req, res, next) => {
     let userId = req.params.uid
@@ -129,7 +131,37 @@ const getAllTagsForAllUsers = async (req, res, next) => {
 }
 
 
+const deleteTag = async (req, res, next) => {
+    var tagID = req.params.tagId;
+    try {
+        await Tags.findOneAndRemove(
+            { _id: tagID}, 
+            { new: true }
+        )
+
+        await File.updateMany(
+          {"tags" : tagID},
+          { "$pull": { "tags": tagID } }
+        )
+
+        await User.updateOne(
+            { "tags": tagID },
+            { "$pull": { "tags": tagID } }
+        )
+    } catch (err) {
+        console.log(err);
+        const error = new HttpError(
+            "Delete tag failed.",
+            500
+        ); 
+        return next(error);
+    }
+
+    res.json({succeed: true});
+}
+
 exports.addTagsForUser = addTagsForUser;
 exports.addTagsToUserFile = addTagsToUserFile;
 exports.getTagsForUser = getTagsForUser;
 exports.getAllTagsForAllUsers = getAllTagsForAllUsers;
+exports.deleteTag = deleteTag;

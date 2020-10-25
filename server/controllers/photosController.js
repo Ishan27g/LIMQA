@@ -201,6 +201,12 @@ const delCoverImagesById = async (req, res, next) =>{
 }
 
 const addCoverImages = async (req, res, next) =>{
+    var limit;
+    var path = [];
+    for (i = 0; i < req.files.length; i++) {
+        path.push(req.files[i].path);
+        console.log('File : ' + i + req.files[i].path)
+    }
     let userId = req.params.uid
     let existingPhoto
     try {
@@ -212,21 +218,25 @@ const addCoverImages = async (req, res, next) =>{
         );
         return next(error);
     }
-    if(existingPhoto) {
-        var path = [];
-        for (i = 0; i < req.files.length; i++) {
-            path.push(req.files[i].path);
-        }
-        const update = {coverImages : path}
-        await existingPhoto.updateOne(update);
-        res.status(201).json({coverImages:true});
-    }else{
+    limit = existingPhoto.coverImages.length + path.length;
+
+    if(limit > 5) {
+        return next(new HttpError("Exceed cover image limits, no more that five."));
+    }
+    existingPhoto.coverImages = existingPhoto.coverImages.concat(path);
+    console.log(existingPhoto.coverImages);
+    
+    try {
+        await existingPhoto.save();
+    } catch (err) {
+        console.log(err);
         const error = new HttpError(
-            'Cover images not uploaded.',
-            500
-            );
+            'Cannot save cover images ',
+             500
+        );
         return next(error);
     }
+    res.json({succeed : true});
 }
 
 const getProfilePhoto = async (req, res, next) => {
