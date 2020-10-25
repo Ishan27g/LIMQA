@@ -28,7 +28,7 @@
     "react-scripts": "3.4.3"
   },
   "scripts": {
-    "start": "HTTPS=true SSL_CRT_FILE=./.sslCerts/cert.pem SSL_KEY_FILE=./.sslCerts/privkey.pem react-scripts start",
+    "start": "HTTPS=true SSL_CRT_FILE=./.sslCerts/cert.pem SSL_KEY_FILE=./.sslCerts/privkey.pem react-scripts --max_old_space_size=1024 start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
