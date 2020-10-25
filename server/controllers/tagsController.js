@@ -2,9 +2,16 @@ const HttpError = require('../models/http-error');
 const Tags = require('../models/tag');
 const User = require('../models/user');
 const File = require('../models/file');
+const {validationResult } = require("express-validator");
 const { deleteOne } = require('../models/user');
 
 const addTagsForUser = async (req, res, next) => {
+    const error =  validationResult(req);
+    if(!error.isEmpty()) {
+        console.log(error);
+        return next(new HttpError("Invalid inputs passed, please check your data.", 422));
+    }
+
     let userId = req.params.uid
     let user;
     try {
