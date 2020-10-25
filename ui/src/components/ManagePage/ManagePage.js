@@ -18,6 +18,9 @@ import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
 import Modal from 'react-bootstrap/Modal';
 import Alert from 'react-bootstrap/Alert';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 import Tag from './../Tags/Tag.js';
 import CoverImage from '../CoverImage/coverImage.js';
@@ -59,8 +62,11 @@ class ManagePage extends Component {
           newTag: false,
           tagName: "",
           tagColor: "",
+          delTag: "",
           tagManagement: false,
-          alertCreateTag: false
+          alertCreateTag: false,
+          alertDelTag: false
+
         }
         this.handleEditBio = this.handleEditBio.bind(this);
         this.handleSubmiteBio = this.handleSubmiteBio.bind(this);
@@ -84,6 +90,8 @@ class ManagePage extends Component {
         this.handleTagShow = this.handleTagShow.bind(this);
         this.handleTagClose = this.handleTagClose.bind(this);
         this.tagColorChange = this.tagColorChange.bind(this);
+        this.deleteTag = this.deleteTag.bind(this);
+        this.abortDeleteTag = this.abortDeleteTag.bind(this);
     }
 
     componentDidMount(){
@@ -232,7 +240,7 @@ class ManagePage extends Component {
     handleFilterOnTag = () => {
         this.setState({
           filter: "Tag",
-          search: "Default;",
+          search: "All;",
           searching: false
         });
     }
@@ -328,15 +336,16 @@ class ManagePage extends Component {
           name: this.state.tagName,
           color: this.state.tagColor
         }
-        const tagUrl = http+'/api/tags/'+this.state.userid;
+        const tagUrl = http +'/api/tags/' + this.state.userid;
         axios.post(tagUrl, obj, { withCredentials: true })
         .then( res => {
           console.log(res);
-          const gettagUrl = http+'/api/tags/' + this.state.userid;
+          const gettagUrl = http +'/api/tags/' + this.state.userid;
           axios.get(gettagUrl)
           .then(res =>{
             this.setState({
-              tags: res.data
+              tags: res.data,
+              newTag: false
             })
           })
           .catch(function(error) {
@@ -385,7 +394,7 @@ class ManagePage extends Component {
         var tempTag = this.state.search.split(";");
         tempTag.pop();
         if (tempTag.includes(e.target.innerHTML)){
-          if(e.target.innerHTML !== "Default"){
+          if(e.target.innerHTML !== "All"){
             var index = tempTag.indexOf(e.target.innerHTML);
             tempTag.splice(index, 1);
             var i;
@@ -426,6 +435,40 @@ class ManagePage extends Component {
       });
     }
 
+    deleteTag(){
+
+      var tagId = this.state.delTag;
+      console.log(tagId);
+      if(this.state.delTag !== ""){
+      axios.delete(http + '/api/deleteTag/' + tagId, {withCredentials: true})
+      .then(response => {
+
+            const tagUrl = http+'/api/tags/' + this.state.userid;
+            axios.get(tagUrl)
+            .then(res =>{
+              this.setState({
+                tags: res.data
+              }, () => this.setState({alertDelTag: false}))
+            })
+            .catch(function(error) {
+              console.log(error);
+            })
+        })
+      .catch(function(error) {
+        console.log(error);
+      })
+    } else {
+      console.log("TAG DELETION FAILED");
+      this.abortDeleteTag();
+    }
+
+  }
+    abortDeleteTag(){
+      this.setState({
+        alertDelTag: false,
+        delTag: ""
+      })
+    }
     render(){
       var doc = {doc: this.state.updateDoc, id: this.state.userid};
       //const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
@@ -433,14 +476,22 @@ class ManagePage extends Component {
 
       var tags = this.state.tags;
 
-      let tagsMap = tags.map(tags =>{
+      let tagsMap = tags.filter(tag => {
+          return (tag.name !== "All")
+      }).map(tags =>{
+        console.log(tags);
           return(
             <Row>
-              <Tag note={tags.name}
-                   variant ={tags.color}/>
-            </Row>
-          )
-      })
+              <Button
+                variant = "outline-danger"
+                style = {{border: "0px solid red"}}
+                onClick= {() => {this.setState({alertDelTag: true, delTag: tags._id})}}>
+                <Tag note={tags.name}
+                     variant ={tags.color}/>
+              </Button>
+             </Row>
+           )
+         });
 
       var tagNames = [];
       let tagsButtonMap = tags.map(tags =>{
@@ -719,51 +770,88 @@ class ManagePage extends Component {
                     <Modal.Title>Tags Management</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                  {this.state.newTag? (
-                        <Form>
-                          <Form.Group controlId="formBasicEmail">
-                            <Form.Control type="tag" placeholder="Enter new tag name" onChange={this.onChangeTagName}/>
-                          </Form.Group>
-                          <Form.Group>
-                            <Form.Text as = "h5">Pick a Color</Form.Text>
-                          </Form.Group>
-                          <Form.Group>
-                            <ToggleButtonGroup type="radio" name="options" defaultValue="primary" onChange = {this.tagColorChange}>
-                              {colorMap}
-                            </ToggleButtonGroup>
-                          </Form.Group>
-                          <Form.Group >
-                            <Button className = "mr-sm-2" variant="warning" type="submit" onClick={this.handleAddTagClose}>
-                              Return
-                            </Button>
-                            <Button variant="primary" type="submit" onClick={this.createNewTag}>
-                              Create
-                            </Button>
-                          </Form.Group>
-                          {
-                            this.state.createNewTag?(
-                              <Alert block variant = "danger">
-                                Name your Tag!
-                              </Alert>
-                            ):(
-                              <div></div>
-                            )
-                          }
-                        </Form>
-
-                  ):(
                     <Container fluid className = "manage-tags-list">
                       {tagsMap}
                     </Container>
-                  )}
-
                   </Modal.Body>
-                  <Modal.Footer>
-
+                  <Modal.Footer className = "tags-management-modal-footer">
                     <Button variant="danger" onClick={this.handleTagClose}>
                       Close
                     </Button>
                     <Button variant="primary" onClick={this.handleAddTagShow}>Add new Tag</Button>
+                  </Modal.Footer>
+                </Modal>
+
+                <Modal show = {this.state.newTag}>
+                  <Modal.Header>
+                    Create a new Tag
+                  </Modal.Header>
+                  <Modal.Body>
+                    <Form>
+                      <Form.Group controlId="formBasicEmail">
+                        <InputGroup>
+                          <Form.Control type="tag" placeholder="Enter new tag name" onChange={this.onChangeTagName}/>
+                          <InputGroup.Append>
+                            <OverlayTrigger placement="top"
+                                            delay={{ hide: 400 }}
+                                            overlay={
+                                              <Popover id="popover-basic">
+                                                <Popover.Title as="h6">Tag requirements</Popover.Title>
+                                                <Popover.Content>
+                                                  Maximum Length:
+                                                  <strong> 20 characters</strong><br/>
+                                                  Pick a <strong>Color </strong>
+                                                  as well!
+                                                </Popover.Content>
+                                              </Popover>
+                                            }>
+                              <Button variant = "light">?</Button>
+                            </OverlayTrigger>
+                          </InputGroup.Append>
+                        </InputGroup>
+
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Text as = "h5">Pick a Color</Form.Text>
+                      </Form.Group>
+                      <Form.Group>
+                        <ToggleButtonGroup type="radio" name="options" defaultValue="primary" onChange = {this.tagColorChange}>
+                          {colorMap}
+                        </ToggleButtonGroup>
+                      </Form.Group>
+                      {
+                        this.state.createNewTag?(
+                          <Alert block variant = "danger">
+                            Name your Tag!
+                          </Alert>
+                        ):(
+                          <div></div>
+                        )
+                      }
+                    </Form>
+                  </Modal.Body>
+                  <Modal.Footer className = "tags-management-modal-footer">
+                    <Button variant="warning" type="submit" onClick={this.handleAddTagClose}>
+                      Return
+                    </Button>
+                    <Button variant="primary" type="submit" onClick={this.createNewTag}>
+                      Create
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+
+                <Modal show = {this.state.alertDelTag}>
+                  <Modal.Header>
+                    Delete Tag Permanently?
+                  </Modal.Header>
+
+                  <Modal.Footer className = "tags-management-modal-footer">
+                    <Button variant = "secondary" onClick ={this.abortDeleteTag}>
+                      Return
+                    </Button>
+                    <Button variant = "warning" onClick ={this.deleteTag} >
+                      Delete Tag
+                    </Button>
                   </Modal.Footer>
                 </Modal>
                 </Container>

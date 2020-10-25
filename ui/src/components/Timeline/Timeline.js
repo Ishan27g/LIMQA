@@ -44,6 +44,7 @@ class Timeline extends Component {
 
     componentDidMount(){
       this.getUsername();
+
     };
 
     getUsername(){
@@ -72,6 +73,7 @@ class Timeline extends Component {
     getUserCoverImages(){
       axios.get(http + '/api/users/coverImages/' + this.state.userid)
       .then(response => {
+        console.log(response.data);
         var coverImagesbyId = [];
         for (var i = 0; i < response.data.coverImages.coverImages.length; i++){
           coverImagesbyId.push(http + '/api/users/coverImages/' + this.state.userid +'/'+ i)
@@ -105,9 +107,9 @@ class Timeline extends Component {
     var date;
     var docCreationEvents = this.state.userDocuments.map(event => {
       var docTags = event.tags.map(tag =>{
-          return (<Tag note = {tag.name}/>)
+          return (<Tag note = {tag.name} variant = {tag.color}/>)
       });
-      date = event.dateCreated.split("T")[0]
+      /*date = event.dateCreated.split("T")[0]*/
       return ({
         type: "document",
         label: this.state.username + ' uploaded ' + event.name.split(".")[0],
@@ -126,7 +128,7 @@ class Timeline extends Component {
                      style = {{height:"65px", width: "50px"}}
                      onClick = {event =>  window.location.href = '/documents/'+ event._id }/>,
                    //remove onCLick when MArker onclick works
-        datetime: date,
+        datetime: event.dateCreated,
         clickEvent:  '/documents/'+ event._id,
         photo : ""
       })
@@ -136,7 +138,7 @@ class Timeline extends Component {
       return modified.dateModified !== "";
     }).map(event => {
       var docTags = event.tags.map(tag =>{
-          return (<Tag note = {tag.name}/>)
+          return (<Tag note = {tag.name} variant = {tag.color}/>)
       });
       return ({
         type: "document",
@@ -190,28 +192,15 @@ class Timeline extends Component {
       return ({
       type: "tag",
       label: <div>
-                {this.state.username + ' created a new tag '}&nbsp;&nbsp;{<Tag note = {event.name} />}
+                {this.state.username + ' created a new tag '}&nbsp;&nbsp;{<Tag note = {event.name} variant = {event.color}/>}
             </div>,
       icon: <Image className = "icon-hover" alt = "tag" src = {tagIcon}
                    style = {{height:"50px", width: "50px"}}
-                   onClick = {event =>  window.location.href= "/experience/" + this.state.userid}/>,
+                   onClick = {event =>  window.location.href= "/manage/" + this.state.userid}/>,
       datetime: event.dateAdded, /*Add DateAdded after response.data structure is created*/
       description: "",
       photo : ""
       })
-    });
-
-
-
-    var flattenedEvents = docCreationEvents.concat(profilePhotoEvent)
-                                           .concat(docModifiedEvents)
-                                           .concat(coverImagesEvent)
-                                           .concat(newTagEvent)
-                                           .sort((a,b) => -(b.datetime - a.datetime));
-
-
-    var timelineMarker = flattenedEvents.map( event => {
-      return(<CustomMarker event = {event} />)
     });
 
     /*console.log(docCreationEvents);
@@ -219,9 +208,18 @@ class Timeline extends Component {
     console.log(profilePhotoEvent);
     console.log(coverImagesEvent);
     console.log(newTagEvent);*/
-    console.log(timelineMarker);
+    /*console.log(timelineMarker);*/
     console.log(this.state.alertDisplay);
     if(this.state.alertDisplay){
+      var flattenedEvents = docModifiedEvents.concat(profilePhotoEvent)
+                                             .concat(docCreationEvents)
+                                             .concat(coverImagesEvent)
+                                             .concat(newTagEvent)
+                                             .sort((a,b) => (new Date(b.datetime).getTime() - new Date(a.datetime).getTime()));
+
+      var timelineMarker = flattenedEvents.map( event => {
+        return(<CustomMarker event = {event} />)
+      });
       return (
           <div className = "timeline-body">
           <h2>Recent Activity</h2>
@@ -231,7 +229,9 @@ class Timeline extends Component {
         </div>
       )
     } else {
+      console.log(this.state);
       return(
+
         <Container fluid className = "default-timeline-body">
           <Row>
             <Spinner animation="border" />

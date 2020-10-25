@@ -480,7 +480,7 @@ class AccountView extends Component {
                       <Col className = "edit-image">
                         <Container>
                           <Row className = "edit-image-display">
-                          <Image src={this.state.profileImage} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle /*style = {{height: "10vmax", width: "10vmax"}}*//>
+                          <Image src={this.state.profileImage} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "10vmax", width: "10vmax"}}/>
 
                           </Row>
                         </Container>
@@ -628,7 +628,7 @@ class AccountView extends Component {
                   <Row className = "acc-info justify-content-md-center">
 
                     <Col className = "acc-image">
-                     <Image src={this.state.profileImage} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle /*style = {{height: "10vmax", width: "10vmax"}}*//>
+                     <Image src={this.state.profileImage} onError={(e)=>{e.target.onerror = null; e.target.src=profile}} roundedCircle style = {{height: "10vmax", width: "10vmax"}}/>
 
                     </Col>
 

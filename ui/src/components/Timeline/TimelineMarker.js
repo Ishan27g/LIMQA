@@ -22,12 +22,13 @@ class CustomMarker extends Component{
   }
   render(){
     //redirect to document viewer
+    var visualDate = new Date(this.state.datetime).toDateString();
     return(
         <TimelineMarker
         className = "timeline-marker"
         label= {this.state.label}
         icon = {this.state.icon}
-        datetime = {this.state.datetime} /*Add System Clock*/
+        datetime = {visualDate} /*Add System Clock*/
         description= {this.state.description} >
         {this.state.type === "photo"?
           (<Card>

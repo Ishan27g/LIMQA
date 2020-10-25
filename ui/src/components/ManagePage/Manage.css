@@ -96,6 +96,7 @@
 .manage-tags-list > .row{
   padding: 0.5vmax;
   padding-left: 0;
+  justify-content: space-between;
 }
 
 .manage-tags > .modal-footer{
@@ -109,4 +110,8 @@
 
 .document-arena-row{
   padding: 1rem;
+}
+.tags-management-modal-footer{
+  display: flex;
+  justify-content: space-between;
 }
