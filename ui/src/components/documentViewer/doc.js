@@ -17,8 +17,7 @@ import Collapse from 'react-bootstrap/Collapse';
 import Alert from 'react-bootstrap/Alert';
 import doc from '../../Image/documents.png';
 import Tag from './../Tags/Tag.js';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { DatePicker } from 'react-rainbow-components';
 
 import {pathForRequest} from '../http.js';
 
@@ -410,9 +409,9 @@ class DocMode extends Component {
                               style ={{marginBottom: "0.6vmax"}}
                               onChange = {this.onChangeInstitution}/>
                               <DatePicker
-                               selected={new Date(this.state.acdate)}
-                               onChange={date  => this.setState({acdate: date.toISOString().split('T')[0] })}
-                               dateFormat={'yyyy/MM/dd'}
+                               onChange={value => this.setState({acdate: value})}
+                               value={this.state.acdate}
+                               locale="en-US"
                                />
                           </Row>
                         </Collapse>

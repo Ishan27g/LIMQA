@@ -70,7 +70,6 @@ class App extends Component{
       /*Login Values*/
         email: '',
         password: '',
-        loading: false,
 
     }
   }
@@ -107,12 +106,9 @@ class App extends Component{
             login: true,
             loginInfo: true,
             userId: response.data.userid
-          },()=>{
-            this.setState({loading: true})
           })
         }
-    });
-    this.setState({loading: true})
+    })
   };
 
   handleSignClose = () => {
@@ -331,14 +327,14 @@ class App extends Component{
             <Route path="/search/:id" component={Search}/>
             <Route path="/forget" component={forgetPassEmail}/>
             <Route path="/reset/:id" component={forgetPass}/>
-            {this.state.login && this.state.loading ? (<Route path="/manage/:id"
+            {this.state.login? (<Route path="/manage/:id"
                                     component={ManagePage}/>)
               :(<Route path="/manage/:id" component={NotFound}/>)
             }
-            {this.state.login && this.state.loading ? (<Route path="/view/:id"
+            {this.state.login? (<Route path="/view/:id"
                                       component={AccountView}/>)
               :(<Route path="/view/:id" component={NotFound}/>)}
-            {this.state.login && this.state.loading? (<Route path="/updatePass/:id" component={changePassword}/>):(<Route path="/updatePass/:id" component={NotFound}/>)}
+            {this.state.login? (<Route path="/updatePass/:id" component={changePassword}/>):(<Route path="/updatePass/:id" component={NotFound}/>)}
             <Route path="/notfound" render = {() => <NotFound link = "/"/> }/>
 
           </Switch>

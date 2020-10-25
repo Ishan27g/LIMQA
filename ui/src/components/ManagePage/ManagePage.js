@@ -4,7 +4,6 @@ import "../../App.css";
 import './Manage.css';
 
 import axios from "axios";
-import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
@@ -65,7 +64,6 @@ class ManagePage extends Component {
           tagColor: "",
           delTag: "",
           tagManagement: false,
-          alertCover: false,
           alertCreateTag: false,
           alertDelTag: false
 
@@ -188,43 +186,26 @@ class ManagePage extends Component {
 
     uploadCoverImage(){
       if (this.state.updateCover !== null){
-        var length = this.state.cover.length + this.state.updateCover.length;
-        if(length < 6){
-          const covImg = new FormData();
-          //covImg.append('files', this.state.updateCover)
-          var i;
-          var tempCover = [];
-          for(i=0; i<this.state.cover.length; i++){
-            tempCover.push(this.state.cover[i]);
-          }
-
-          for(i=0; i<this.state.updateCover.length; i++){
-            covImg.append('files', this.state.updateCover[i]);
-            tempCover.push(URL.createObjectURL(this.state.updateCover[i]));
-          }
-  
-          axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
-          .then( res => {
-            this.setState({
-              cover: tempCover
-            })
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-        }else{
-          this.setState({alertCover:true},()=>{
-            window.setTimeout(()=>{
-              this.setState({alertCover:false}, ()=>{
-                this.setState({
-                  updateCover: null
-                })
-              })
-            },1500);
-          });
+        const covImg = new FormData();
+        //covImg.append('files', this.state.updateCover)
+        var i;
+        var tempCover = [];
+        for(i=0; i<this.state.updateCover.length; i++){
+          covImg.append('files', this.state.updateCover[i]);
+          tempCover.push(URL.createObjectURL(this.state.updateCover[i]));
         }
 
-      }
+        axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
+        .then( res => {
+          this.setState({
+            cover: tempCover
+          })
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      };
+
     }
 
     handleEditBio = () => {
@@ -619,37 +600,29 @@ class ManagePage extends Component {
                         });
       return(
         <body>
-
         <div class = "manage-cover-image">
-          {this.state.alertCover?(
-            <Alert variant="danger" show={this.state.alertCover} block>
-            Upload cover image failed, the limit of total cover image is 5! 
-            </Alert>
-          ):(
-            <Carousel Fluid>
-              {coverImage}
-            <Carousel.Item>
-              <input
-              type="file"
-              style={{display: "none"}}
-              onChange={this.onChangeCoverImage}
-              ref={coverInput=>this.coverInput=coverInput}
-              multiple="multiple"/>
-              <img
-              src = {uploadCoverImageBg}
-              onClick = {() => this.coverInput.click()} />
-            <Carousel.Caption>
-              <img
-                src = {uploadIcon}
-                alt ="Upload Icon"
-                onClick = {() => this.coverInput.click()}
-                style = {{height: "7vmax", width: "9vmax", marginBottom: "1vmax"}}/>
-              <h3>Uplaod Cover Image</h3>
-            </Carousel.Caption>
-            </Carousel.Item>
-            </Carousel>
-          )}
-          
+          <Carousel Fluid>
+            {coverImage}
+          <Carousel.Item>
+            <input
+             type="file"
+             style={{display: "none"}}
+             onChange={this.onChangeCoverImage}
+             ref={coverInput=>this.coverInput=coverInput}
+             multiple="multiple"/>
+            <img
+             src = {uploadCoverImageBg}
+             onClick = {() => this.coverInput.click()} />
+           <Carousel.Caption>
+             <img
+              src = {uploadIcon}
+              alt ="Upload Icon"
+              onClick = {() => this.coverInput.click()}
+              style = {{height: "7vmax", width: "9vmax", marginBottom: "1vmax"}}/>
+            <h3>Uplaod Cover Image</h3>
+           </Carousel.Caption>
+          </Carousel.Item>
+          </Carousel>
         </div>
 
             <div class = "manage-basic-info">
