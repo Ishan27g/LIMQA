@@ -364,7 +364,7 @@ class singleDoc extends Component {
                                 {this.state.loaded? (
                                     <FileViewer
                                     fileType={this.state.fileType}
-                                    filePath={require("./"+path)}
+                                    filePath={require("/usr/src/uploads/images/"+path)}
                                     errorComponent={CustomErrorComponent}
                                     onError={this.onError}
                                     key={this.props.match.params.id}
