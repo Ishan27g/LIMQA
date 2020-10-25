@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 
 import docImage from '../../Image/documents.png';
 
@@ -17,7 +18,10 @@ class Search extends Component{
   constructor(props){
     super(props);
     this.getDocs = this.getDocs.bind(this);
+    this.getTags = this.getTags.bind(this);
     this.onChangeSearch = this.onChangeSearch.bind(this);
+    this.handleMethodChange = this.handleMethodChange.bind(this);
+    this.onChangeTag = this.onChangeTag.bind(this);
 
     this.state = {
       /*App states*/
@@ -25,12 +29,15 @@ class Search extends Component{
 
       /*Documents Search*/
       documents: [],
+      tags: [],
       search: "",
       userId: this.props.match.params.id,
+      searchMethod: "Title",
     }
   }
   componentDidMount(){
     this.getDocs();
+    this.getTags();
   };
 
 
@@ -45,46 +52,162 @@ class Search extends Component{
   }
 
   onChangeSearch(e){
-    if (e.target.value === ""){	
-      this.setState({	
-        search: e.target.value,	
-        searching: false	
-      });	
-    } else {	
-      this.setState({	
-        search: e.target.value,	
-        searching: true	
-      });	
-    }	
+    if (e.target.value === ""){
+      this.setState({
+        search: e.target.value,
+        searching: false
+      });
+    } else {
+      this.setState({
+        search: e.target.value,
+        searching: true
+      });
+    }
 
+  }
+
+  getTags(){
+    axios.get(http+'/api/tags/'+this.state.userId)
+    .then(response => {
+      this.setState({tags: response.data});
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+  }
+
+  handleMethodChange(e){
+    if(e.target.innerHTML === 'Title'){
+      this.setState({
+        searchMethod: "Title",
+        search: "",
+        searching: false
+      })
+    }
+    if(e.target.innerHTML === 'Tag'){
+      this.setState({
+        searchMethod: "Tag",
+        search: "Default|",
+        searching: false
+      })
+    }
+  }
+
+  intersection() {
+    var result = [];
+    var lists;
+
+    if(arguments.length === 1) {
+      lists = arguments[0];
+    } else {
+      lists = arguments;
+    }
+
+    for(var i = 0; i < lists.length; i++) {
+      var currentList = lists[i];
+      for(var y = 0; y < currentList.length; y++) {
+        var currentValue = currentList[y];
+        if(result.indexOf(currentValue) === -1) {
+          if(lists.filter(function(obj) { return obj.indexOf(currentValue) === -1 }).length === 0) {
+            result.push(currentValue);
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  onChangeTag(e){
+    if (this.state.search === ""){
+      this.setState({
+        searching: true,
+        search: e.target.innerHTML + "|"
+      })
+    }else{
+      var tempTag = this.state.search.split("|");
+      tempTag.pop();
+      if (tempTag.includes(e.target.innerHTML)){
+        if(e.target.innerHTML !== "Default"){
+          var index = tempTag.indexOf(e.target.innerHTML);
+          tempTag.splice(index, 1);
+          var i;
+          var tempString = tempTag[0];
+          for(i=1; i<tempTag.length; i++){
+            tempString = tempString + "|" + tempTag[i]
+          }
+          tempString = tempString + "|"
+          this.setState({
+            search: tempString
+          })
+        }
+      }else{
+        this.setState({
+          searching: true,
+          search: this.state.search + e.target.innerHTML + "|"
+        })
+      }
+    }
   }
 
 render(){
 
-    var searchDocs = this.state.documents.filter(doc => {
-        if (this.state.search === "") {
+  var tags = this.state.tags;
+  var tagNames = [];
+  let tagsMap = tags.map(tags =>{
+    tagNames.push(tags.name);
+      return(
+          <Button className = "mt-sm-1 mr-sm-1"onClick={this.onChangeTag} variant = {tags.color}>{tags.name}</Button>
+      )
+  })
 
-            return("")
+  var searchDocs = this.state.documents
 
-        } else {
+  if(this.state.searchMethod === "Title"){
+    searchDocs = this.state.documents.filter(doc => {
+      if (this.state.search === "") {
 
-          var name = doc.name;
-          const pattern = this.state.search.split("").map(letter => {
-                    if(!("\\+*()?.,".includes(letter))) {
-                      return `(?=.*${letter})`
-                    } else {
-                      return ""
-                    }
-                  }).join("");
+        return("")
 
-          const regex = new RegExp(`${pattern}`, "g");
+      } else {
 
-          return (name.toLowerCase().includes(this.state.search.toLowerCase())
-                  || name.match(regex))
+        var name = doc.name;
+        const pattern = this.state.search.split("").map(letter => {
+          if(!("\\+*()?.,".includes(letter))) {
+            return `(?=.*${letter})`
+          } else {
+            return ""
+          }
+        }).join("");
 
+        const regex = new RegExp(`${pattern}`, "g");
+
+        return (name.toLowerCase().includes(this.state.search.toLowerCase()) || name.match(regex))
+
+      }
+    }).sort((a,b)=> b["name"] - a["name"]).slice(0,7);
+
+    }else{
+      if (this.state.search !== ""){
+        var selectTags = this.state.search.split("|");
+        var tempTagWithDoc = [];
+        var i;
+        for(i=0; i<selectTags.length; i++){
+          var j;
+          for(j=0; j<tagNames.length; j++){
+            if(selectTags[i] === tagNames[j]){
+              tempTagWithDoc.push(this.state.tags[j].files);
+            }
+          }
         }
-      }).sort((a,b)=> b["name"] - a["name"]).slice(0,7);
-      
+        tempTagWithDoc = this.intersection(tempTagWithDoc);
+        searchDocs = this.state.documents.filter(function(document){
+          return tempTagWithDoc.includes(document._id)
+        });
+
+      }
+    }
+
+
     let showDocs = searchDocs.map( searchedDoc => {
         return (
             <Col sm='3' >
@@ -126,11 +249,32 @@ render(){
                 <Row className = "landing-header">
                     Discover documents
                 </Row>
-                <Row className = "user-search">
-                <FormControl type="text" size = "lg"
-                                onChange = {this.onChangeSearch}
-                                placeholder="Search documents"/>
+                <Row className = "landing-header">
+                  <Button variant='primary' size='lg' onClick= {this.handleMethodChange}>Title</Button>
+                  <Button variant='secondary' size='lg'onClick= {this.handleMethodChange} >Tag</Button>
                 </Row>
+                <Row className = "user-search">
+                {this.state.searchMethod === "Title"?(
+                  <FormControl type="text" size = "lg"
+                  onChange = {this.onChangeSearch}
+                  value = {this.state.search}
+                  placeholder="Search documents by Titles"/>
+                ):(
+                  <FormControl type="text" size = "lg"
+                  onChange = {this.onChangeSearch}
+                  value = {this.state.search}
+                  placeholder="Search documents by Tags"
+                  readOnly />
+                )}
+                </Row>
+                {this.state.searchMethod === "Title"?(
+                  <br />
+                ):(
+                  <Row className = "user-search">
+                  {tagsMap}
+                  </Row>
+                )}
+
                 {this.state.searching ? (
                     <Container>
                         <div class="row justify-content-md-center" style={{marginTop:"2rem"}}>

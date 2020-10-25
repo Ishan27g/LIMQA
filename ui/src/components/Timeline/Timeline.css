@@ -1,0 +1,35 @@
+.timeline-body{
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 40px;
+  background-color: white;
+
+}
+
+.default-timeline-body{
+  width: 60%;
+  padding: 5%;
+  background-color: white;
+  margin-bottom: 15%;
+  margin-top: 15%;
+
+}
+.default-timeline-body > .row{
+  justify-content: center;
+}
+
+.timeline-body > h2 , .default-timeline-body > .row > h2, .default-timeline-body > .row > h3{
+  color: black;
+  padding-top: 1vmax;
+  padding-bottom: 1vmax;
+}
+.timeline-marker {
+  padding-left: 3vmax;
+  padding-right: 3vmax;
+}
+.icon-hover{
+  padding: 5px
+}
+.icon-hover:hover{
+  background-color: #e6e6e6;
+}

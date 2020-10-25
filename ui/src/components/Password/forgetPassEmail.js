@@ -45,7 +45,9 @@ class forgetPassEmail extends Component{
 
   onChangeEmail(e){
     this.setState({
-        Email: e.target.value
+        Email: e.target.value,
+        alertEmail: false,
+        alertValid: false
     });
   }
 
@@ -77,17 +79,17 @@ class forgetPassEmail extends Component{
 
   render(){
     return(
-        <body>
+        <body style={{marginTop: "100px"}}>
         {this.state.emailSend? (
             <div className ="page-fill">
             <Container className = "register">
-                
+
                 <Form className = "register-form">
                     <h3>An email has send to your email addres</h3>
                     <p>please follow attached link to reset your password!</p>
-                    
+
                     <Button href='/' variant="dark" block>return to home page</Button>
-                    
+
                 </Form>
             </Container>
             </div>
@@ -96,7 +98,7 @@ class forgetPassEmail extends Component{
             <Container className = "register">
                 <Col>
                 <Form className = "register-form">
-                    <h3>Forget your password</h3>
+                    <h3>Password Recovery</h3>
                     <Form.Group controlId="formBasicUsername">
                     <Col sm = "3">
                     <Form.Label>Email</Form.Label>
@@ -105,20 +107,7 @@ class forgetPassEmail extends Component{
                     <Form.Control type="email" placeholder="Enter your email address" onChange={this.onChangeEmail} />
                     </Col>
                     </Form.Group>
-                    {this.state.alertEmail?
-                    (<Collapse>
-                    <Row>
-                        <Col sm = {{span: 8, offset: 3}}>
-                            <Alert variant={'danger'}>
-                            Please enter an email address
-                            </Alert>
-                        </Col>
-                    </Row>
-                    </Collapse>):(
-                    <div></div>
-                    )
-                    }
-                    {this.state.alertValid?
+                    {this.state.alertEmail || this.state.alertValid?
                     (<Collapse>
                     <Row>
                         <Col sm = {{span: 8, offset: 3}}>

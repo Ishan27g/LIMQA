@@ -17,7 +17,8 @@ import Collapse from 'react-bootstrap/Collapse';
 import Alert from 'react-bootstrap/Alert';
 import doc from '../../Image/documents.png';
 import Tag from './../Tags/Tag.js';
-import { DatePicker } from 'react-rainbow-components';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import {pathForRequest} from '../http.js';
 
@@ -63,15 +64,17 @@ class DocMode extends Component {
       /*Document Properties*/
       docname: "Untitled",
       docdate: "Document Date",
-      tags: ["Default"],
+      tags: ["All"],
+      tagColors: ["Primary"],
       highlighted: false,
       docdesc: "",
       achievement: false,
       acinst: "",
-      acdate: new Date().toLocaleDateString(),
+      acdate: "2020-01-01",
 
        /*All Tags Created*/
       allTags: [],
+      allTagColors: []
     }
 
   }
@@ -81,12 +84,15 @@ class DocMode extends Component {
     axios.get(tagUrl)
     .then(res =>{
       var tempTag = [];
+      var tempTagColors = [];
       var i;
       for(i=0; i<res.data.length; i++){
         tempTag.push(res.data[i].name);
+        tempTagColors.push(res.data[i].color);
       }
       this.setState({
-        allTags: tempTag
+        allTags: tempTag,
+        allTagColors: tempTagColors
       })
     })
     .catch(function(error) {
@@ -119,7 +125,9 @@ class DocMode extends Component {
 
   /* Leaves abruptly w/o saving Changes */
   handleAbruptLeave = () => {
-    this.setState({docEditor:false, docViewer: false, checkEdit: false});
+    this.setState({
+      docEditor:false, docViewer: false, checkEdit: false
+    },()=>{window.location.href = '/manage/'+ this.props.doc.id;});
   }
 
   handleAddTags = () =>{
@@ -194,7 +202,7 @@ class DocMode extends Component {
       .catch(function(error) {
         console.log(error);
       });
-   
+
       this.setState({alertSuccess:true},()=>{
         window.setTimeout(()=>{
           this.setState({alertSuccess:false}, ()=>{
@@ -202,7 +210,8 @@ class DocMode extends Component {
               docViewer: false,
               DocEditor: false,
               uploadMode: false
-            })
+            });
+            window.location.href = '/manage/'+ this.props.doc.id;
           })
         },1500);
       });
@@ -234,40 +243,44 @@ class DocMode extends Component {
 
   onChangeTags(e){
     var chosetag = this.state.tags;
+    var chooseTagColors = this.state.tagColors;
+    var colorIndex = this.state.allTags.indexOf(e.target.value);
+    console.log(colorIndex);
     if(e.target.checked){
         chosetag.push(e.target.value);
+        chooseTagColors.push(this.state.allTagColors[colorIndex])
     }else{
         var index = chosetag.indexOf(e.target.value);
         chosetag.splice(index, 1);
+        chooseTagColors.splice(index, 1);
     }
     this.setState({
-        tags: chosetag
+        tags: chosetag,
+        tagColors: chooseTagColors
     }, ()=>{
         console.log(this.state.tags)
+        console.log(this.state.tagColors)
     })
   }
 
   render(){
     var tags = this.state.tags;
-
-    let tagsMap = tags.map(tags =>{
+    var tagColors = this.state.tagColors;
+    let tagsMap = tags.map((tags, idx) =>{
         return(
-            <Tag note={tags} />
-        )
-    })
+          <Col className ="mr-sm-1">
+            <h4>
+              <Tag note={tags} variant={tagColors[idx]} />
+            </h4>
+          </Col>
 
-    let showtagButtons = tags.map(tags =>{
-        return(
-          <Button
-            variant = "outline-danger"
-            style = {{border: "0px solid red"}}>
-            <Tag note={tags} />
-          </Button>
         )
     })
 
     var allTags = this.state.allTags;
-    let SelectTags = allTags.map(allTags =>{
+    var allTagColors = this.state.allTagColors;
+
+    let SelectTags = allTags.map((allTags, idx) =>{
         var check = this.state.tags.includes(allTags);
         return(
             <InputGroup className = "select-tags">
@@ -275,7 +288,7 @@ class DocMode extends Component {
                 <InputGroup.Checkbox onChange={this.onChangeTags} value={allTags} checked={check}/>
               </InputGroup.Prepend>
               <InputGroup.Append>
-                  <Tag note={allTags} />
+                  <Tag note={allTags} variant={allTagColors[idx]}/>
               </InputGroup.Append>
             </InputGroup>
         )
@@ -353,7 +366,7 @@ class DocMode extends Component {
 
                         </Row>
                         <Row className = "doc-tags">
-                          <h4>{showtagButtons}</h4>
+                          {tagsMap}
                           <Button block variant = "success" onClick ={this.handleAddTags}>Alter Tags</Button>
                         </Row>
 
@@ -399,9 +412,9 @@ class DocMode extends Component {
                               style ={{marginBottom: "0.6vmax"}}
                               onChange = {this.onChangeInstitution}/>
                               <DatePicker
-                               onChange={value => this.setState({acdate: value})}
-                               value={this.state.acdate}
-                               locale="en-US"
+                               selected={new Date(this.state.acdate)}
+                               onChange={date  => this.setState({acdate: date.toISOString().split('T')[0] })}
+                               dateFormat={'yyyy/MM/dd'}
                                />
                           </Row>
                         </Collapse>

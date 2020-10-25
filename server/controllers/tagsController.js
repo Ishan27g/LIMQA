@@ -1,8 +1,17 @@
 const HttpError = require('../models/http-error');
 const Tags = require('../models/tag');
 const User = require('../models/user');
+const File = require('../models/file');
+const {validationResult } = require("express-validator");
+const { deleteOne } = require('../models/user');
 
 const addTagsForUser = async (req, res, next) => {
+    const error =  validationResult(req);
+    if(!error.isEmpty()) {
+        console.log(error);
+        return next(new HttpError("Invalid inputs passed, please check your data.", 422));
+    }
+
     let userId = req.params.uid
     let user;
     try {
@@ -91,7 +100,7 @@ const addTagsToUserFile = async (req, res, next) => {
     res.status(201).json({tag: user.toObject({ getters : true}).tags});
 }
 const getTagsForUser = async (req, res, next) => {
-    let userId = req.params.uid
+    let userId = req.params.uid;
     let user;
     try {
         user = await User.findById(userId);
@@ -129,7 +138,52 @@ const getAllTagsForAllUsers = async (req, res, next) => {
 }
 
 
+const deleteTag = async (req, res, next) => {
+    var tagID = req.params.tagId;
+    var tag;
+    try {
+        tag = await Tags.findById(tagID);
+    } catch (err) {
+        console.log(err);
+        const error = new HttpError(
+            "Tag does not exist.",
+            500
+        );
+        return next(error);
+    }
+    if(tag.name === "All") {
+        return next(new HttpError("Cannot delete default tag."));
+    }
+
+    try {
+        await Tags.findOneAndRemove(
+            { _id: tagID}, 
+            { new: true }
+        )
+
+        await File.updateMany(
+          {"tags" : tagID},
+          { "$pull": { "tags": tagID } }
+        )
+
+        await User.updateOne(
+            { "tags": tagID },
+            { "$pull": { "tags": tagID } }
+        )
+    } catch (err) {
+        console.log(err);
+        const error = new HttpError(
+            "Delete tag failed.",
+            500
+        ); 
+        return next(error);
+    }
+
+    res.json({succeed: true});
+}
+
 exports.addTagsForUser = addTagsForUser;
 exports.addTagsToUserFile = addTagsToUserFile;
 exports.getTagsForUser = getTagsForUser;
 exports.getAllTagsForAllUsers = getAllTagsForAllUsers;
+exports.deleteTag = deleteTag;

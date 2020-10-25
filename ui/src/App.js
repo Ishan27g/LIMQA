@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import './App.css';
 
 import Alert from 'react-bootstrap/Alert';
@@ -8,17 +8,16 @@ import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
 import Image from 'react-bootstrap/Image';
 import Modal from 'react-bootstrap/Modal';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Row from 'react-bootstrap/Row';
 
 import AccountView from './components/AccountView/accountView.js';
 import Landing from './components/LandingPage/landingPage.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
+import Timeline from './components/Timeline/Timeline.js';
+import Achievements from './components/Achievement/Achievement.js';
 import NotFound from './components/NotFound.js';
 import Register from './components/SignUp/register.js';
 import singleDoc from './components/documentViewer/singleDoc.js';
@@ -29,6 +28,11 @@ import forgetPass from './components/Password/forgetPass.js';
 
 import logo from './Image/logo.png';
 import loginButton from './Image/loginButton.svg';
+import iconFacebook from './Image/Facebook.png';
+import iconInstagram from './Image/Instagram.png';
+import iconLinkedin from './Image/Linkedin.png';
+import iconGithub from './Image/Github.png';
+import iconWechat from './Image/Wechat.png';
 
 import {pathForRequest} from './components/http.js';
 import Home from './components/Home/Home';
@@ -58,15 +62,42 @@ class App extends Component{
         AlertLogin: '',
         loginInfo: true,
         userId: '',
-
+        QRcode: null,
+        front: true,
+        showQR: false,
+        socialLinks: [],
+        slinksAlert: true,
       /*Login Values*/
         email: '',
         password: '',
+        loading: false,
 
     }
   }
 
   componentDidMount(){
+    var path = window.location.pathname.split("/")[1];
+    if(path!=='' && path!=='register' && path !== 'reset' && path !== 'notfound' && path!== 'forget'){
+      this.setState({
+        showQR: true,
+        front: false,
+        userId: window.location.pathname.split("/")[2]
+      }, () => {
+            axios.get( http+'/api/social/' + this.state.userId)
+            .then(response => {
+              this.setState({socialLinks: response.data.socials},
+                 () =>{this.setState({slinksAlert: false}) })
+            })
+            .catch(function(error) {
+                console.log(error);
+            })} )
+    }else{
+      this.setState({
+        front: true,
+        showQR: false,
+      })
+    }
+
     const check = http+'/api/users/check';
     axios.get(check, { withCredentials: true })
       .then(response => {
@@ -76,9 +107,12 @@ class App extends Component{
             login: true,
             loginInfo: true,
             userId: response.data.userid
+          },()=>{
+            this.setState({loading: true})
           })
         }
-    })
+    });
+    this.setState({loading: true})
   };
 
   handleSignClose = () => {
@@ -90,7 +124,22 @@ class App extends Component{
   }
 
   handleQRShow = () => {
-    this.setState({ QRButton: true });
+    const obj = {
+      url: "https://limqa.eastus.cloudapp.azure.com:3000/home/"+ window.location.pathname.split("/")[2]
+    }
+    const url = http + '/api/users/QRCode';
+    axios.post(url, obj)
+    .then(res =>{
+      this.setState({
+        QRcode: res.data
+      },()=>{
+        this.setState({ QRButton: true });
+      })
+    })
+    .catch(function(error){
+      console.log(error)
+    })
+
   }
 
   handleQRClose = () => {
@@ -101,7 +150,6 @@ class App extends Component{
     axios.get(http+'/api/users/logout', { withCredentials: true })
     .then(res=>{
       window.location.href='/';
-      console.log(res);
       this.setState({
         login: false,
       });
@@ -149,12 +197,12 @@ class App extends Component{
               if (response.data.success){
                 axios.get(check, { withCredentials: true })
                 .then(response => {
-                  console.log(response.data.logIn);
                   if (response.data.logIn){
                     this.setState({
                       loginButton: false,
                       login: true,
                       userId: response.data.userid
+
                     },()=>{
                       window.location.href='/manage/'+this.state.userId;
                     })
@@ -172,28 +220,42 @@ class App extends Component{
       }
   }
 
+
+
   handleSignin = () => {
     this.setState({ login: true });
     this.setState({ loginButton: false });
   }
 
   handleSearchPage(){
-    var id = window.location.pathname.split('/')[2];
-    //console.log(window.location.pathname.split('/')[2])
-    window.location.href='/search/'+id;
+    window.location.href='/search/'+ this.state.userId;
   }
 
-  render(){
-    var front = true;
-    if(window.location.pathname !== '/' && window.location.pathname !== '/notfound'){
-      front = false;
-    }else{
-      front = true;
-    }
 
+
+  render(){
+    if(this.state.slinksAlert === false){
+    var socials = this.state.socialLinks;
+
+    var Linkedin = socials.filter( social =>
+        {return social.name === "Linkedin"}
+    )[0].url;
+    var Facebook = socials.filter( social =>
+        {return social.name === "Facebook"}
+    )[0].url;
+    var Instagram = socials.filter(social =>
+          {return social.name === "Instagram"}
+    )[0].url;
+    var Github = socials.filter(social =>
+          {return social.name === "Github"}
+    )[0].url;
+    var WeChat = socials.filter(social =>
+          {return social.name === "Wechat"}
+    )[0].url;
+  }
     return (
       <div>
-          {front && !this.state.login ? (
+          {this.state.front && !this.state.login? (
             <div>
               <header>
                 <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
@@ -206,18 +268,12 @@ class App extends Component{
                     className="mr-2">
                     <img alt="Login" src = {loginButton}/>
                   </Button>
+                  <Button variant ="outline-dark"
+                          onClick = {() => {window.location.href = "/register"}}>
+                          Register Now!
+                  </Button>
                 </Navbar>
               </header>
-              <footer>
-                <Navbar
-                  bg = "light" variant = "light"
-                  expand = "lg" fixed ="bottom"
-                  className = "copyright">
-                  <Form>
-                    <Form.Text> Product of team LiMQA ©</Form.Text>
-                  </Form>
-                </Navbar>
-              </footer>
             </div>
           ):(
             <header>
@@ -230,19 +286,13 @@ class App extends Component{
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className ="mr-auto">
                     <Nav.Item class = "nav-item">
-                    <Nav.Link href="/">About me</Nav.Link>
+                    <Nav.Link href={"/home/"+this.state.userId}>About me</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
-                    <Nav.Link href="/">Experience</Nav.Link>
+                      <Nav.Link href={"/Achievements/"+this.state.userId}>Achievements</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
-                      <Nav.Link href="/">Achievements</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item class = "nav-item">
-                      <Nav.Link href="/">Timeline</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item class = "nav-item">
-                      <Nav.Link href="/">Contact me</Nav.Link>
+                      <Nav.Link href={'/timeline/'+this.state.userId}>Timeline</Nav.Link>
                     </Nav.Item>
                     </Nav>
                     <Nav>
@@ -263,7 +313,6 @@ class App extends Component{
                       </Button>)
                       }
                       <Form inline>
-                        <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                         <Button variant="outline-dark" onClick={this.handleSearchPage}>Search</Button>
                       </Form>
                     </Nav>
@@ -276,18 +325,20 @@ class App extends Component{
             <Route path="/" component ={Landing} exact/>
             <Route path="/register" component={Register}/>
             <Route path="/home/:id" component={Home}/>
+            <Route path="/timeline/:id" component={Timeline}/>
+            <Route path="/Achievements/:id" component={Achievements}/>
             <Route path="/documents/:id" component={singleDoc}/>
             <Route path="/search/:id" component={Search}/>
             <Route path="/forget" component={forgetPassEmail}/>
             <Route path="/reset/:id" component={forgetPass}/>
-            {this.state.login? (<Route path="/manage/:id"
+            {this.state.login && this.state.loading ? (<Route path="/manage/:id"
                                     component={ManagePage}/>)
               :(<Route path="/manage/:id" component={NotFound}/>)
             }
-            {this.state.login? (<Route path="/view/:id"
+            {this.state.login && this.state.loading ? (<Route path="/view/:id"
                                       component={AccountView}/>)
               :(<Route path="/view/:id" component={NotFound}/>)}
-            {this.state.login? (<Route path="/updatePass/:id" component={changePassword}/>):(<Route path="/updatePass/:id" component={NotFound}/>)}
+            {this.state.login && this.state.loading? (<Route path="/updatePass/:id" component={changePassword}/>):(<Route path="/updatePass/:id" component={NotFound}/>)}
             <Route path="/notfound" render = {() => <NotFound link = "/"/> }/>
 
           </Switch>
@@ -311,9 +362,12 @@ class App extends Component{
                   </Alert>
                 ) : (<section></section>)
               }
-              <Form.Group controlId="formBasicPassword">
+              <Form.Group   controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
+              </Form.Group>
+              <Form.Group  controlId ="formforgotPassword" style = {{textAlign: "right"}}>
+                <a href = "/forget">Forgot password?</a>
               </Form.Group>
               {
                 ((this.state.loginInfo === false) ||
@@ -330,11 +384,75 @@ class App extends Component{
             <Button size="lg" block variant="primary" onClick={this.Adminlogin}>
               Login
             </Button>
-            <Button size="lg" block variant="primary" onClick={event =>  window.location.href='/register'}>
-              Register
-            </Button>
           </Modal.Footer>
         </Modal>
+
+        {this.state.showQR ? (
+            <footer>
+              <Navbar
+                bg = "light" variant = "light"
+                expand = "lg" sticky ="bottom"
+                className = "profile-footer">
+                <Nav  className = "profile-nav">
+                  <Nav.Item>
+                    <Form>
+                      <Form.Text> Product of team LiMQA ©</Form.Text>
+                    </Form>
+
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Button className = "qr-button"
+                            variant = "outline-dark"
+                            onClick={this.handleQRShow}>QR Code</Button>
+
+                  </Nav.Item>
+                  { this.state.slinksAlert? (<div></div>):
+                  (
+                  <Nav.Item className = "profile-socials">
+                    <Image onClick= {event => window.location.href = Facebook}
+                            src = {iconFacebook}
+                            style = {{width: "2vmax", height: "2vmax"}} />
+                    <Image onClick= {event => window.location.href = Instagram}
+                            src = {iconInstagram}
+                            style = {{width: "2vmax", height: "2vmax"}} />
+                    <Image onClick= {event => window.location.href = Linkedin}
+                            src = {iconLinkedin}
+                            style = {{width: "2vmax", height: "2vmax"}} />
+                    <Image onClick= {event => window.location.href = Github}
+                            src = {iconGithub}
+                            style = {{width: "2vmax", height: "2vmax"}} />
+                    <Image onClick= {event => window.location.href = WeChat}
+                            src = {iconWechat}
+                            style = {{width: "2vmax", height: "2vmax"}} />
+                  </Nav.Item>   )
+                }
+
+                </Nav>
+              </Navbar>
+
+              <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
+                <Modal.Body className ="qr-code">
+                  <Image src={this.state.QRcode} rounded style ={{width: "15vmax", height: "15vmax"}} />
+                </Modal.Body>
+                <Modal.Footer>
+                <Button block variant="outline-dark" onClick={this.handleQRClose}>
+                  Close
+                </Button>
+                </Modal.Footer>
+              </Modal>
+            </footer>
+          ):(
+            <footer>
+              <Navbar
+                bg = "light" variant = "light"
+                expand = "lg" fixed = "bottom"
+                className = "copyright">
+                <Form>
+                  <Form.Text> Product of team LiMQA ©</Form.Text>
+                </Form>
+              </Navbar>
+            </footer>
+          )}
       </div>
     )
   }

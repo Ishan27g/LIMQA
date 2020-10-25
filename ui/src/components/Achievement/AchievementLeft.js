@@ -12,7 +12,7 @@ class CardLeft extends React.Component{
     dateAchieved: this.props.dateAchieved
     }
   }
-  render(){   
+  render(){
     return (
       <Card className="outline left" /*style={{
           position:'relative', 
@@ -38,5 +38,5 @@ class CardLeft extends React.Component{
     );          
   }
 }
-  
+
 export default CardLeft;

@@ -29,7 +29,7 @@ const getUsers = async (req, res, next) => {
           path: 'tags',
           model: 'Tag'
         } 
-      }).populate("social").populate("tags");
+      }).populate("social").populate("tags").populate("photos");
   } catch (err) {
     const error = new HttpError(
       'Fetching users failed please try again later.',
@@ -92,8 +92,8 @@ const signup = async (req, res, next) => {
     email,
     documents: [],
     password: hashedPassword,
-    social: [], 
-    bioinfo: "This is bioinfo message",
+    social: [],
+    bioinfo: "Describe yourself in a few words.",
     semail: "",
     officeAddress: "",
     tags: [],
@@ -116,7 +116,7 @@ const signup = async (req, res, next) => {
     owner : createdUser.id,
     profilePhoto: "",
     coverImages: "",
-    bgImage: ""
+    bgImage: ["#182848", "#4B6CB7"]
   })
   try {
     await createdPhotos.save();
@@ -129,50 +129,50 @@ const signup = async (req, res, next) => {
   }
   // create some default tags for user.
 
-  const Default = new Tag({
-    name: "Default",
-    color: "grey",
+  const All = new Tag({
+    name: "All",
+    color: "primary",
     files: [],
     owner: createdUser.id
   })
 
   const work = new Tag({
     name: "Work-Experience",
-    color: "red",
+    color: "secondary",
     files : [],
     owner : createdUser.id
   });
-  
+
   const Academic = new Tag({
     name: "Academic",
-    color: "blue",
+    color: "info",
     files : [],
     owner : createdUser.id
   });
-  
+
   const volunteering = new Tag({
     name: "Volunteering",
-    color: "green",
+    color: "light",
     files : [],
     owner : createdUser.id
   });
-  
+
   const Leadership = new Tag({
     name: "Leadership",
-    color: "brown",
+    color: "warning",
     files : [],
     owner : createdUser.id
   });
-  
+
   const Curricular = new Tag({
     name: "Extra-Curricular",
-    color: "yellow",
+    color: "success",
     files : [],
     owner : createdUser.id
   });
-  
+
   try{
-      await Default.save();
+      await All.save();
       await work.save();
       await Academic.save();
       await volunteering.save();
@@ -265,6 +265,7 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
+  console.log("User signed up.");
   res.status(201).json({user: createdUser.toObject({ getters : true})});
 };
 // use passport middle ware to authenticate user.
@@ -272,15 +273,16 @@ const login = (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if(err) {
       return next(err);
-    } 
+    }
     if( ! user) {
-      return res.send({ success : false, message : 'authentication failed' }); 
+      return res.send({ success : false, message : 'authentication failed' });
     }
 
     req.login(user, loginErr => {
       if (loginErr) {
         return next(loginErr);
       }
+      console.log("User logged in.")
       return res.send({ success : true, message : 'authentication succeeded' });
     });
   })(req, res, next);
@@ -319,7 +321,7 @@ const forgotPassword = async (req, res, next) => {
 
   console.log(token);
 
-  user.resetPasswordToken = token;      // generate a unique token 
+  user.resetPasswordToken = token;      // generate a unique token
   user.resetPasswordExpires = Date.now() + 3600000; //  token will be expired in 1 hour.
 
   try{
@@ -332,7 +334,7 @@ const forgotPassword = async (req, res, next) => {
       )
       return next(error);
   }
- 
+
  //Create email transport service
  tr = nodemailer.createTransport({
   service: `${SERVICE}`,
@@ -354,11 +356,12 @@ const forgotPassword = async (req, res, next) => {
     if(err){
       console.log(err);
       console.log('Error sending email')
-    }else{  
+    }else{
       console.log('email sent')
       res.json({user : user.toObject({getters: true})});
     }
   })
+  console.log("Email sent to user.")
 }
 
 // check if token has expired or not.
@@ -410,7 +413,7 @@ const resetPassowrd = async (req, res, next) => {
   }
 
   user.password = hashedPassword;
-  user.resetPasswordToken = undefined;      // set token to undefined  
+  user.resetPasswordToken = undefined;      // set token to undefined
   user.resetPasswordExpires = undefined; // set expire time to undefinec.
 
   try{
@@ -423,7 +426,7 @@ const resetPassowrd = async (req, res, next) => {
       )
       return next(error);
   }
-  /*  
+  /*
     send an email to user to notify that user has changed password successfully.
   */
   //Create email transport service
@@ -446,13 +449,14 @@ const resetPassowrd = async (req, res, next) => {
     if(err){
       console.log(err);
       console.log('Error sending email')
-    }else{  
+    }else{
       console.log('email sent')
       res.json({
         reset: true
       });
     }
   })
+  console.log("User password reset complete.")
 }
 
 
@@ -499,13 +503,13 @@ const updatePassword = async (req, res, next) => {
     );
     return next(error);
   }
-
+  console.log("User update password complete.")
   res.json({success:true})
 }
 
 const checkPreviousPassword = async (req, res, next) => {
 
-  password = req.body.password; 
+  password = req.body.password;
   let user = req.user;
   let match;
   try {
@@ -535,10 +539,11 @@ const generateQRCode = (req, res, next) => {
       console.log(err);
       res.send("error occured.");
     }
+    console.log("QR code generated.")
     res.send(src);
   })
 
-  
+
 }
 
 exports.getUsers = getUsers;

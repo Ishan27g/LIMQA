@@ -17,7 +17,6 @@ let http = pathForRequest();
 class UserCard extends Component{
 
     render(){
-        const profileImage = http+'/api/user/profilePhoto'+this.props.id;
         var socials = this.props.social;
 
         var Linkedin = socials.filter( social =>
@@ -41,9 +40,10 @@ class UserCard extends Component{
                   style={{ height: "auto"}}
                   bg = "light">
 
-                  <Card.Img variant="top" src={http+'/api/users/profilePhoto/'+this.props.id}
+                  <Image variant="top" src={http+'/api/users/profilePhoto/'+this.props.id}
                             onError={(e)=>{e.target.onerror = null; e.target.src=profile}}
-                            style = {{width: "10vmax", height: "10vmax", alignSelf: "center"}}/>
+                            style = {{width: "10vmax", height: "10vmax", alignSelf: "center"}}
+                            roundedCircle/>
 
                   <Card.Title style = {{fontSize: "1.25em", color: "black"}}
                               onClick = {event =>  window.location.href = '/home/'+this.props.id }>
@@ -53,7 +53,7 @@ class UserCard extends Component{
                                   {this.props.email}
                                 </Card.Text>
                   </Card.Title>
-                  <Card.Body style={{height: "auto"}}>
+                  <Card.Body style={{height: "7rem"}}>
                     <Card.Text style = {{fontSize: "0.6em", color: "black"}}>
                       {this.props.bioinfo}
                     </Card.Text>

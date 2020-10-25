@@ -8,14 +8,16 @@ const { ensureAuthenticated } = require('../middlerware/auth');
 
 router.get('/bioinfo/:uid',  manageController.getBioinfo);
 // expect json data send from front-end.
-router.put('/bioinfo/:uid', ensureAuthenticated, [ check("bioinfo").not().isEmpty() ], manageController.updateBioinfo);
+router.put('/bioinfo/:uid', ensureAuthenticated, [ check("bioinfo").not().isEmpty(),
+                                                    check("bioinfo").isLength({max: 100}) ], manageController.updateBioinfo);
 
-router.get('/accSetting/:uid', ensureAuthenticated, manageController.getAcc);
-// expect form data 
+router.get('/accSetting/:uid', manageController.getAcc);
+// expect form data
 router.put('/accSetting/:uid', ensureAuthenticated, fileUpload.single('profileimg'), manageController.updateAcc);
 
 // document related routes below.
-router.post('/documents/:uid', ensureAuthenticated, fileUpload.single("document"), manageController.uploadFiles);
+router.post('/documents/:uid', ensureAuthenticated, fileUpload.single("document"), [ check("description").not().isEmpty(),
+check("description").isLength({max: 100}) ], manageController.uploadFiles);
 
 router.get('/documents/:uid', manageController.getFiles);
 
@@ -40,14 +42,15 @@ router.put('/social/:uid/:socialId', ensureAuthenticated, manageController.updat
 router.delete('/social/:uid/:socialId', ensureAuthenticated, manageController.deleteSocialLink);
 
 // create a new tag for a user
-/* json payload 
-    {"name":"testTag4","color":"black"} 
+/* json payload
+    {"name":"testTag4","color":"black"}
 */
-router.post('/tags/:uid', ensureAuthenticated, tagsController.addTagsForUser);
+router.post('/tags/:uid', ensureAuthenticated, [ check("name").not().isEmpty(),
+                        check("name").isLength({max: 20}) ],tagsController.addTagsForUser);
 
 // create a new tag and link to 1 document
 /* json payload
-    {"name":"testTag3","color":"green"} 
+    {"name":"testTag3","color":"green"}
 */
 router.post('/tags/:uid/:documentId', ensureAuthenticated, tagsController.addTagsToUserFile);
 
@@ -56,5 +59,7 @@ router.get('/tags/:uid', tagsController.getTagsForUser);
 
 //get all tags for all users
 router.get('/tags/', tagsController.getAllTagsForAllUsers);
+
+router.delete('/deleteTag/:tagId', ensureAuthenticated, tagsController.deleteTag);
 
 module.exports = router;

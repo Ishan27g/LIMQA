@@ -83,12 +83,35 @@
   text-align: center;
 }
 .upload-doc-input{
-  margin-top: 15vmax;
-  margin-bottom: 10vmax;
+  margin-top: 14rem;
+  margin-bottom: 10rem;
 }
 
 .upload-doc-input > .row{
   display: flex;
   justify-content: center;
+  padding-right: 2vmax;
+}
+
+.manage-tags-list > .row{
+  padding: 0.5vmax;
+  padding-left: 0;
+  justify-content: space-between;
+}
+
+.manage-tags > .modal-footer{
   border: 1px solid red;
+}
+
+.document-arena-search {
+  width: 35rem;
+  justify-content: center;
+}
+
+.document-arena-row{
+  padding: 1rem;
+}
+.tags-management-modal-footer{
+  display: flex;
+  justify-content: space-between;
 }

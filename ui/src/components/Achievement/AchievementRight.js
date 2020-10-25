@@ -1,10 +1,9 @@
-import { render } from '@testing-library/react';
-import React from 'react';
+import React, {Component} from "react";
 import Card from "react-bootstrap/Card";
 import docIcon from './documents.png';
 import './Card.css'
 
-class CardRight extends React.Component{
+class CardRight extends Component{
   constructor(props){
     super(props);
     this.state = {
@@ -14,7 +13,8 @@ class CardRight extends React.Component{
     dateAchieved: this.props.dateAchieved
     }
   }
-  render(){   
+
+  render(){
     return (
       <Card className="outline right" /*style={{
           position:'relative', 
@@ -37,8 +37,8 @@ class CardRight extends React.Component{
         </Card.Text>
       </Card.Body>
       </Card>
-    );          
+    );
   }
 }
-  
+
 export default CardRight;

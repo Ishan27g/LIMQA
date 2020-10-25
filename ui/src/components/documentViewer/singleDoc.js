@@ -14,8 +14,13 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
+import Spinner from 'react-bootstrap/Spinner';
+
 import doc from '../../Image/documents.png';
-import { DatePicker } from 'react-rainbow-components';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import FileViewer from 'react-file-viewer';
+import { CustomErrorComponent } from 'custom-error';
 import Tag from './../Tags/Tag.js';
 
 import {pathForRequest} from '../http.js';
@@ -58,7 +63,7 @@ class singleDoc extends Component {
             docViewer: true,
             /*Document Properties*/
             docname: "Untitled",
-            docdate: "Document Date",
+            docdate: "",
             tags: [],
             highlighted: false,
             docdesc: "",
@@ -69,6 +74,9 @@ class singleDoc extends Component {
             docId: this.props.match.params.id,
             /*All Tags Created*/
             allTags: [],
+            fileType: "",
+            filePath: "",
+            loaded: false,
         }
 
     }
@@ -82,24 +90,31 @@ class singleDoc extends Component {
             for(i=0; i<res.data.document.tags.length; i++){
                 tempTag.push(res.data.document.tags[i].name)
             }
+            var parts = res.data.document.path.split('.');
+            var pathParts = res.data.document.path.split('/');
             this.setState({
                 docname: res.data.document.name,
-                docdate: res.data.document.dateCreated,
+                docdate: res.data.document.dateCreated.split("T")[0],
                 highlighted: res.data.document.highlighted,
                 docdesc: res.data.document.description,
                 achievement: res.data.document.achivement,
                 acinst: res.data.document.institution,
-                acdate: res.data.document.dateAchieved,
+                acdate: res.data.document.dateAchieved.split("T")[0],
                 tags: tempTag,
-                owner: res.data.document.owner
+                owner: res.data.document.owner,
+                filePath: pathParts[pathParts.length-1],
+                fileType: parts[parts.length-1]
+
             },()=>{
+                this.setState({
+                    loaded: true
+                })
+                console.log(this.state.filePath);
                 const tagUrl = http+'/api/tags/' + this.state.owner;
-                console.log(tagUrl)
                 axios.get(tagUrl)
                 .then(res =>{
                     var tempTag = [];
                     var i;
-                    console.log(res.data)
                     for(i=0; i<res.data.length; i++){
                       tempTag.push(res.data[i].name);
                     }
@@ -111,6 +126,7 @@ class singleDoc extends Component {
                   console.log(error);
                 })
             })
+
         })
         .catch(function(error) {
             console.log(error);
@@ -131,7 +147,7 @@ class singleDoc extends Component {
 
     handleViewerShow = () => {
         this.setState({ docViewer: true });
-        
+
     }
     handleViewerClose = () => {
         this.setState({ docViewer: false});
@@ -187,12 +203,12 @@ class singleDoc extends Component {
         .then(res => {
             console.log(res);
             this.setState({
-                checkDelete: false, 
-                docEditor: false, 
+                checkDelete: false,
+                docEditor: false,
                 docViewer: false
             }, ()=>{
                 this.props.history.goBack();
-            }); 
+            });
         });
     }
 
@@ -261,6 +277,10 @@ class singleDoc extends Component {
     })
   }
 
+  onError = (e) => {
+    console.log(e, "error in file-viewer");
+  };
+
   render(){
     var tags = this.state.tags;
 
@@ -294,7 +314,10 @@ class singleDoc extends Component {
             </InputGroup>
         )
     })
-    //console.log(this.props.doc)
+
+    var path = this.state.filePath;
+    // change line 501 {require("/usr/src/uploads/images/"+path)}
+
     return(
         <body>
         { this.state.docEditor ?(
@@ -337,10 +360,19 @@ class singleDoc extends Component {
                     <Container fluid>
                     <Row>
                         <Col  xs ={5} md = {5}>
-                            {/*Change Image Src to document preview */}
                             <Row className = "docview-image">
-                                <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
-                            </Row>
+                                {this.state.loaded? (
+                                    <FileViewer
+                                    fileType={this.state.fileType}
+                                    filePath={require("./"+path)}
+                                    errorComponent={CustomErrorComponent}
+                                    onError={this.onError}
+                                    key={this.props.match.params.id}
+                                    />
+                                ):(
+                                    <Spinner animation="border" variant="secondary" />
+                                )}
+                                </Row>
                             <Row>
                                 <Button
                                  block
@@ -389,9 +421,9 @@ class singleDoc extends Component {
                                 style ={{marginBottom: "0.6vmax"}}
                                 onChange = {this.onChangeInstitution}/>
                               <DatePicker
-                               onChange={value => this.setState({acdate: value})}
-                               value={this.state.acdate}
-                               locale="en-US"
+                               selected={new Date(this.state.acdate)}
+                               onChange={date  => this.setState({acdate: date.toISOString().split('T')[0] })}
+                               dateFormat={'yyyy/MM/dd'}
                                />
                             </Row>
                             </Collapse>
@@ -477,8 +509,18 @@ class singleDoc extends Component {
                     <Container fluid>
                     <Row>
                         <Col className = "docview-image" xs ={5} md = {5}>
-                        {/*Change Image Src to document preview */}
-                        <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
+                        {this.state.loaded? (
+                            <FileViewer
+                            fileType={this.state.fileType}
+                            filePath={require("./"+path)}
+                            errorComponent={CustomErrorComponent}
+                            onError={this.onError}
+                            key={this.props.match.params.id}
+                            />
+                        ):(
+                            <Spinner animation="border" variant="secondary" />
+                        )}
+
                         </Col>
                         <Col className = "docview-properties">
                         <Row>
@@ -527,7 +569,7 @@ class singleDoc extends Component {
                     ):(
                         <div></div>
                     )}
-                    
+
                 </Modal.Footer>
             </Modal>
         )}
