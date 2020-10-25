@@ -17,7 +17,8 @@ import Collapse from 'react-bootstrap/Collapse';
 import Alert from 'react-bootstrap/Alert';
 import doc from '../../Image/documents.png';
 import Tag from './../Tags/Tag.js';
-import { DatePicker } from 'react-rainbow-components';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import {pathForRequest} from '../http.js';
 
@@ -124,7 +125,9 @@ class DocMode extends Component {
 
   /* Leaves abruptly w/o saving Changes */
   handleAbruptLeave = () => {
-    this.setState({docEditor:false, docViewer: false, checkEdit: false});
+    this.setState({
+      docEditor:false, docViewer: false, checkEdit: false
+    },()=>{window.location.href = '/manage/'+ this.props.doc.id;});
   }
 
   handleAddTags = () =>{
@@ -409,9 +412,9 @@ class DocMode extends Component {
                               style ={{marginBottom: "0.6vmax"}}
                               onChange = {this.onChangeInstitution}/>
                               <DatePicker
-                               onChange={value => this.setState({acdate: value})}
-                               value={this.state.acdate}
-                               locale="en-US"
+                               selected={new Date(this.state.acdate)}
+                               onChange={date  => this.setState({acdate: date.toISOString().split('T')[0] })}
+                               dateFormat={'yyyy/MM/dd'}
                                />
                           </Row>
                         </Collapse>
