@@ -14,11 +14,42 @@ const { hrtime } = require('process');
 
 require('dotenv').config();
 const nodemailer = require('nodemailer');
+const { getOneSocialLink } = require('./manageController');
 const {
   SERVICE,
   EMAIL,
   PASSWORD,
 } = process.env
+
+const getOneUser = async (req, res, next) => {
+  let user;
+  let userId = req.params.uid;
+  try {
+    user = await User.findById(userId).select("-password").populate(
+      {path: 'documents',
+        populate: {
+          path: 'tags',
+          model: 'Tag'
+        } 
+      }).populate("social").populate("tags").populate("photos");
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError (
+      "Cannot find user, please try again.",
+      500
+    )
+    return next(error);
+  }
+
+  if(!user) {
+    return next(new HttpError("User does not exits.", 422));
+  }
+  
+  res.json(
+    {
+      user : user.toObject({getters : true})
+    });
+}
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -555,3 +586,4 @@ exports.resetPassowrd = resetPassowrd;
 exports.updatePassword = updatePassword;
 exports.checkPreviousPassword = checkPreviousPassword;
 exports.generateQRCode = generateQRCode;
+exports.getOneUser = getOneUser;
