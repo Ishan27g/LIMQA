@@ -41,6 +41,7 @@ class ManagePage extends Component {
         super(props);
         this.docView = React.createRef();
         this.state = {
+           
           editBio : false,
           filter : "Title",
           bio: 'tester',
@@ -195,10 +196,16 @@ class ManagePage extends Component {
           tempCover.push(URL.createObjectURL(this.state.updateCover[i]));
         }
 
-        axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
-        .then( res => {
-          this.setState({
-            cover: tempCover
+          for(i=0; i<this.state.updateCover.length; i++){
+            covImg.append('files', this.state.updateCover[i]);
+            tempCover.push(URL.createObjectURL(this.state.updateCover[i]));
+          }
+
+          axios.post(http+'/api/users/coverImages/'+this.state.userid, covImg, { withCredentials: true })
+          .then( res => {
+            this.setState({
+              cover: tempCover
+            })
           })
         })
         .catch(function(error) {
@@ -601,28 +608,35 @@ class ManagePage extends Component {
       return(
         <body>
         <div class = "manage-cover-image">
-          <Carousel Fluid>
-            {coverImage}
-          <Carousel.Item>
-            <input
-             type="file"
-             style={{display: "none"}}
-             onChange={this.onChangeCoverImage}
-             ref={coverInput=>this.coverInput=coverInput}
-             multiple="multiple"/>
-            <img
-             src = {uploadCoverImageBg}
-             onClick = {() => this.coverInput.click()} />
-           <Carousel.Caption>
-             <img
-              src = {uploadIcon}
-              alt ="Upload Icon"
-              onClick = {() => this.coverInput.click()}
-              style = {{height: "7vmax", width: "9vmax", marginBottom: "1vmax"}}/>
-            <h3>Uplaod Cover Image</h3>
-           </Carousel.Caption>
-          </Carousel.Item>
-          </Carousel>
+          {this.state.alertCover?(
+            <Alert variant="danger" show={this.state.alertCover} block>
+            Upload cover image failed, the limit of total cover image is 5!
+            </Alert>
+          ):(
+            <Carousel Fluid>
+              {coverImage}
+            <Carousel.Item>
+              <input
+              type="file"
+              style={{display: "none"}}
+              onChange={this.onChangeCoverImage}
+              ref={coverInput=>this.coverInput=coverInput}
+              multiple="multiple"/>
+              <img
+              src = {uploadCoverImageBg}
+              onClick = {() => this.coverInput.click()} />
+            <Carousel.Caption>
+              <img
+                src = {uploadIcon}
+                alt ="Upload Icon"
+                onClick = {() => this.coverInput.click()}
+                style = {{height: "7vmax", width: "9vmax", marginBottom: "1vmax"}}/>
+              <h3>Uplaod Cover Image</h3>
+            </Carousel.Caption>
+            </Carousel.Item>
+            </Carousel>
+          )}
+
         </div>
 
             <div class = "manage-basic-info">
