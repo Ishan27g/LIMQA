@@ -68,10 +68,6 @@ p{
   font-weight: bolder;
 }
 
-.card-body{
-  background-color: rgba(180,180,180,0.5);
-  height: 5vmax;
-}
 .welcome-sign{
   line-height: 2;
   font-family: 'Kavoon', cursive;
