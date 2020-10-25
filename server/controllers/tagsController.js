@@ -133,6 +133,21 @@ const getAllTagsForAllUsers = async (req, res, next) => {
 
 const deleteTag = async (req, res, next) => {
     var tagID = req.params.tagId;
+    var tag;
+    try {
+        tag = await Tags.findById(tagID);
+    } catch (err) {
+        console.log(err);
+        const error = new HttpError(
+            "Tag does not exist.",
+            500
+        );
+        return next(error);
+    }
+    if(tag.name === "Default") {
+        return next(new HttpError("Cannot delete default tag."));
+    }
+
     try {
         await Tags.findOneAndRemove(
             { _id: tagID}, 

@@ -129,8 +129,8 @@ const signup = async (req, res, next) => {
   }
   // create some default tags for user.
 
-  const Default = new Tag({
-    name: "Default",
+  const All = new Tag({
+    name: "All",
     color: "primary",
     files: [],
     owner: createdUser.id
@@ -172,7 +172,7 @@ const signup = async (req, res, next) => {
   });
 
   try{
-      await Default.save();
+      await All.save();
       await work.save();
       await Academic.save();
       await volunteering.save();
