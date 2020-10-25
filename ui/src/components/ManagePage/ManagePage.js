@@ -4,6 +4,7 @@ import "../../App.css";
 import './Manage.css';
 
 import axios from "axios";
+import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
@@ -17,7 +18,6 @@ import FormControl from 'react-bootstrap/FormControl';
 import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row';
 import Modal from 'react-bootstrap/Modal';
-import Alert from 'react-bootstrap/Alert';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -65,6 +65,7 @@ class ManagePage extends Component {
           tagColor: "",
           delTag: "",
           tagManagement: false,
+          alertCover: false,
           alertCreateTag: false,
           alertDelTag: false
 
@@ -160,7 +161,7 @@ class ManagePage extends Component {
     uploadProfileImage(){
       if (this.state.updateProfile !== null){
         const proImg = new FormData();
-        proImg.append('file', this.state.updateProfile)
+        proImg.append('file', this.state.updateProfile);
         axios.post(http+'/api/users/profilePhoto/'+this.state.userid, proImg, { withCredentials: true })
         .then( res => {
           console.log(res);
@@ -187,14 +188,24 @@ class ManagePage extends Component {
 
     uploadCoverImage(){
       if (this.state.updateCover !== null){
-        const covImg = new FormData();
-        //covImg.append('files', this.state.updateCover)
-        var i;
-        var tempCover = [];
-        for(i=0; i<this.state.updateCover.length; i++){
-          covImg.append('files', this.state.updateCover[i]);
-          tempCover.push(URL.createObjectURL(this.state.updateCover[i]));
+        var length
+        if(this.state.cover[0]!==sampleImage1){
+          length = this.state.cover.length + this.state.updateCover.length;
+        }else{
+          length = this.state.updateCover.length;
         }
+        
+        if(length < 6){
+          const covImg = new FormData();
+          var i;
+          var tempCover = [];
+
+          if(this.state.cover[0]!==sampleImage1){
+            console.log("uptohere")
+            for(i=0; i<this.state.cover.length; i++){
+              tempCover.push(this.state.cover[i]);
+            }
+          }
 
           for(i=0; i<this.state.updateCover.length; i++){
             covImg.append('files', this.state.updateCover[i]);
@@ -207,9 +218,22 @@ class ManagePage extends Component {
               cover: tempCover
             })
           })
-        .catch(function(error) {
-          console.log(error);
-        });
+          .catch(function(error) {
+            console.log(error);
+          }); 
+
+        }else{
+          this.setState({alertCover:true},()=>{
+            window.setTimeout(()=>{
+              this.setState({alertCover:false}, ()=>{
+                this.setState({
+                  updateCover: null
+                })
+              })
+            },1500);
+          });
+        }
+
       }
     }
 
@@ -602,6 +626,7 @@ class ManagePage extends Component {
                         });
       return(
         <body>
+
         <div class = "manage-cover-image">
           {this.state.alertCover?(
             <Alert variant="danger" show={this.state.alertCover} block>
