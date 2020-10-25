@@ -1,6 +1,8 @@
 const fs = require('fs');
 const { exec } = require('child_process');
+const {v4:uuid4} =require('uuid');
 const HttpError = require('../models/http-error');
+const {validationResult } = require("express-validator");
 const  Photos = require('../models/photos');
 
 const getBgImage = async (req, res, next) => {
@@ -19,7 +21,7 @@ const getBgImage = async (req, res, next) => {
         var bgImage = existingPhoto.toObject({getters: true})
         bgImage = bgImage.bgImage
         res.status(200).json({ bgImage });
-    }   
+    }
     else{
         const error = new HttpError(
             'User not found.'+req.user.email,
@@ -56,7 +58,7 @@ const delBgImage = async (req, res, next) => {
         const update = {bgImage : ""}
         await existingPhoto.updateOne(update);
         res.status(201).json({bgImage:false});
-    }   
+    }
     else{
         const error = new HttpError(
             'User not found.'+req.user.email,
@@ -104,7 +106,7 @@ const getCoverImages = async (req, res, next) => {
     if(existingPhoto) {
         var coverImages = existingPhoto.toObject({getters: true})
         res.status(200).json({ coverImages });
-    }   
+    }
     else{
         const error = new HttpError(
             'User not found.' ,
@@ -120,7 +122,6 @@ const getCoverImagesById = async (req, res, next) =>{
     try {
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
-        console.log(err)
         const error = new HttpError(
         'Photos not found.',
         500
@@ -134,14 +135,14 @@ const getCoverImagesById = async (req, res, next) =>{
         if (err) {
             res.writeHead(400, {'Content-type':'text/html'})
             console.log(err);
-            res.end("No such image");    
+            res.end("No such image");
         } else {
             res.writeHead(200,{'Content-type':'image/jpg'});
             res.end(content);
         }
-       
+
         });
-    }   
+    }
     else{
         const error = new HttpError(
             'User not found.' ,
@@ -190,7 +191,7 @@ const delCoverImagesById = async (req, res, next) =>{
         const update = {coverImages : path}
         await existingPhoto.updateOne(update);
         res.status(201).json({coverImages:false});
-    }   
+    }
     else{
         const error = new HttpError(
             'User not found.' ,
@@ -225,7 +226,7 @@ const addCoverImages = async (req, res, next) =>{
     }
     existingPhoto.coverImages = existingPhoto.coverImages.concat(path);
     console.log(existingPhoto.coverImages);
-    
+
     try {
         await existingPhoto.save();
     } catch (err) {
@@ -257,13 +258,13 @@ const getProfilePhoto = async (req, res, next) => {
         if (err) {
             res.writeHead(400, {'Content-type':'text/html'})
             console.log(err);
-            res.end("No such image");    
+            res.end("No such image");
         } else {
             res.writeHead(200,{'Content-type':'image/jpg'});
             res.end(content);
         }
     });
-    }   
+    }
     else{
         const error = new HttpError(
             'User not found.'+req.user.email,
@@ -272,7 +273,7 @@ const getProfilePhoto = async (req, res, next) => {
         return next(error);
     }
   };
-  
+
 const addProfilePhoto = async (req, res, next) =>{
     let userId = req.params.uid
     let existingPhoto
@@ -313,7 +314,7 @@ const deleteProfilePhoto = async (req, res, next) =>{
         var path = existingPhoto.toObject({getters: true})
         path = `rm ${path.profilePhoto}`
         console.log(path)
-        
+
         exec(path, (error, stdout, stderr) => {
             if (error) {
                 console.log(`error: ${error.message}`);
@@ -323,7 +324,7 @@ const deleteProfilePhoto = async (req, res, next) =>{
                 console.log(`stderr: ${stderr}`);
             }
         });
-        
+
         const update = {profilePhoto : ""}
         await existingPhoto.updateOne(update);
         res.status(201).json({profilePhoto:false});
