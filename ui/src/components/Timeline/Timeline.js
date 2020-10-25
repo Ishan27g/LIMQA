@@ -10,6 +10,10 @@ import Tag from '../Tags/Tag.js';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Col from  'react-bootstrap/Col';
+import Spinner from  'react-bootstrap/Spinner';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 import docIcon from '../../Image/documents.png';
 import photoIcon from '../../Image/imageIcon.png';
@@ -29,7 +33,7 @@ class Timeline extends Component {
       userCoverImages:[],
       userTags:[],
       userid: this.props.match.params.id,
-      counter: 0
+      alertDisplay: false
     };
 
     this.getUsername = this.getUsername.bind(this);
@@ -40,36 +44,30 @@ class Timeline extends Component {
 
     componentDidMount(){
       this.getUsername();
-      this.getUserDocs();
-      this.getUserCoverImages();
-      this.getUserTags();
     };
 
     getUsername(){
       const accurl = http + '/api/accSetting/' + this.state.userid;
       axios.get(accurl)
       .then(response => {
-        var local_counter = this.state.counter + 1;
-        this.setState({username: response.data.user.name},() => {this.setState({counter:  local_counter})});
+        this.setState({username: response.data.user.name},() => {this.getUserTags()});
       })
       .catch(function(error) {
         console.log(error);
+        console.log("LEVEL 1 FAILED");
       });
     }
 
-    getUserDocs(){
-      const docurl =  http + '/api/documents/' + this.state.userid;
-      axios.get(docurl)
+    getUserTags(){
+      axios.get(http + '/api/tags/' + this.state.userid)
       .then(response => {
-        var local_counter = this.state.counter + 1;
-        this.setState({userDocuments: response.data.documents},() => {this.setState({counter:  local_counter})});
-        console.log(response.data.documents);
+        this.setState({userTags: response.data}, () => {this.getUserCoverImages()});
       })
       .catch(function(error) {
         console.log(error);
+        console.log("LEVEL 2 FAILED");
       });
     }
-
 
     getUserCoverImages(){
       axios.get(http + '/api/users/coverImages/' + this.state.userid)
@@ -78,24 +76,30 @@ class Timeline extends Component {
         for (var i = 0; i < response.data.coverImages.coverImages.length; i++){
           coverImagesbyId.push(http + '/api/users/coverImages/' + this.state.userid +'/'+ i)
         }
-        var local_counter = this.state.counter + 1;
-        this.setState({userCoverImages: coverImagesbyId}, () => {this.setState({counter: local_counter})});
+        this.setState({userCoverImages: coverImagesbyId}, () => {this.getUserDocs()});
       })
       .catch(function(error) {
         console.log(error);
+        console.log("LEVEL 3 FAILED");
       });
     }
 
-    getUserTags(){
-      axios.get(http + '/api/tags/' + this.state.userid)
+    getUserDocs(){
+      const docurl =  http + '/api/documents/' + this.state.userid;
+      axios.get(docurl)
       .then(response => {
-        var local_counter = this.state.counter + 1;
-        this.setState({userTags: response.data}, () => {this.setState({counter: local_counter})});
+        this.setState({userDocuments: response.data.documents}, () => this.setState({alertDisplay: true}));
       })
       .catch(function(error) {
         console.log(error);
+        console.log("LEVEL 4 FAILED");
       });
     }
+
+
+
+
+
 
   render (){
     var date;
@@ -216,8 +220,8 @@ class Timeline extends Component {
     console.log(coverImagesEvent);
     console.log(newTagEvent);*/
     console.log(timelineMarker);
-    console.log(this.state.counter)
-    if(this.state.counter === 4){
+    console.log(this.state.alertDisplay);
+    if(this.state.alertDisplay){
       return (
           <div className = "timeline-body">
           <h2>Recent Activity</h2>
@@ -227,7 +231,51 @@ class Timeline extends Component {
         </div>
       )
     } else {
-      return(<div></div>)
+      return(
+        <Container fluid className = "default-timeline-body">
+          <Row>
+            <Spinner animation="border" />
+          </Row>
+          <Row>
+            <h2>Want a Timeline?</h2>
+          </Row>
+          <Row>
+            <h3>Get the following on your profile today!</h3>
+          </Row>
+          <Row>
+              <OverlayTrigger placement="top"
+                              delay={{ hide: 100 }}
+                              overlay={
+                                <Tooltip>Photos</Tooltip>
+                              }>
+              <Image className = "icon-hover mr-sm-2" alt = "photo" src = {photoIcon}
+                     style = {{height:"50px", width: "50px"}}
+                     onClick = {event =>  window.location.href= '/manage/' + this.state.userid}/>
+              </OverlayTrigger>
+
+              <OverlayTrigger placement="top"
+                              delay={{ hide: 100 }}
+                              overlay={
+                                <Tooltip>Documents</Tooltip>
+                              }>
+              <Image className = "icon-hover mr-sm-2" alt = "document" src = {docIcon}
+                   style = {{height:"50px", width: "50px"}}
+                   onClick = {event =>  window.location.href= '/manage/' + this.state.userid}/>
+             </OverlayTrigger>
+
+             <OverlayTrigger placement="top"
+                             delay={{ hide: 100 }}
+                             overlay={
+                               <Tooltip>Tags</Tooltip>
+                             }>
+             <Image className = "icon-hover" alt = "tags" src = {tagIcon}
+                  style = {{height:"50px", width: "50px"}}
+                  onClick = {event =>  window.location.href= '/manage/' + this.state.userid}/>
+             </OverlayTrigger>
+          </Row>
+        </Container>
+
+      )
     }
 
   }

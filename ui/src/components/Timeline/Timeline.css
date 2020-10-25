@@ -4,10 +4,22 @@
   margin-bottom: 40px;
   background-color: white;
 
-
 }
 
-.timeline-body > h2 {
+.default-timeline-body{
+  width: 60%;
+  padding: 5%;
+  background-color: white;
+  margin-bottom: auto;
+  position: relative;
+  margin-bottom: 20%;
+
+}
+.default-timeline-body > .row{
+  justify-content: center;
+}
+
+.timeline-body > h2 , .default-timeline-body > .row > h2, .default-timeline-body > .row > h3{
   color: black;
   padding-top: 1vmax;
   padding-bottom: 1vmax;

@@ -87,7 +87,7 @@ class Search extends Component{
     if(e.target.innerHTML === 'Tag'){
       this.setState({
         searchMethod: "Tag",
-        search: "Default;",
+        search: "Default|",
         searching: false
       })
     }
@@ -121,10 +121,10 @@ class Search extends Component{
     if (this.state.search === ""){
       this.setState({
         searching: true,
-        search: e.target.innerHTML + ';'
+        search: e.target.innerHTML + "|"
       })
     }else{
-      var tempTag = this.state.search.split(";");
+      var tempTag = this.state.search.split("|");
       tempTag.pop();
       if (tempTag.includes(e.target.innerHTML)){
         if(e.target.innerHTML !== "Default"){
@@ -133,9 +133,9 @@ class Search extends Component{
           var i;
           var tempString = tempTag[0];
           for(i=1; i<tempTag.length; i++){
-            tempString = tempString + ";" + tempTag[i]
+            tempString = tempString + "|" + tempTag[i]
           }
-          tempString = tempString + ";"
+          tempString = tempString + "|"
           this.setState({
             search: tempString
           })
@@ -143,7 +143,7 @@ class Search extends Component{
       }else{
         this.setState({
           searching: true,
-          search: this.state.search + e.target.innerHTML + ';'
+          search: this.state.search + e.target.innerHTML + "|"
         })
       }
     }
@@ -188,7 +188,7 @@ render(){
 
     }else{
       if (this.state.search !== ""){
-        var selectTags = this.state.search.split(";");
+        var selectTags = this.state.search.split("|");
         var tempTagWithDoc = [];
         var i;
         for(i=0; i<selectTags.length; i++){

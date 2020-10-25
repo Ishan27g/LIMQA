@@ -725,7 +725,7 @@ class ManagePage extends Component {
                             <Form.Control type="tag" placeholder="Enter new tag name" onChange={this.onChangeTagName}/>
                           </Form.Group>
                           <Form.Group>
-                            <Form.Text>Pick a Color</Form.Text>
+                            <Form.Text as = "h5">Pick a Color</Form.Text>
                           </Form.Group>
                           <Form.Group>
                             <ToggleButtonGroup type="radio" name="options" defaultValue="primary" onChange = {this.tagColorChange}>
@@ -733,11 +733,11 @@ class ManagePage extends Component {
                             </ToggleButtonGroup>
                           </Form.Group>
                           <Form.Group >
+                            <Button className = "mr-sm-2" variant="warning" type="submit" onClick={this.handleAddTagClose}>
+                              Return
+                            </Button>
                             <Button variant="primary" type="submit" onClick={this.createNewTag}>
                               Create
-                            </Button>{' '}
-                            <Button variant="warning" type="submit" onClick={this.handleAddTagClose}>
-                              Return
                             </Button>
                           </Form.Group>
                           {
@@ -759,6 +759,7 @@ class ManagePage extends Component {
 
                   </Modal.Body>
                   <Modal.Footer>
+
                     <Button variant="danger" onClick={this.handleTagClose}>
                       Close
                     </Button>
