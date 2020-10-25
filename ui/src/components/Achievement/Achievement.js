@@ -10,7 +10,7 @@ class CardApp extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      documents: [{name: 'A', description: 'a', achivement: true, Institution: 'SPV', dateAchieved:'11-12-14', highlighted: false }, 
+      documents: [{name: 'A', description: 'alot has happened in te lst dor djkwqufdwebdebvwhjfdge ehqwkfruwf wfejwhfuhuhdekjwenc hfwkjafj.rjfareigs jfaljfijresvnjkewjoidjdw dljwio', achivement: true, Institution: 'SPV', dateAchieved:'11-12-14', highlighted: false }, 
         {name: 'B', description: 'b', achivement: true, Institution: 'Unimelb', dateAchieved: '12-13-14', highlighted: false}],
       //userId: this.props.match.params.id,
     }
