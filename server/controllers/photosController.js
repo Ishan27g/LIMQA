@@ -219,12 +219,20 @@ const addCoverImages = async (req, res, next) =>{
         );
         return next(error);
     }
-    limit = existingPhoto.coverImages.length + path.length;
-
+    if(existingPhoto.coverImages[0] === ""){
+        limit = path.length;
+    }else{
+        limit = existingPhoto.coverImages.length + path.length;
+    }
+    
     if(limit > 5) {
         return next(new HttpError("Exceed cover image limits, no more that five."));
     }
-    existingPhoto.coverImages = existingPhoto.coverImages.concat(path);
+    if(existingPhoto.coverImages[0] === ""){
+        existingPhoto.coverImages =path;
+    }else{ 
+        existingPhoto.coverImages = existingPhoto.coverImages.concat(path);
+    }
     console.log(existingPhoto.coverImages);
 
     try {
