@@ -114,30 +114,30 @@
   margin-left: 10%;
   margin-right: 10%;
 }
-.edit-social-list > .list-group-item,
-.edit-contact-list > .list-group-item{
+.edit-social-list > .list-group-item > .input-group,
+.edit-contact-list > .list-group-item > .input-group{
   width: 40vmax;
 }
 
-.edit-social-list > .list-group-item > p,
-.edit-contact-list > .list-group-item > p{
+.edit-social-list > .list-group-item > .input-group > p,
+.edit-contact-list > .list-group-item  > .input-group > p{
   color: black;
   font-size: 1.25em;
   font-weight: normal;
   text-align: left;
 }
 
-.edit-social-list > .list-group-item > h4,
-.edit-contact-list > .list-group-item > h4{
+.edit-social-list > .list-group-item > .input-group > h4,
+.edit-contact-list > .list-group-item  > .input-group > h4{
   font-family: "Roboto", sans-serif;
   font-size: 1.25em;
   font-weight: bolder;
 }
-.edit-social-list > .list-group-item > p > span:hover{
+.edit-social-list > .list-group-item > .input-group > p > span:hover{
   color: blue;
 }
 
-.edit-social-list > .list-group-item > h4{
+.edit-social-list > .list-group-item > .input-group > h4{
   font-family: "Roboto", sans-serif;
   font-size: 1.25em;
   font-weight: bolder;

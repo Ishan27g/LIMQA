@@ -17,7 +17,8 @@ import Collapse from 'react-bootstrap/Collapse';
 import Spinner from 'react-bootstrap/Spinner';
 
 import doc from '../../Image/documents.png';
-import { DatePicker } from 'react-rainbow-components';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import FileViewer from 'react-file-viewer';
 import { CustomErrorComponent } from 'custom-error';
 import Tag from './../Tags/Tag.js';
@@ -359,10 +360,19 @@ class singleDoc extends Component {
                     <Container fluid>
                     <Row>
                         <Col  xs ={5} md = {5}>
-                            {/*Change Image Src to document preview */}
                             <Row className = "docview-image">
-                                <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
-                            </Row>
+                                {this.state.loaded? (
+                                    <FileViewer
+                                    fileType={this.state.fileType}
+                                    filePath={require("./"+path)}
+                                    errorComponent={CustomErrorComponent}
+                                    onError={this.onError}
+                                    key={this.props.match.params.id}
+                                    />
+                                ):(
+                                    <Spinner animation="border" variant="secondary" />
+                                )}
+                                </Row>
                             <Row>
                                 <Button
                                  block
@@ -411,9 +421,9 @@ class singleDoc extends Component {
                                 style ={{marginBottom: "0.6vmax"}}
                                 onChange = {this.onChangeInstitution}/>
                               <DatePicker
-                               onChange={value => this.setState({acdate: value})}
-                               value={this.state.acdate}
-                               locale="en-US"
+                               selected={new Date(this.state.acdate)}
+                               onChange={date  => this.setState({acdate: date.toISOString().split('T')[0] })}
+                               dateFormat={'yyyy/MM/dd'}
                                />
                             </Row>
                             </Collapse>
@@ -499,7 +509,6 @@ class singleDoc extends Component {
                     <Container fluid>
                     <Row>
                         <Col className = "docview-image" xs ={5} md = {5}>
-                        {/*Change Image Src to document preview  <Image src ={doc} style = {{height:"100%", width: "100%"}}/>*/ }
                         {this.state.loaded? (
                             <FileViewer
                             fileType={this.state.fileType}
@@ -510,9 +519,7 @@ class singleDoc extends Component {
                             />
                         ):(
                             <Spinner animation="border" variant="secondary" />
-                        )
-
-                        }
+                        )}
 
                         </Col>
                         <Col className = "docview-properties">

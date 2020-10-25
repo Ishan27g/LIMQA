@@ -17,6 +17,7 @@ import AccountView from './components/AccountView/accountView.js';
 import Landing from './components/LandingPage/landingPage.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import Timeline from './components/Timeline/Timeline.js';
+import Achievements from './components/Achievement/Achievement.js';
 import NotFound from './components/NotFound.js';
 import Register from './components/SignUp/register.js';
 import singleDoc from './components/documentViewer/singleDoc.js';
@@ -69,13 +70,14 @@ class App extends Component{
       /*Login Values*/
         email: '',
         password: '',
+        loading: false,
 
     }
   }
 
   componentDidMount(){
     var path = window.location.pathname.split("/")[1];
-    if(path !=='' && path!=='register' && path !== 'reset' && path !== 'notfound' && path!== 'forget'){
+    if(path!=='' && path!=='register' && path !== 'reset' && path !== 'notfound' && path!== 'forget'){
       this.setState({
         showQR: true,
         front: false,
@@ -84,7 +86,7 @@ class App extends Component{
             axios.get( http+'/api/social/' + this.state.userId)
             .then(response => {
               this.setState({socialLinks: response.data.socials},
-                 () =>{this.setState({slinksAlert: false})})
+                 () =>{this.setState({slinksAlert: false}) })
             })
             .catch(function(error) {
                 console.log(error);
@@ -105,9 +107,12 @@ class App extends Component{
             login: true,
             loginInfo: true,
             userId: response.data.userid
+          },()=>{
+            this.setState({loading: true})
           })
         }
-    })
+    });
+    this.setState({loading: true})
   };
 
   handleSignClose = () => {
@@ -230,25 +235,24 @@ class App extends Component{
 
   render(){
     if(this.state.slinksAlert === false){
-      var socials = this.state.socialLinks;
+    var socials = this.state.socialLinks;
 
-      var Linkedin = socials.filter( social =>
-          {return social.name === "Linkedin"}
-      )[0].url;
-      var Facebook = socials.filter( social =>
-          {return social.name === "Facebook"}
-      )[0].url;
-      var Instagram = socials.filter(social =>
-            {return social.name === "Instagram"}
-      )[0].url;
-      var Github = socials.filter(social =>
-            {return social.name === "Github"}
-      )[0].url;
-      var WeChat = socials.filter(social =>
-            {return social.name === "Wechat"}
-      )[0].url;
-    }
-
+    var Linkedin = socials.filter( social =>
+        {return social.name === "Linkedin"}
+    )[0].url;
+    var Facebook = socials.filter( social =>
+        {return social.name === "Facebook"}
+    )[0].url;
+    var Instagram = socials.filter(social =>
+          {return social.name === "Instagram"}
+    )[0].url;
+    var Github = socials.filter(social =>
+          {return social.name === "Github"}
+    )[0].url;
+    var WeChat = socials.filter(social =>
+          {return social.name === "Wechat"}
+    )[0].url;
+  }
     return (
       <div>
           {this.state.front && !this.state.login? (
@@ -263,6 +267,10 @@ class App extends Component{
                     onClick={this.handleSignShow}
                     className="mr-2">
                     <img alt="Login" src = {loginButton}/>
+                  </Button>
+                  <Button variant ="outline-dark"
+                          onClick = {() => {window.location.href = "/register"}}>
+                          Register Now!
                   </Button>
                 </Navbar>
               </header>
@@ -281,7 +289,7 @@ class App extends Component{
                     <Nav.Link href={"/home/"+this.state.userId}>About me</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
-                      <Nav.Link href="/">Achievements</Nav.Link>
+                      <Nav.Link href={"/Achievements/"+this.state.userId}>Achievements</Nav.Link>
                     </Nav.Item>
                     <Nav.Item class = "nav-item">
                       <Nav.Link href={'/timeline/'+this.state.userId}>Timeline</Nav.Link>
@@ -318,18 +326,19 @@ class App extends Component{
             <Route path="/register" component={Register}/>
             <Route path="/home/:id" component={Home}/>
             <Route path="/timeline/:id" component={Timeline}/>
+            <Route path="/Achievements/:id" component={Achievements}/>
             <Route path="/documents/:id" component={singleDoc}/>
             <Route path="/search/:id" component={Search}/>
             <Route path="/forget" component={forgetPassEmail}/>
             <Route path="/reset/:id" component={forgetPass}/>
-            {this.state.login? (<Route path="/manage/:id"
+            {this.state.login && this.state.loading ? (<Route path="/manage/:id"
                                     component={ManagePage}/>)
               :(<Route path="/manage/:id" component={NotFound}/>)
             }
-            {this.state.login? (<Route path="/view/:id"
+            {this.state.login && this.state.loading ? (<Route path="/view/:id"
                                       component={AccountView}/>)
               :(<Route path="/view/:id" component={NotFound}/>)}
-            {this.state.login? (<Route path="/updatePass/:id" component={changePassword}/>):(<Route path="/updatePass/:id" component={NotFound}/>)}
+            {this.state.login && this.state.loading? (<Route path="/updatePass/:id" component={changePassword}/>):(<Route path="/updatePass/:id" component={NotFound}/>)}
             <Route path="/notfound" render = {() => <NotFound link = "/"/> }/>
 
           </Switch>
@@ -353,9 +362,12 @@ class App extends Component{
                   </Alert>
                 ) : (<section></section>)
               }
-              <Form.Group controlId="formBasicPassword">
+              <Form.Group   controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
+              </Form.Group>
+              <Form.Group  controlId ="formforgotPassword" style = {{textAlign: "right"}}>
+                <a href = "/forget">Forgot password?</a>
               </Form.Group>
               {
                 ((this.state.loginInfo === false) ||
@@ -371,9 +383,6 @@ class App extends Component{
           <Modal.Footer>
             <Button size="lg" block variant="primary" onClick={this.Adminlogin}>
               Login
-            </Button>
-            <Button size="lg" block variant="primary" onClick={event =>  window.location.href='/register'}>
-              Register
             </Button>
           </Modal.Footer>
         </Modal>

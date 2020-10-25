@@ -52,17 +52,17 @@ class Search extends Component{
   }
 
   onChangeSearch(e){
-    if (e.target.value === ""){	
-      this.setState({	
-        search: e.target.value,	
-        searching: false	
-      });	
-    } else {	
-      this.setState({	
-        search: e.target.value,	
-        searching: true	
-      });	
-    }	
+    if (e.target.value === ""){
+      this.setState({
+        search: e.target.value,
+        searching: false
+      });
+    } else {
+      this.setState({
+        search: e.target.value,
+        searching: true
+      });
+    }
 
   }
 
@@ -87,7 +87,7 @@ class Search extends Component{
     if(e.target.innerHTML === 'Tag'){
       this.setState({
         searchMethod: "Tag",
-        search: "Default;",
+        search: "Default|",
         searching: false
       })
     }
@@ -96,13 +96,13 @@ class Search extends Component{
   intersection() {
     var result = [];
     var lists;
-    
+
     if(arguments.length === 1) {
       lists = arguments[0];
     } else {
       lists = arguments;
     }
-    
+
     for(var i = 0; i < lists.length; i++) {
       var currentList = lists[i];
       for(var y = 0; y < currentList.length; y++) {
@@ -121,10 +121,10 @@ class Search extends Component{
     if (this.state.search === ""){
       this.setState({
         searching: true,
-        search: e.target.innerHTML + ';'
+        search: e.target.innerHTML + "|"
       })
     }else{
-      var tempTag = this.state.search.split(";");
+      var tempTag = this.state.search.split("|");
       tempTag.pop();
       if (tempTag.includes(e.target.innerHTML)){
         if(e.target.innerHTML !== "Default"){
@@ -133,9 +133,9 @@ class Search extends Component{
           var i;
           var tempString = tempTag[0];
           for(i=1; i<tempTag.length; i++){
-            tempString = tempString + ";" + tempTag[i]
+            tempString = tempString + "|" + tempTag[i]
           }
-          tempString = tempString + ";"
+          tempString = tempString + "|"
           this.setState({
             search: tempString
           })
@@ -143,20 +143,20 @@ class Search extends Component{
       }else{
         this.setState({
           searching: true,
-          search: this.state.search + e.target.innerHTML + ';'
+          search: this.state.search + e.target.innerHTML + "|"
         })
       }
     }
   }
 
 render(){
-  
+
   var tags = this.state.tags;
   var tagNames = [];
   let tagsMap = tags.map(tags =>{
     tagNames.push(tags.name);
       return(
-          <Button onClick={this.onChangeTag}>{tags.name}</Button>
+          <Button className = "mt-sm-1 mr-sm-1"onClick={this.onChangeTag} variant = {tags.color}>{tags.name}</Button>
       )
   })
 
@@ -188,7 +188,7 @@ render(){
 
     }else{
       if (this.state.search !== ""){
-        var selectTags = this.state.search.split(";");
+        var selectTags = this.state.search.split("|");
         var tempTagWithDoc = [];
         var i;
         for(i=0; i<selectTags.length; i++){
@@ -206,8 +206,8 @@ render(){
 
       }
     }
-    
-      
+
+
     let showDocs = searchDocs.map( searchedDoc => {
         return (
             <Col sm='3' >
@@ -274,7 +274,7 @@ render(){
                   {tagsMap}
                   </Row>
                 )}
-               
+
                 {this.state.searching ? (
                     <Container>
                         <div class="row justify-content-md-center" style={{marginTop:"2rem"}}>
