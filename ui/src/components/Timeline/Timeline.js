@@ -105,6 +105,7 @@ class Timeline extends Component {
 
   render (){
     var date;
+    var id;
     var docCreationEvents = this.state.userDocuments.map(event => {
       var docTags = event.tags.map(tag =>{
           return (<Tag note = {tag.name} variant = {tag.color}/>)
@@ -126,7 +127,7 @@ class Timeline extends Component {
                     </Container>,
         icon: <Image className = "icon-hover" alt = "document" src = {docIcon}
                      style = {{height:"65px", width: "50px"}}
-                     onClick = {event =>  window.location.href = '/documents/'+ event._id }/>,
+                     onClick = { e =>  window.location.href = '/documents/'+ event._id }/>,
                    //remove onCLick when MArker onclick works
         datetime: event.dateCreated,
         clickEvent:  '/documents/'+ event._id,
@@ -156,7 +157,7 @@ class Timeline extends Component {
                     </Container>,
         icon: <Image className = "icon-hover" alt = "document" src = {docIcon}
                      style = {{height:"65px", width: "50px"}}
-                     onClick = {event =>  window.location.href= '/documents/'+ event._id}/>,
+                     onClick = {e =>  window.location.href= '/documents/'+ event._id}/>,
         datetime: event.dateModified,
         photo : ""
       })
@@ -180,7 +181,7 @@ class Timeline extends Component {
       label: this.state.username + ' added a cover image',
       icon: <Image className = "icon-hover" alt = "photo" src = {photoIcon}
                    style = {{height:"50px", width: "50px"}}
-                   onClick = {event =>  window.location.href= '/manage/' + this.state.userid}/>,
+                   onClick = {e =>  window.location.href= '/manage/' + this.state.userid}/>,
       datetime: "2020-10-19T04:23:28.855Z",/*Add DateAdded after response.data structure is created*/
       description: "",
       photo : event
