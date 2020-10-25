@@ -8,8 +8,10 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+import InputGroup from 'react-bootstrap/InputGroup';
 import Collapse from 'react-bootstrap/Collapse';
-
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover';
 import {pathForRequest} from '../http.js';
 let http = pathForRequest();
 
@@ -23,7 +25,6 @@ class Register extends Component{
     this.onChangePassword = this.onChangePassword.bind(this);
     this.onChangeRePassword = this.onChangeRePassword.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
-
     this.state ={
         /*User Values to Post*/
         username: '',
@@ -107,93 +108,82 @@ class Register extends Component{
         });
     }
   }
+
   render(){
     return(
-      <div className ="page-fill">
-      <Container className = "register">
+      <Container fluid className = "register">
         <Col>
           <Form className = "register-form">
-            <h3>Register to LiMQA E-portfolio</h3>
+            <h4>Register to LiMQA E-portfolio</h4>
             <Form.Group controlId="formBasicUsername">
-              <Col sm = "2">
               <Form.Label>Username</Form.Label>
-              </Col>
-              <Col sm = "10">
               <Form.Control placeholder="Enter Username" onChange={this.onChangeUsername} />
-              </Col>
             </Form.Group>
             {this.state.alertUsername?
             (<Collapse>
-              <Row>
-                <Col sm = {{span: 8, offset: 3}}>
-                    <Alert variant={'danger'}>
-                      Invalid Username!
-                    </Alert>
-                </Col>
-              </Row>
+                <Alert  block variant={'danger'}>
+                  Invalid Username!
+                </Alert>
             </Collapse>):(
               <div></div>
             )
             }
             <Form.Group controlId="formBasicEmail">
-              <Col sm = "2">
               <Form.Label>Email</Form.Label>
-              </Col>
-              <Col sm = "10">
               <Form.Control type="email" placeholder="Enter email" onChange={this.onChangeEmail} />
-              </Col>
             </Form.Group>
             {this.state.alertEmail?
             (<Collapse>
-              <Row>
-                <Col sm = {{span: 8, offset: 3}}>
-                    <Alert variant={'danger'}>
-                      Invalid Email!
-                    </Alert>
-                </Col>
-              </Row>
+                <Alert variant={'danger'}>
+                  Invalid Email!
+                </Alert>
             </Collapse>):(
               <div></div>
             )
             }
             <Form.Group controlId="formBasicPassword">
-              <Col sm = "2">
               <Form.Label>Password</Form.Label>
-              </Col>
-              <Col sm = "10">
-              <Form.Control type="password" placeholder="Requirements length 6 with a capital letter & number" onChange={this.onChangePassword}/>
-              </Col>
+              <InputGroup>
+                <Form.Control type="password" placeholder="Requirements " onChange={this.onChangePassword}/>
+                <InputGroup.Append>
+                  <OverlayTrigger placement="top"
+                                  delay={{ hide: 400 }}
+                                  overlay={
+                                    <Popover id="popover-basic">
+                                      <Popover.Title as="h6">Password Requirements </Popover.Title>
+                                      <Popover.Content>
+                                        Password should be atleast
+                                        <strong> 6 characters</strong> long<br/>
+                                        Should contain a <strong>capital </strong>
+                                        letter and a <strong>number</strong>
+                                      </Popover.Content>
+                                    </Popover>
+                                  }>
+                    <Button variant = "light">?</Button>
+                  </OverlayTrigger>
+                </InputGroup.Append>
+              </InputGroup>
+
             </Form.Group>
+
             {this.state.alertPassword?
             (<Collapse>
-              <Row>
-                <Col sm = {{span: 8, offset: 3}}>
-                    <Alert variant={'danger'}>
-                      Enter a Valid Password
-                    </Alert>
-                </Col>
-              </Row>
+                <Alert variant={'danger'}>
+                  Enter a Valid Password
+                </Alert>
             </Collapse>):(
               <div></div>
             )
             }
             <Form.Group controlId="formBasicRePassword">
-              <Col sm = "2">
               <Form.Label>Re-enter Password</Form.Label>
-              </Col>
-              <Col sm = "10">
               <Form.Control type="password" placeholder="Re-Enter Password" onChange={this.onChangeRePassword}/>
-              </Col>
             </Form.Group>
             {this.state.alertRePassword?
             (<Collapse>
-              <Row>
-                <Col sm = {{span: 8, offset: 3}}>
-                    <Alert variant={'danger'}>
-                      Passwords don't match!
-                    </Alert>
-                </Col>
-              </Row>
+              <Alert variant={'danger'}>
+                Passwords don't match!
+              </Alert>
             </Collapse>):(
               <div></div>
             )
@@ -204,7 +194,6 @@ class Register extends Component{
           </Form>
         </Col>
       </Container>
-    </div>
     )
   }
 }

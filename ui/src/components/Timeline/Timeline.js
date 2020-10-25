@@ -10,6 +10,10 @@ import Tag from '../Tags/Tag.js';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Col from  'react-bootstrap/Col';
+import Spinner from  'react-bootstrap/Spinner';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 import docIcon from '../../Image/documents.png';
 import photoIcon from '../../Image/imageIcon.png';
@@ -29,7 +33,7 @@ class Timeline extends Component {
       userCoverImages:[],
       userTags:[],
       userid: this.props.match.params.id,
-      counter: 0
+      alertDisplay: false
     };
 
     this.getUsername = this.getUsername.bind(this);
@@ -40,20 +44,45 @@ class Timeline extends Component {
 
     componentDidMount(){
       this.getUsername();
-      this.getUserDocs();
-      this.getUserCoverImages();
-      this.getUserTags();
+
     };
 
     getUsername(){
       const accurl = http + '/api/accSetting/' + this.state.userid;
-      axios.get(accurl, {withCredentials: true })
+      axios.get(accurl)
       .then(response => {
-        var local_counter = this.state.counter + 1;
-        this.setState({username: response.data.user.name},() => {this.setState({counter:  local_counter})});
+        this.setState({username: response.data.user.name},() => {this.getUserTags()});
       })
       .catch(function(error) {
         console.log(error);
+        console.log("LEVEL 1 FAILED");
+      });
+    }
+
+    getUserTags(){
+      axios.get(http + '/api/tags/' + this.state.userid)
+      .then(response => {
+        this.setState({userTags: response.data}, () => {this.getUserCoverImages()});
+      })
+      .catch(function(error) {
+        console.log(error);
+        console.log("LEVEL 2 FAILED");
+      });
+    }
+
+    getUserCoverImages(){
+      axios.get(http + '/api/users/coverImages/' + this.state.userid)
+      .then(response => {
+        console.log(response.data);
+        var coverImagesbyId = [];
+        for (var i = 0; i < response.data.coverImages.coverImages.length; i++){
+          coverImagesbyId.push(http + '/api/users/coverImages/' + this.state.userid +'/'+ i)
+        }
+        this.setState({userCoverImages: coverImagesbyId}, () => {this.getUserDocs()});
+      })
+      .catch(function(error) {
+        console.log(error);
+        console.log("LEVEL 3 FAILED");
       });
     }
 
@@ -61,49 +90,26 @@ class Timeline extends Component {
       const docurl =  http + '/api/documents/' + this.state.userid;
       axios.get(docurl)
       .then(response => {
-        var local_counter = this.state.counter + 1;
-        this.setState({userDocuments: response.data.documents},() => {this.setState({counter:  local_counter})});
-        console.log(response.data.documents);
+        this.setState({userDocuments: response.data.documents}, () => this.setState({alertDisplay: true}));
       })
       .catch(function(error) {
         console.log(error);
+        console.log("LEVEL 4 FAILED");
       });
     }
 
 
-    getUserCoverImages(){
-      axios.get(http + '/api/users/coverImages/' + this.state.userid)
-      .then(response => {
-        var coverImagesbyId = [];
-        for (var i = 0; i < response.data.coverImages.coverImages.length; i++){
-          coverImagesbyId.push(http + '/api/users/coverImages/' + this.state.userid +'/'+ i)
-        }
-        var local_counter = this.state.counter + 1;
-        this.setState({userCoverImages: coverImagesbyId}, () => {this.setState({counter: local_counter})});
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-    }
 
-    getUserTags(){
-      axios.get(http + '/api/tags/' + this.state.userid)
-      .then(response => {
-        var local_counter = this.state.counter + 1;
-        this.setState({userTags: response.data}, () => {this.setState({counter: local_counter})});
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-    }
+
+
 
   render (){
     var date;
     var docCreationEvents = this.state.userDocuments.map(event => {
       var docTags = event.tags.map(tag =>{
-          return (<Tag note = {tag.name}/>)
+          return (<Tag note = {tag.name} variant = {tag.color}/>)
       });
-      date = event.dateCreated.split("T")[0]
+      /*date = event.dateCreated.split("T")[0]*/
       return ({
         type: "document",
         label: this.state.username + ' uploaded ' + event.name.split(".")[0],
@@ -122,7 +128,7 @@ class Timeline extends Component {
                      style = {{height:"65px", width: "50px"}}
                      onClick = {event =>  window.location.href = '/documents/'+ event._id }/>,
                    //remove onCLick when MArker onclick works
-        datetime: date,
+        datetime: event.dateCreated,
         clickEvent:  '/documents/'+ event._id,
         photo : ""
       })
@@ -132,7 +138,7 @@ class Timeline extends Component {
       return modified.dateModified !== "";
     }).map(event => {
       var docTags = event.tags.map(tag =>{
-          return (<Tag note = {tag.name}/>)
+          return (<Tag note = {tag.name} variant = {tag.color}/>)
       });
       return ({
         type: "document",
@@ -186,28 +192,15 @@ class Timeline extends Component {
       return ({
       type: "tag",
       label: <div>
-                {this.state.username + ' created a new tag '}&nbsp;&nbsp;{<Tag note = {event.name} />}
+                {this.state.username + ' created a new tag '}&nbsp;&nbsp;{<Tag note = {event.name} variant = {event.color}/>}
             </div>,
       icon: <Image className = "icon-hover" alt = "tag" src = {tagIcon}
                    style = {{height:"50px", width: "50px"}}
-                   onClick = {event =>  window.location.href= "/experience/" + this.state.userid}/>,
+                   onClick = {event =>  window.location.href= "/manage/" + this.state.userid}/>,
       datetime: event.dateAdded, /*Add DateAdded after response.data structure is created*/
       description: "",
       photo : ""
       })
-    });
-
-
-
-    var flattenedEvents = docCreationEvents.concat(profilePhotoEvent)
-                                           .concat(docModifiedEvents)
-                                           .concat(coverImagesEvent)
-                                           .concat(newTagEvent)
-                                           .sort((a,b) => -(b.datetime - a.datetime));
-
-
-    var timelineMarker = flattenedEvents.map( event => {
-      return(<CustomMarker event = {event} />)
     });
 
     /*console.log(docCreationEvents);
@@ -215,9 +208,18 @@ class Timeline extends Component {
     console.log(profilePhotoEvent);
     console.log(coverImagesEvent);
     console.log(newTagEvent);*/
-    console.log(timelineMarker);
-    console.log(this.state.counter)
-    if(this.state.counter === 4){
+    /*console.log(timelineMarker);*/
+    console.log(this.state.alertDisplay);
+    if(this.state.alertDisplay){
+      var flattenedEvents = docModifiedEvents.concat(profilePhotoEvent)
+                                             .concat(docCreationEvents)
+                                             .concat(coverImagesEvent)
+                                             .concat(newTagEvent)
+                                             .sort((a,b) => (new Date(b.datetime).getTime() - new Date(a.datetime).getTime()));
+
+      var timelineMarker = flattenedEvents.map( event => {
+        return(<CustomMarker event = {event} />)
+      });
       return (
           <div className = "timeline-body">
           <h2>Recent Activity</h2>
@@ -227,7 +229,53 @@ class Timeline extends Component {
         </div>
       )
     } else {
-      return(<div></div>)
+      console.log(this.state);
+      return(
+
+        <Container fluid className = "default-timeline-body">
+          <Row>
+            <Spinner animation="border" />
+          </Row>
+          <Row>
+            <h2>Want a Timeline?</h2>
+          </Row>
+          <Row>
+            <h3>Get the following on your profile today!</h3>
+          </Row>
+          <Row>
+              <OverlayTrigger placement="top"
+                              delay={{ hide: 100 }}
+                              overlay={
+                                <Tooltip>Photos</Tooltip>
+                              }>
+              <Image className = "icon-hover mr-sm-2" alt = "photo" src = {photoIcon}
+                     style = {{height:"50px", width: "50px"}}
+                     onClick = {event =>  window.location.href= '/manage/' + this.state.userid}/>
+              </OverlayTrigger>
+
+              <OverlayTrigger placement="top"
+                              delay={{ hide: 100 }}
+                              overlay={
+                                <Tooltip>Documents</Tooltip>
+                              }>
+              <Image className = "icon-hover mr-sm-2" alt = "document" src = {docIcon}
+                   style = {{height:"50px", width: "50px"}}
+                   onClick = {event =>  window.location.href= '/manage/' + this.state.userid}/>
+             </OverlayTrigger>
+
+             <OverlayTrigger placement="top"
+                             delay={{ hide: 100 }}
+                             overlay={
+                               <Tooltip>Tags</Tooltip>
+                             }>
+             <Image className = "icon-hover" alt = "tags" src = {tagIcon}
+                  style = {{height:"50px", width: "50px"}}
+                  onClick = {event =>  window.location.href= '/manage/' + this.state.userid}/>
+             </OverlayTrigger>
+          </Row>
+        </Container>
+
+      )
     }
 
   }

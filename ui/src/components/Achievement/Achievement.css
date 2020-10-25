@@ -1,0 +1,21 @@
+.ac-body{
+  width: 60%;
+  height: auto;
+}
+
+.ac-body > .row{
+  margin-bottom: 50px;
+  border: 1px solid red;
+  padding: 10px;
+}
+
+.ac-body > .row > .col{
+  border: 1px solid red;
+
+}
+.ac-iamge {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+}

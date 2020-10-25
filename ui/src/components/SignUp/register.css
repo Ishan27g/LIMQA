@@ -1,37 +1,23 @@
-.page-fill{
-  height: 87vmin;
-  width: 100%;
-}
+
 .register{
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%,-42.5%);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   background-color: white;
-  margin-top: 70px;
-  margin-bottom: 2vmax;
-  width: 40vmax;
+  width: 60%;
   padding: 1.5vmax;
 }
-.register-form > h3{
+.register-form > h4{
   text-align: center;
   font-size: 1.75em;
-  color: black;
-  margin-bottom: 2vmax;
+  margin-bottom: 1vmax;
 }
-.register-form > .form-group {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 .register-form > .row  {
   display: flex;
   justify-content: flex-start;
-}
-.register-form > .row > .col > .alert{
-
-}
-
-.register-form > .form-group
-{
-
 }

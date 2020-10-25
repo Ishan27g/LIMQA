@@ -63,15 +63,17 @@ class DocMode extends Component {
       /*Document Properties*/
       docname: "Untitled",
       docdate: "Document Date",
-      tags: ["Default"],
+      tags: ["All"],
+      tagColors: ["Primary"],
       highlighted: false,
       docdesc: "",
       achievement: false,
       acinst: "",
-      acdate: "2000-01-01",
+      acdate: "2020-01-01",
 
        /*All Tags Created*/
       allTags: [],
+      allTagColors: []
     }
 
   }
@@ -81,12 +83,15 @@ class DocMode extends Component {
     axios.get(tagUrl)
     .then(res =>{
       var tempTag = [];
+      var tempTagColors = [];
       var i;
       for(i=0; i<res.data.length; i++){
         tempTag.push(res.data[i].name);
+        tempTagColors.push(res.data[i].color);
       }
       this.setState({
-        allTags: tempTag
+        allTags: tempTag,
+        allTagColors: tempTagColors
       })
     })
     .catch(function(error) {
@@ -235,40 +240,44 @@ class DocMode extends Component {
 
   onChangeTags(e){
     var chosetag = this.state.tags;
+    var chooseTagColors = this.state.tagColors;
+    var colorIndex = this.state.allTags.indexOf(e.target.value);
+    console.log(colorIndex);
     if(e.target.checked){
         chosetag.push(e.target.value);
+        chooseTagColors.push(this.state.allTagColors[colorIndex])
     }else{
         var index = chosetag.indexOf(e.target.value);
         chosetag.splice(index, 1);
+        chooseTagColors.splice(index, 1);
     }
     this.setState({
-        tags: chosetag
+        tags: chosetag,
+        tagColors: chooseTagColors
     }, ()=>{
         console.log(this.state.tags)
+        console.log(this.state.tagColors)
     })
   }
 
   render(){
     var tags = this.state.tags;
-
-    let tagsMap = tags.map(tags =>{
+    var tagColors = this.state.tagColors;
+    let tagsMap = tags.map((tags, idx) =>{
         return(
-            <Tag note={tags} />
-        )
-    })
+          <Col className ="mr-sm-1">
+            <h4>
+              <Tag note={tags} variant={tagColors[idx]} />
+            </h4>
+          </Col>
 
-    let showtagButtons = tags.map(tags =>{
-        return(
-          <Button
-            variant = "outline-danger"
-            style = {{border: "0px solid red"}}>
-            <Tag note={tags} />
-          </Button>
         )
     })
 
     var allTags = this.state.allTags;
-    let SelectTags = allTags.map(allTags =>{
+    var allTagColors = this.state.allTagColors;
+
+    let SelectTags = allTags.map((allTags, idx) =>{
         var check = this.state.tags.includes(allTags);
         return(
             <InputGroup className = "select-tags">
@@ -276,7 +285,7 @@ class DocMode extends Component {
                 <InputGroup.Checkbox onChange={this.onChangeTags} value={allTags} checked={check}/>
               </InputGroup.Prepend>
               <InputGroup.Append>
-                  <Tag note={allTags} />
+                  <Tag note={allTags} variant={allTagColors[idx]}/>
               </InputGroup.Append>
             </InputGroup>
         )
@@ -354,7 +363,7 @@ class DocMode extends Component {
 
                         </Row>
                         <Row className = "doc-tags">
-                          <h4>{showtagButtons}</h4>
+                          {tagsMap}
                           <Button block variant = "success" onClick ={this.handleAddTags}>Alter Tags</Button>
                         </Row>
 
