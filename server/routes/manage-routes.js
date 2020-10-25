@@ -59,4 +59,6 @@ router.get('/tags/:uid', tagsController.getTagsForUser);
 //get all tags for all users
 router.get('/tags/', tagsController.getAllTagsForAllUsers);
 
+router.delete('/deleteTag/:tagId', ensureAuthenticated, tagsController.deleteTag);
+
 module.exports = router;
