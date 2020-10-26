@@ -508,7 +508,7 @@ class singleDoc extends Component {
                 <Modal.Body className = "docview-body" >
                     <Container fluid>
                     <Row>
-                        <Col className = "docview-image" xs ={5} md = {5}>
+                        <Col className = "docview-image" xs ={5} md = {5} style={{height: "40vmax"}}>
                         {this.state.loaded? (
                             <FileViewer
                             fileType={this.state.fileType}
