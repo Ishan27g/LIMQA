@@ -15,7 +15,7 @@ class Construct extends Component {
                         color: "white",
                         marginTop: "20vmax"}}>
             <h2>This page is under construction</h2>
-            <h4>Comming soon</h4>
+            <h4>Coming soon</h4>
             <div style = {{display: 'flex',
                           justifyContent: 'center',
                           flexDirection: 'column',
