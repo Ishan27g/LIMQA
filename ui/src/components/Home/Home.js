@@ -97,9 +97,9 @@ class Home extends Component {
             return (
                 <Card className='documentsCard'  style={{ height: "auto"}} bg = "light">
                   <Image variant="top" src={docImage}
-                            style = {{width: "8vmax", height: "10vmax", alignSelf: "center"}}/>
+                            style = {{width: "8vmax", height: "10vmax", alignSelf: "center", marginBottom: "10px"}}/>
                   <Card.Body onClick = {event =>  window.location.href = '/documents/'+doc._id }
-                      style = {{fontSize: ".6em", color: "black", height: "7rem"}} >
+                      style = {{fontSize: ".6em", color: "black", height: "7rem", backgroundColor: "rgba(180,180,180,0.3)" }} >
                         {doc.name}
                   </Card.Body>
                 </Card>
