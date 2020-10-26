@@ -1,7 +1,11 @@
-import React from 'react';
-import Card from "react-bootstrap/Card";
+import React, {Component} from "react";
+import './Achievement.css';
+import Row from "react-bootstrap/Row";
+import Col  from "react-bootstrap/Col";
+import Image from "react-bootstrap/Image";
 import docIcon from '../../Image/documents.png';
-class CardLeft extends React.Component{
+
+class CardLeft extends Component{
   constructor(props){
     super(props);
     this.state = {
@@ -13,34 +17,26 @@ class CardLeft extends React.Component{
   }
   render(){
     return (
-      <Card style={{
-          position:'relative',
-          background: "grey",
-          width: "70vw",
-          height: "30vh",
-          top: "50px",
-          margin: "0 auto",
-          marginBottom: "100px"}}>
-        <Card.Img src={docIcon} style={{position:'relative', left:"10%", top:"14%", width:"6.5vw", height:"17vh"}} />
-        <Card.Body style={{
-          background: "white",
-          width: "79.9vw"
-          }}>
-          <Card.Title style = {{position:'relative',right:"22%", bottom:"15vh", "font-size":"4vh", fontWeight:"bold"}}>
-            {this.state.name}
-          </Card.Title>    
-          <Card.Text style = {{position:'relative',right:"0.4%", bottom:"15vh", "font-size":"2.5vh", width: "60%" }}>
-            {this.state.description}
-          </Card.Text>
-          <Card.Text style = {{position:'relative', right:"26.7%", bottom:"13vh", "font-size":"2vh", color:"black"}}>
-          <b>Institution</b>: {this.state.institution}
-          </Card.Text>
-          <Card.Text style = {{position:'relative', right:"20.4%", bottom:"15vh", "font-size":"2vh", color:"black"}}>
-          <b>Date</b>: {this.state.dateAchieved}
-          </Card.Text>
-        </Card.Body>
-      </Card>
-    
+          <Row>
+            <Col className = "ac-image" sm = {3}>
+              <Image src={docIcon} style = {{width: "10vmax", height:"14vmax"}}/>
+            </Col>
+            <Col sm = {7}>
+              <Row>
+                <h4>{this.state.name}</h4>
+              </Row>
+              <Row>
+                  <h5>{this.state.description}</h5>
+              </Row>
+              <Row>
+                <h5>Institution: {this.state.institution}</h5>
+              </Row>
+              <Row style ={{display: 'flex', alignItems: "center", justifyContent: "flex-start"}}>
+                <h5>Date: {this.state.dateAchieved}</h5>
+              </Row>
+
+            </Col>
+          </Row>
     );
   }
 }
