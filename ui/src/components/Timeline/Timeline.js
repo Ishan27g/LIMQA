@@ -104,8 +104,6 @@ class Timeline extends Component {
 
 
   render (){
-    var date;
-    var id;
     var docCreationEvents = this.state.userDocuments.map(event => {
       var docTags = event.tags.map(tag =>{
           return (<Tag note = {tag.name} variant = {tag.color}/>)

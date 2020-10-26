@@ -269,7 +269,7 @@ class ManagePage extends Component {
     handleFilterOnTag = () => {
         this.setState({
           filter: "Tag",
-          search: "All;",
+          search: "All|",
           searching: false
         });
     }
@@ -416,10 +416,10 @@ class ManagePage extends Component {
       if (this.state.search === ""){
         this.setState({
           searching: true,
-          search: e.target.innerHTML + ';'
+          search: e.target.innerHTML + '|'
         })
       }else{
-        var tempTag = this.state.search.split(";");
+        var tempTag = this.state.search.split("|");
         tempTag.pop();
         if (tempTag.includes(e.target.innerHTML)){
           if(e.target.innerHTML !== "All"){
@@ -428,9 +428,9 @@ class ManagePage extends Component {
             var i;
             var tempString = tempTag[0];
             for(i=1; i<tempTag.length; i++){
-              tempString = tempString + ";" + tempTag[i]
+              tempString = tempString + "|" + tempTag[i]
             }
-            tempString = tempString + ";"
+            tempString = tempString + "|"
             this.setState({
               search: tempString
             })
@@ -438,7 +438,7 @@ class ManagePage extends Component {
         }else{
           this.setState({
             searching: true,
-            search: this.state.search + e.target.innerHTML + ';'
+            search: this.state.search + e.target.innerHTML + '|'
           })
         }
       }
@@ -571,7 +571,7 @@ class ManagePage extends Component {
 
       }else{
         if (this.state.search !== ""){
-          var selectTags = this.state.search.split(";");
+          var selectTags = this.state.search.split("|");
           var tempTagWithDoc = [];
           var i;
           for(i=0; i<selectTags.length; i++){
@@ -743,6 +743,7 @@ class ManagePage extends Component {
                                 <FormControl type="text"
                                              placeholder="Search for documents by tags"
                                              className="mr-sm-2 w-75"
+                                             value = {this.state.search}
                                              defaultValue = "Select documents by tags" disabled/>
                               )}
 
@@ -854,7 +855,7 @@ class ManagePage extends Component {
                         </ToggleButtonGroup>
                       </Form.Group>
                       {
-                        this.state.createNewTag?(
+                        this.state.alertCreateTag?(
                           <Alert block variant = "danger">
                             Name your Tag!
                           </Alert>

@@ -107,12 +107,10 @@ class App extends Component{
             login: true,
             loginInfo: true,
             userId: response.data.userid
-          },()=>{
-            this.setState({loading: true})
-          })
+          }, ()=>{this.setState({loading: true})})
         }
     });
-    this.setState({loading: true})
+    
   };
 
   handleSignClose = () => {
