@@ -17,7 +17,6 @@ import AccountView from './components/AccountView/accountView.js';
 import Landing from './components/LandingPage/landingPage.js';
 import ManagePage from './components/ManagePage/ManagePage.js';
 import Timeline from './components/Timeline/Timeline.js';
-import Achievements from './components/Achievement/Achievement.js';
 import NotFound from './components/NotFound.js';
 import Register from './components/SignUp/register.js';
 import singleDoc from './components/documentViewer/singleDoc.js';
