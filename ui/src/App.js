@@ -25,6 +25,7 @@ import Search from './components/Search/Search.js';
 import changePassword from './components/Password/changePassword.js';
 import forgetPassEmail from './components/Password/forgetPassEmail.js';
 import forgetPass from './components/Password/forgetPass.js';
+import Construct from './components/Constructing/Contruct.js';
 
 import logo from './Image/logo.png';
 import loginButton from './Image/loginButton.svg';
@@ -107,12 +108,10 @@ class App extends Component{
             login: true,
             loginInfo: true,
             userId: response.data.userid
-          },()=>{
-            this.setState({loading: true})
-          })
+          }, ()=>{this.setState({loading: true})})
         }
     });
-    this.setState({loading: true})
+    
   };
 
   handleSignClose = () => {
@@ -326,7 +325,7 @@ class App extends Component{
             <Route path="/register" component={Register}/>
             <Route path="/home/:id" component={Home}/>
             <Route path="/timeline/:id" component={Timeline}/>
-            <Route path="/Achievements/:id" component={Achievements}/>
+            <Route path="/Achievements/:id" component={Construct}/>
             <Route path="/documents/:id" component={singleDoc}/>
             <Route path="/search/:id" component={Search}/>
             <Route path="/forget" component={forgetPassEmail}/>
@@ -387,47 +386,48 @@ class App extends Component{
           </Modal.Footer>
         </Modal>
 
-        {this.state.showQR ? (
+        {this.state.showQR && (!this.state.slinksAlert)? (
             <footer>
               <Navbar
                 bg = "light" variant = "light"
-                expand = "lg" sticky ="bottom"
+                expand = "sm" fixed ="bottom"
                 className = "profile-footer">
-                <Nav  className = "profile-nav">
-                  <Nav.Item>
-                    <Form>
-                      <Form.Text> Product of team LiMQA ©</Form.Text>
-                    </Form>
 
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Button className = "qr-button"
-                            variant = "outline-dark"
-                            onClick={this.handleQRShow}>QR Code</Button>
+                    <Navbar.Brand className = "copyright">
+                      <Form>
+                        <Form.Text> Product of team LiMQA ©</Form.Text>
+                      </Form>
+                    </Navbar.Brand>
 
-                  </Nav.Item>
-                  { this.state.slinksAlert? (<div></div>):
-                  (
-                  <Nav.Item className = "profile-socials">
-                    <Image onClick= {event => window.location.href = Facebook}
-                            src = {iconFacebook}
-                            style = {{width: "2vmax", height: "2vmax"}} />
-                    <Image onClick= {event => window.location.href = Instagram}
-                            src = {iconInstagram}
-                            style = {{width: "2vmax", height: "2vmax"}} />
-                    <Image onClick= {event => window.location.href = Linkedin}
-                            src = {iconLinkedin}
-                            style = {{width: "2vmax", height: "2vmax"}} />
-                    <Image onClick= {event => window.location.href = Github}
-                            src = {iconGithub}
-                            style = {{width: "2vmax", height: "2vmax"}} />
-                    <Image onClick= {event => window.location.href = WeChat}
-                            src = {iconWechat}
-                            style = {{width: "2vmax", height: "2vmax"}} />
-                  </Nav.Item>   )
-                }
+                  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                  <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className = "profile-nav">
+                          <Nav.Item>
+                            <Button className = "qr-button"
+                                    variant = "outline-dark"
+                                    onClick={this.handleQRShow}>QR Code</Button>
 
-                </Nav>
+                          </Nav.Item>
+                          <Nav.Item className = "profile-socials">
+                            <Image onClick= {event => window.location.href = Facebook}
+                                    src = {iconFacebook}
+                                    style = {{width: "30px", height: "30px"}} />
+                            <Image onClick= {event => window.location.href = Instagram}
+                                    src = {iconInstagram}
+                                    style = {{width: "30px", height: "30px"}} />
+                            <Image onClick= {event => window.location.href = Linkedin}
+                                    src = {iconLinkedin}
+                                    style = {{width: "30px", height: "30px"}} />
+                            <Image onClick= {event => window.location.href = Github}
+                                    src = {iconGithub}
+                                    style = {{width: "30px", height: "30px"}} />
+                            <Image onClick= {event => window.location.href = WeChat}
+                                    src = {iconWechat}
+                                    style = {{width: "30px", height: "30px"}} />
+                          </Nav.Item>
+                    </Nav>
+                  </Navbar.Collapse>
+
               </Navbar>
 
               <Modal show={this.state.QRButton} onHide={this.handleQRClose}>

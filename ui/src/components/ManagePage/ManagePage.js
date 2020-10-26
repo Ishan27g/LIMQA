@@ -194,7 +194,7 @@ class ManagePage extends Component {
         }else{
           length = this.state.updateCover.length;
         }
-        
+
         if(length < 6){
           const covImg = new FormData();
           var i;
@@ -220,7 +220,7 @@ class ManagePage extends Component {
           })
           .catch(function(error) {
             console.log(error);
-          }); 
+          });
 
         }else{
           this.setState({alertCover:true},()=>{
@@ -269,7 +269,7 @@ class ManagePage extends Component {
     handleFilterOnTag = () => {
         this.setState({
           filter: "Tag",
-          search: "All;",
+          search: "All|",
           searching: false
         });
     }
@@ -416,10 +416,10 @@ class ManagePage extends Component {
       if (this.state.search === ""){
         this.setState({
           searching: true,
-          search: e.target.innerHTML + ';'
+          search: e.target.innerHTML + '|'
         })
       }else{
-        var tempTag = this.state.search.split(";");
+        var tempTag = this.state.search.split("|");
         tempTag.pop();
         if (tempTag.includes(e.target.innerHTML)){
           if(e.target.innerHTML !== "All"){
@@ -428,9 +428,9 @@ class ManagePage extends Component {
             var i;
             var tempString = tempTag[0];
             for(i=1; i<tempTag.length; i++){
-              tempString = tempString + ";" + tempTag[i]
+              tempString = tempString + "|" + tempTag[i]
             }
-            tempString = tempString + ";"
+            tempString = tempString + "|"
             this.setState({
               search: tempString
             })
@@ -438,7 +438,7 @@ class ManagePage extends Component {
         }else{
           this.setState({
             searching: true,
-            search: this.state.search + e.target.innerHTML + ';'
+            search: this.state.search + e.target.innerHTML + '|'
           })
         }
       }
@@ -453,7 +453,7 @@ class ManagePage extends Component {
     handleTagClose(){
       this.setState({
         tagManagement: false
-      })
+      }, () => {window.location.href = "/manage/" + this.state.userid})
     }
 
     tagColorChange(variant){
@@ -571,7 +571,7 @@ class ManagePage extends Component {
 
       }else{
         if (this.state.search !== ""){
-          var selectTags = this.state.search.split(";");
+          var selectTags = this.state.search.split("|");
           var tempTagWithDoc = [];
           var i;
           for(i=0; i<selectTags.length; i++){
@@ -681,12 +681,13 @@ class ManagePage extends Component {
                       <Col className = "bioinfo">
                           {this.state.editBio ? (
                               <Form style ={{textAlign: "center", color: "white"}}>
-                                  <h5>Enter your new bio here</h5>
+                                <h5>Enter your new bio here</h5>
                                   <Form.Control
                                     as="textarea"
                                     rows = "8"
                                     defaultValue = {this.state.bio}
                                     onChange={this.onChangBioInfo}/>
+                                  <h6> 100 charcater limit</h6>
                                   <Button variant="info" onClick={this.handleSubmiteBio} block className = "mt-3">Submit</Button>
                               </Form>
                           ):
@@ -698,6 +699,7 @@ class ManagePage extends Component {
                           )}
                       </Col>
                   </Row>
+
                 </Container>
               </div>
 
@@ -743,7 +745,9 @@ class ManagePage extends Component {
                                 <FormControl type="text"
                                              placeholder="Search for documents by tags"
                                              className="mr-sm-2 w-75"
-                                             defaultValue = "Select documents by tags" disabled/>
+                                             defaultValue = "Select documents by tags"
+                                             value = {this.state.search}
+                                             disabled/>
                               )}
 
                               <Dropdown>
@@ -853,8 +857,7 @@ class ManagePage extends Component {
                           {colorMap}
                         </ToggleButtonGroup>
                       </Form.Group>
-                      {
-                        this.state.createNewTag?(
+                      {this.state.createNewTag?(
                           <Alert block variant = "danger">
                             Name your Tag!
                           </Alert>

@@ -87,7 +87,7 @@ class Search extends Component{
     if(e.target.innerHTML === 'Tag'){
       this.setState({
         searchMethod: "Tag",
-        search: "Default|",
+        search: "All|",
         searching: false
       })
     }
@@ -127,7 +127,7 @@ class Search extends Component{
       var tempTag = this.state.search.split("|");
       tempTag.pop();
       if (tempTag.includes(e.target.innerHTML)){
-        if(e.target.innerHTML !== "Default"){
+        if(e.target.innerHTML !== "All"){
           var index = tempTag.indexOf(e.target.innerHTML);
           tempTag.splice(index, 1);
           var i;
