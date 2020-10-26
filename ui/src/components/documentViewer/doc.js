@@ -177,15 +177,17 @@ class DocMode extends Component {
 
     if(!(this.state.docdesc === "")){
       const docForm = new FormData();
-      console.log(this.state.docname);
+      const date = this.state.acdate.toISOString().split('T')[0];
+
       docForm.append('highlighted', this.state.highlighted);
       docForm.append('description', this.state.docdesc);
       docForm.append('achivement', this.state.achievement);
       docForm.append('document', this.props.doc.doc);
       docForm.append('institution', this.state.acinst);
       docForm.append('dateCreated', this.state.docdate);
-      docForm.append('dateAchieved', this.state.acdate);
+      docForm.append('dateAchieved', date);
       docForm.append('name', this.state.docname);
+      
       if(this.state.tags.length === 1){
         docForm.append('tagName[]', this.state.tags[0])
       }else{
@@ -215,11 +217,9 @@ class DocMode extends Component {
           })
         },1500);
       });
-
-  } else {
-    this.setState({alertDescription: true});
-  }
-
+    } else {
+      this.setState({alertDescription: true});
+    }
   }
 
   onChangeDescripton(e){
@@ -415,7 +415,7 @@ class DocMode extends Component {
                               onChange = {this.onChangeInstitution}/>
                               <DatePicker
                                selected={new Date(this.state.acdate)}
-                               onChange={date  => this.setState({acdate: date.toISOString().split('T')[0] })}
+                               onChange={date  => this.setState({acdate: date })}
                                dateFormat={'yyyy/MM/dd'}
                                />
                           </Row>
