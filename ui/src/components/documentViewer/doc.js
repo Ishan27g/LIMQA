@@ -355,9 +355,11 @@ class DocMode extends Component {
                             Delete Document
                           </Button>)
                           }
-                        <Alert variant="success" show={this.state.alertSuccess} block>
-                          Successfully upload the documents!
-                        </Alert>
+                        </Row>
+                        <Row className ="justify-content-center mt-sm-2">
+                          <Alert variant="success" show={this.state.alertSuccess} block>
+                            Uploaded Successfully !
+                          </Alert>
                         </Row>
                       </Col>
                       <Col className = "docedit-properties">
