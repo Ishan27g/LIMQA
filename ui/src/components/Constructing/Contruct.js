@@ -14,7 +14,7 @@ class Construct extends Component {
                         fontSize: "1em",
                         color: "white",
                         marginTop: "20vmax"}}>
-            <h2>This page is under constructing</h2>
+            <h2>This page is under construction</h2>
             <h4>Comming soon</h4>
             <div style = {{display: 'flex',
                           justifyContent: 'center',
