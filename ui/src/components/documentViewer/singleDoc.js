@@ -77,6 +77,9 @@ class singleDoc extends Component {
             fileType: "",
             filePath: "",
             loaded: false,
+            dateChange: false,
+
+            /*update properties*/
         }
 
     }
@@ -221,7 +224,14 @@ class singleDoc extends Component {
     }
 
   updateDoc(){
-    const date = this.state.acdate.toISOString().split('T')[0];
+    var date;
+
+    if(this.state.dateChange){
+        date = this.state.dateChange.toISOString().split('T')[0];
+    }else{
+        date = this.state.acdate;
+    }
+
       // wait for backend for updating tags
     const docForm = {
         'name': this.state.docname,
@@ -361,18 +371,8 @@ class singleDoc extends Component {
                     <Row>
                         <Col  xs ={5} md = {5}>
                             <Row className = "docview-image">
-                                {this.state.loaded? (
-                                    <FileViewer
-                                    fileType={this.state.fileType}
-                                    filePath={require("/usr/src/uploads/images/"+path)}
-                                    errorComponent={CustomErrorComponent}
-                                    onError={this.onError}
-                                    key={this.props.match.params.id}
-                                    />
-                                ):(
-                                    <Spinner animation="border" variant="secondary" />
-                                )}
-                                </Row>
+                                <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
+                            </Row>
                             <Row>
                                 <Button
                                  block
@@ -422,7 +422,7 @@ class singleDoc extends Component {
                                 onChange = {this.onChangeInstitution}/>
                               <DatePicker
                                selected={new Date(this.state.acdate)}
-                               onChange={date  => this.setState({acdate: date})}
+                               onChange={date  => this.setState({acdate: date, dateChange: true})}
                                dateFormat={'yyyy/MM/dd'}
                                />
                             </Row>

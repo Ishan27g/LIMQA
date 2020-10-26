@@ -71,6 +71,7 @@ class DocMode extends Component {
       achievement: false,
       acinst: "",
       acdate: "2020-01-01",
+      dateChange: false,
 
        /*All Tags Created*/
       allTags: [],
@@ -177,7 +178,13 @@ class DocMode extends Component {
 
     if(!(this.state.docdesc === "")){
       const docForm = new FormData();
-      const date = this.state.acdate.toISOString().split('T')[0];
+      var date;
+
+      if(this.state.dateChange){
+          date = this.state.dateChange.toISOString().split('T')[0];
+      }else{
+          date = this.state.acdate;
+      }
 
       docForm.append('highlighted', this.state.highlighted);
       docForm.append('description', this.state.docdesc);
@@ -415,7 +422,7 @@ class DocMode extends Component {
                               onChange = {this.onChangeInstitution}/>
                               <DatePicker
                                selected={new Date(this.state.acdate)}
-                               onChange={date  => this.setState({acdate: date })}
+                               onChange={date  => this.setState({acdate: date, dateChange: true })}
                                dateFormat={'yyyy/MM/dd'}
                                />
                           </Row>
