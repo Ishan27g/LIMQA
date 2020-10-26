@@ -221,7 +221,7 @@ class singleDoc extends Component {
     }
 
   updateDoc(){
-
+    const date = this.state.acdate.toISOString().split('T')[0];
       // wait for backend for updating tags
     const docForm = {
         'name': this.state.docname,
@@ -229,7 +229,7 @@ class singleDoc extends Component {
         'description': this.state.docdesc,
         'achivement': this.state.achievement,
         'institution': this.state.acinst,
-        'dateAchieved': this.state.acdate,
+        'dateAchieved': date,
         'tagName': this.state.tags,
     }
 
@@ -422,7 +422,7 @@ class singleDoc extends Component {
                                 onChange = {this.onChangeInstitution}/>
                               <DatePicker
                                selected={new Date(this.state.acdate)}
-                               onChange={date  => this.setState({acdate: date.toISOString().split('T')[0] })}
+                               onChange={date  => this.setState({acdate: date})}
                                dateFormat={'yyyy/MM/dd'}
                                />
                             </Row>
