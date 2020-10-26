@@ -194,7 +194,7 @@ class ManagePage extends Component {
         }else{
           length = this.state.updateCover.length;
         }
-        
+
         if(length < 6){
           const covImg = new FormData();
           var i;
@@ -220,7 +220,7 @@ class ManagePage extends Component {
           })
           .catch(function(error) {
             console.log(error);
-          }); 
+          });
 
         }else{
           this.setState({alertCover:true},()=>{
@@ -453,7 +453,7 @@ class ManagePage extends Component {
     handleTagClose(){
       this.setState({
         tagManagement: false
-      })
+      }, () => {window.location.href = "/manage/" + this.state.userid})
     }
 
     tagColorChange(variant){
@@ -681,12 +681,13 @@ class ManagePage extends Component {
                       <Col className = "bioinfo">
                           {this.state.editBio ? (
                               <Form style ={{textAlign: "center", color: "white"}}>
-                                  <h5>Enter your new bio here</h5>
+                                <h5>Enter your new bio here</h5>
                                   <Form.Control
                                     as="textarea"
                                     rows = "8"
                                     defaultValue = {this.state.bio}
                                     onChange={this.onChangBioInfo}/>
+                                  <h6> 100 charcater limit</h6>
                                   <Button variant="info" onClick={this.handleSubmiteBio} block className = "mt-3">Submit</Button>
                               </Form>
                           ):
@@ -698,6 +699,7 @@ class ManagePage extends Component {
                           )}
                       </Col>
                   </Row>
+
                 </Container>
               </div>
 
@@ -743,7 +745,9 @@ class ManagePage extends Component {
                                 <FormControl type="text"
                                              placeholder="Search for documents by tags"
                                              className="mr-sm-2 w-75"
-                                             defaultValue = "Select documents by tags" disabled/>
+                                             defaultValue = "Select documents by tags"
+                                             value = {this.state.search}
+                                             disabled/>
                               )}
 
                               <Dropdown>
@@ -853,8 +857,7 @@ class ManagePage extends Component {
                           {colorMap}
                         </ToggleButtonGroup>
                       </Form.Group>
-                      {
-                        this.state.createNewTag?(
+                      {this.state.createNewTag?(
                           <Alert block variant = "danger">
                             Name your Tag!
                           </Alert>

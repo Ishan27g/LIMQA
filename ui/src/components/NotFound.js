@@ -2,9 +2,20 @@ import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
+import { Spinner } from 'react-rainbow-components';
 
 class NotFound extends Component {
   render() {
+    if(true){
+      return(
+        <React.Fragment>
+          <Container>
+            <div className="rainbow-align-content_center rainbow-position_relative rainbow-p-vertical_xx-large">
+              <Spinner variant="brand" size="large" />
+            </div>
+          </Container>
+        </React.Fragment>)
+    } else {
     return (
       <React.Fragment>
           <Container fluid style = {{display: 'flex',
@@ -31,7 +42,8 @@ class NotFound extends Component {
             </div>
           </Container>
       </React.Fragment>
-    );
+    );}
+
   }
 }
 

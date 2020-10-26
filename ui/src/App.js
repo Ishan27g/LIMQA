@@ -387,47 +387,48 @@ class App extends Component{
           </Modal.Footer>
         </Modal>
 
-        {this.state.showQR ? (
+        {this.state.showQR && (!this.state.slinksAlert)? (
             <footer>
               <Navbar
                 bg = "light" variant = "light"
-                expand = "lg" sticky ="bottom"
+                expand = "sm" fixed ="bottom"
                 className = "profile-footer">
-                <Nav  className = "profile-nav">
-                  <Nav.Item>
-                    <Form>
-                      <Form.Text> Product of team LiMQA ©</Form.Text>
-                    </Form>
 
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Button className = "qr-button"
-                            variant = "outline-dark"
-                            onClick={this.handleQRShow}>QR Code</Button>
+                    <Navbar.Brand className = "copyright">
+                      <Form>
+                        <Form.Text> Product of team LiMQA ©</Form.Text>
+                      </Form>
+                    </Navbar.Brand>
 
-                  </Nav.Item>
-                  { this.state.slinksAlert? (<div></div>):
-                  (
-                  <Nav.Item className = "profile-socials">
-                    <Image onClick= {event => window.location.href = Facebook}
-                            src = {iconFacebook}
-                            style = {{width: "2vmax", height: "2vmax"}} />
-                    <Image onClick= {event => window.location.href = Instagram}
-                            src = {iconInstagram}
-                            style = {{width: "2vmax", height: "2vmax"}} />
-                    <Image onClick= {event => window.location.href = Linkedin}
-                            src = {iconLinkedin}
-                            style = {{width: "2vmax", height: "2vmax"}} />
-                    <Image onClick= {event => window.location.href = Github}
-                            src = {iconGithub}
-                            style = {{width: "2vmax", height: "2vmax"}} />
-                    <Image onClick= {event => window.location.href = WeChat}
-                            src = {iconWechat}
-                            style = {{width: "2vmax", height: "2vmax"}} />
-                  </Nav.Item>   )
-                }
+                  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                  <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className = "profile-nav">
+                          <Nav.Item>
+                            <Button className = "qr-button"
+                                    variant = "outline-dark"
+                                    onClick={this.handleQRShow}>QR Code</Button>
 
-                </Nav>
+                          </Nav.Item>
+                          <Nav.Item className = "profile-socials">
+                            <Image onClick= {event => window.location.href = Facebook}
+                                    src = {iconFacebook}
+                                    style = {{width: "30px", height: "30px"}} />
+                            <Image onClick= {event => window.location.href = Instagram}
+                                    src = {iconInstagram}
+                                    style = {{width: "30px", height: "30px"}} />
+                            <Image onClick= {event => window.location.href = Linkedin}
+                                    src = {iconLinkedin}
+                                    style = {{width: "30px", height: "30px"}} />
+                            <Image onClick= {event => window.location.href = Github}
+                                    src = {iconGithub}
+                                    style = {{width: "30px", height: "30px"}} />
+                            <Image onClick= {event => window.location.href = WeChat}
+                                    src = {iconWechat}
+                                    style = {{width: "30px", height: "30px"}} />
+                          </Nav.Item>
+                    </Nav>
+                  </Navbar.Collapse>
+
               </Navbar>
 
               <Modal show={this.state.QRButton} onHide={this.handleQRClose}>

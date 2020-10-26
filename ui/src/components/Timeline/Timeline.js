@@ -108,7 +108,9 @@ class Timeline extends Component {
     var id;
     var docCreationEvents = this.state.userDocuments.map(event => {
       var docTags = event.tags.map(tag =>{
-          return (<Tag note = {tag.name} variant = {tag.color}/>)
+        return (<div className = "mr-sm-2">
+                  <Tag  note = {tag.name} variant = {tag.color}/>
+                </div>)
       });
       /*date = event.dateCreated.split("T")[0]*/
       return ({
@@ -139,7 +141,9 @@ class Timeline extends Component {
       return modified.dateModified !== "";
     }).map(event => {
       var docTags = event.tags.map(tag =>{
-          return (<Tag note = {tag.name} variant = {tag.color}/>)
+          return (<div className = "mr-sm-2">
+                    <Tag  note = {tag.name} variant = {tag.color}/>
+                  </div>)
       });
       return ({
         type: "document",
