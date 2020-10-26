@@ -15,17 +15,24 @@ class CardRight extends Component{
 
   render(){
     return (
-      <Card>
-      <Card.Img src={docIcon} style = {{width: "15vmax", height:"12vmax"}}/>
+      <Card className="outline right" style={{
+          position:'relative',
+          backgroundColor: 'black',
+          width: "70vw",
+          height: "30vh",
+          top: "50px",
+          margin: "0 auto",
+          marginBottom: "100px"}}>
+      <Card.Img className="imgOutline rightImg" src={docIcon} style={{position:'relative', left:"80%", top:"24%", width:"6.5vw", height:"17vh"}}/>
       <Card.Body>
-        <Card.Title><h6>{this.state.name}</h6></Card.Title>
-        <Card.Text>
+        <Card.Title className="heading" style = {{position:'relative', left:"20%", bottom:"15vh", "font-size":"2vh"}}>{this.state.name}</Card.Title>
+        <Card.Text className="desc" style = {{position:'relative', left:"20%", bottom:"15vh", "font-size":"2.5vh", width: "80%" }}>
         {this.state.description}
         </Card.Text>
-        <Card.Text>
-          <p>Institution</p>: {this.state.institution}
-          <br/>
-          <p>Date</p>: {this.state.dateAchieved}
+        <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"15vh", "font-size":"2vh" }}>
+        <b>Institution</b>: {this.state.institution}
+        <br/>
+        <b>Date</b>: {this.state.dateAchieved}
         </Card.Text>
       </Card.Body>
       </Card>
