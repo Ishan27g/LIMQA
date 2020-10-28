@@ -111,7 +111,6 @@ class Register extends Component{
 
   render(){
     return(
-      <body className = "app-background">
       <Container fluid className = "register">
         <Col>
           <Form className = "register-form">
@@ -190,12 +189,11 @@ class Register extends Component{
             )
             }
             <Row>
-            <Button block variant = "outline-dark" onClick = {this.handleRegister}> Register </Button>
+            <Button block variant = "dark" onClick = {this.handleRegister}> Register </Button>
             </Row>
           </Form>
         </Col>
       </Container>
-    </body>
     )
   }
 }

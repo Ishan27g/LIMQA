@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import './App.css';
+import './Themes.css';
 
 import Alert from 'react-bootstrap/Alert';
 import axios from 'axios';

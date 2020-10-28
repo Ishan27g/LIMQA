@@ -114,7 +114,12 @@
 .document-arena-row{
   padding: 1rem;
 }
+
 .tags-management-modal-footer{
   display: flex;
   justify-content: space-between;
+}
+.manage-background-list{
+  overflow: auto;
+  height: 35rem;
 }

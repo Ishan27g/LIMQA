@@ -95,7 +95,9 @@ class ManagePage extends Component {
         this.abortDeleteTag = this.abortDeleteTag.bind(this);
         this.handleSelectBackground = this.handleSelectBackground.bind(this);
         this.handleCheckBackground =this.handleCheckBackground.bind(this);
+        this.getBgGradient =this.getBgGradient.bind(this);
         this.updateBgGradient =this.updateBgGradient.bind(this);
+
     }
 
     componentDidMount(){
@@ -148,31 +150,32 @@ class ManagePage extends Component {
       .catch(function(error) {
         console.log(error);
       })
-
+      this.getBgGradient();
+    };
+    getBgGradient(){
       const bgUrl = http+'/api/users/bgImage/'+this.props.match.params.id;
       axios.get(bgUrl)
       .then(response => {
         this.setState({
-          bgClass: "app-background-"+response.data.bgImage
-        }, () => console.log(this.state.bgClass))
+          bgClass: response.data.bgImage
+        })
       })
       .catch(function(error) {
         console.log(error);
       });
-    };
-
+    }
     updateBgGradient(){
-      const testBg = "app-background-dusk-left";
+      /*const testBg = "app-background-sociallive-left";*/
       const obj = {
-        bgImage: testBg
+        bgImage: this.state.bgClass
       };
       axios.put(http+'/api/users/bgImage/'+this.state.userid, obj, { withCredentials: true })
       .then(response =>{
-        const updateBgGradient = testBg;
+        const updatedBgGradient = this.state.bgClass;
         this.setState({
-          bgClass: updateBgGradient
-        })
-      }, () => console.log(this.state.bgClass))
+          bgClass: updatedBgGradient
+        }, this.handleCheckBackground())
+      })
     }
 
     onChangeProfileImage(e){
@@ -507,7 +510,7 @@ class ManagePage extends Component {
     handleCheckBackground(){
       this.setState({
         selectBackground: false
-      }, () => {window.location.href = "/manage/" + this.state.userid})
+      }, () => {this.getBgGradient()})
     }
 
 
@@ -550,7 +553,7 @@ class ManagePage extends Component {
                 <Card.Img variant='top' src={docImage}
                           style ={{alignSelf: "center", width: "auto", height: "200px"}}/>
                 <Card.Body onClick = {event =>  window.location.href = '/documents/'+card._id }>
-                <Card.Title >
+                <Card.Title>
                   {card.name}
                 </Card.Title>
                 </Card.Body>
@@ -639,8 +642,56 @@ class ManagePage extends Component {
                                           variant = {variant} value = {variant}>
                             </ToggleButton>)
                         });
-      var bgColors = ["default", "roseanna", "wave", "purple", "mauve", "socialive", "cherry", "lush", "dusk"];
+      var bgColors = ["default", "dusk", "roseanna", "wave", "purple", "mauve", "sociallive", "cherry", "lush"];
+      var LeftBgColormap = bgColors.map(color => {
 
+        if(color === "default"){
+          var colorClass = "row app-background-" + color;
+        } else {
+          var colorClass = "row app-background-" + color + "-left";
+        }
+        return(
+          <Container className = "mt-3">
+            <Row className = "d-flex align-items-center">
+              <h5>{color}</h5>
+            </Row>
+            <Container fluid className = {colorClass} style ={{height: "100px", width: "auto"}} >
+            </Container>
+            <Row className = "d-flex align-items-center justify-content-center mt-sm-2">
+                <Button className ="ml-sm-2" variant = "outline-dark"
+                  onClick ={() => {this.setState({bgClass: colorClass.split(" ")[1]})}}>
+                  Select
+                </Button>
+            </Row>
+          </Container>
+        )
+
+      })
+
+      var RightBgColormap = bgColors.map(color => {
+
+        if(color === "default"){
+          var colorClass = "row app-background-" + color ;
+        } else {
+          var colorClass = "row app-background-" + color + "-right";
+        }
+        return(
+          <Container className = "mt-3">
+            <Row className = "d-flex align-items-center">
+              <h5>{color}</h5>
+            </Row>
+            <Container fluid className = {colorClass} style ={{height: "100px", width: "auto"}} >
+            </Container>
+            <Row className = "d-flex align-items-center justify-content-center mt-sm-2">
+                <Button className ="ml-sm-2" variant = "outline-dark"
+                  onClick ={() => {this.setState({bgClass: colorClass.split(" ")[1]})}}>
+                  Select
+                </Button>
+            </Row>
+          </Container>
+        )
+
+      })
 
       return(
         <body className = {this.state.bgClass}>
@@ -824,10 +875,12 @@ class ManagePage extends Component {
                   <Modal.Header closeButton>
                     <Modal.Title>Select Background Gradient</Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>
-                    <h5>Select Gradient Direction</h5>
+                  <Modal.Body >
                     <Container fluid className = "manage-background-list">
-                      <Row>
+                      <Row className = "justify-content-center">
+                        <h5>Select Gradient Direction</h5>
+                      </Row>
+                      <Row className = "justify-content-center">
                         <ToggleButtonGroup type="radio" name ="direction" defaultValue="left"
                           onChange ={(value) => {this.setState({bgDirection: value})}}>
                           <ToggleButton variant = "outline-dark" value = "left">Left</ToggleButton>
@@ -835,10 +888,14 @@ class ManagePage extends Component {
                         </ToggleButtonGroup>
                       </Row>
                       <Collapse in = {this.state.bgDirection === "left"}>
-                          <h5>Select Direction left</h5>
+                        <Container className = "mt-3 overflow-scroll">
+                          {LeftBgColormap}
+                        </Container>
                       </Collapse>
                       <Collapse in = {this.state.bgDirection === "right"}>
-                        <h5>Select Direction right</h5>
+                        <Container className = "mt-3 overflow-scroll">
+                          {RightBgColormap}
+                        </Container>
                       </Collapse>
                     </Container>
                   </Modal.Body>

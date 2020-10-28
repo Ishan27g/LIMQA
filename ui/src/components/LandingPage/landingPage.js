@@ -130,8 +130,7 @@ class Landing extends Component{
     });
 
     return (
-      <body className = "app-background">
-        <Container className = "app-body">
+        <Container fluid className = "app-body">
           <Row className = "landing-header">
               Discover New Talents
           </Row>
@@ -157,7 +156,6 @@ class Landing extends Component{
           </Fade>
           </Row>
         </Container>
-      </body>
     )
   }
 }

@@ -33,19 +33,34 @@ class Timeline extends Component {
       userCoverImages:[],
       userTags:[],
       userid: this.props.match.params.id,
-      alertDisplay: false
+      alertDisplay: false,
+      bgClass: ""
     };
 
     this.getUsername = this.getUsername.bind(this);
     this.getUserDocs = this.getUserDocs.bind(this);
     this.getUserCoverImages = this.getUserCoverImages.bind(this);
     this.getUserTags = this.getUserTags.bind(this);
+    this.getBgGradient =this.getBgGradient.bind(this);
   }
 
     componentDidMount(){
       this.getUsername();
-
+      this.getBgGradient();
     };
+
+    getBgGradient(){
+      const bgUrl = http+'/api/users/bgImage/'+this.props.match.params.id;
+      axios.get(bgUrl)
+      .then(response => {
+        this.setState({
+          bgClass: response.data.bgImage
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }
 
     getUsername(){
       const accurl = http + '/api/accSetting/' + this.state.userid;
@@ -210,21 +225,24 @@ class Timeline extends Component {
     console.log(docModifiedEvents);
     console.log(profilePhotoEvent);
     console.log(coverImagesEvent);
-    console.log(newTagEvent);*/
-    /*console.log(timelineMarker);*/
-    console.log(this.state.alertDisplay);
+    console.log(newTagEvent);
+    console.log(timelineMarker);
+    console.log(this.state.alertDisplay);*/
+
     if(this.state.alertDisplay){
       var flattenedEvents = docModifiedEvents.concat(profilePhotoEvent)
                                              .concat(docCreationEvents)
                                              .concat(coverImagesEvent)
                                              .concat(newTagEvent)
-                                             .sort((a,b) => (new Date(b.datetime).getTime() - new Date(a.datetime).getTime()));
+                                             .sort((a,b) => (
+                                               new Date(b.datetime).getTime()
+                                             - new Date(a.datetime).getTime()));
 
       var timelineMarker = flattenedEvents.map( event => {
         return(<CustomMarker event = {event} />)
       });
       return (
-        <body className = "app-background">
+        <body className = {this.state.bgClass}>
           <div className = "timeline-body">
             <h2>Recent Activity</h2>
             <ActivityTimeline>
@@ -235,7 +253,6 @@ class Timeline extends Component {
 
       )
     } else {
-      console.log(this.state);
       return(
       <body className = "app-background">
         <Container fluid className = "default-timeline-body">

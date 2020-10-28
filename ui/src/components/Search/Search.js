@@ -22,7 +22,7 @@ class Search extends Component{
     this.onChangeSearch = this.onChangeSearch.bind(this);
     this.handleMethodChange = this.handleMethodChange.bind(this);
     this.onChangeTag = this.onChangeTag.bind(this);
-
+    this.getBgGradient =this.getBgGradient.bind(this);
     this.state = {
       /*App states*/
       searching: false,
@@ -38,8 +38,21 @@ class Search extends Component{
   componentDidMount(){
     this.getDocs();
     this.getTags();
+    this.getBgGradient();
   };
 
+  getBgGradient(){
+    const bgUrl = http+'/api/users/bgImage/'+this.props.match.params.id;
+    axios.get(bgUrl)
+    .then(response => {
+      this.setState({
+        bgClass: response.data.bgImage
+      })
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+  }
 
   getDocs(){
     axios.get(http+'/api/documents/'+this.state.userId)
@@ -243,8 +256,8 @@ render(){
     });
 
     return (
-      <body className = "app-background">
-        <Container style={{paddingBottom:"5rem"}} fluid>
+      <body className = {this.state.bgClass}>
+        <Container style={{paddingBottom:"5rem", overflow: "auto", height:"45rem"}} fluid>
             <Row className = "landing-header">
                 Discover documents
             </Row>

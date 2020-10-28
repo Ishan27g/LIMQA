@@ -34,8 +34,9 @@ class Home extends Component {
             docname:"",
             userId: this.props.match.params.id,
             profileImg: http+'/api/users/profilePhoto/'+this.props.match.params.id,
-            bgImg: http+'/api/users/bgImage/'+this.props.match.params.id,
+            bgClass:""
         }
+        this.getBgGradient =this.getBgGradient.bind(this);
     }
 
     componentDidMount(){
@@ -76,8 +77,22 @@ class Home extends Component {
         .catch(function(error) {
             console.log(error);
         })
+        
+        this.getBgGradient();
     };
 
+    getBgGradient(){
+      const bgUrl = http+'/api/users/bgImage/'+this.props.match.params.id;
+      axios.get(bgUrl)
+      .then(response => {
+        this.setState({
+          bgClass: response.data.bgImage
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }
 
     render(){
         var coverImg = this.state.cover;
@@ -122,7 +137,7 @@ class Home extends Component {
 
 
         return(
-        <body className ="app-background-default">
+        <body className = {this.state.bgClass}>
         <div className = "home">
             <div class = "cover-image">
                 <Carousel Fluid >
