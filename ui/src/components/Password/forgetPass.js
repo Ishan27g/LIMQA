@@ -87,7 +87,7 @@ class forgetPass extends Component{
             <div className ="page-fill">
                 <Container className = "register">
                     <Form className = "register-form">
-                        <h3>Your password has been updated</h3>
+                        <h4>Your password has been updated</h4>
                         <p>You can use your new password to log in!</p>
                         <Button href='/' variant="dark" block>return to home page</Button>
                     </Form>
@@ -98,7 +98,7 @@ class forgetPass extends Component{
                 <Container className = "register">
                     <Col>
                     <Form className = "register-form">
-                        <h3>Reset your password</h3>
+                        <h4>Reset your password</h4>
 
                         <Form.Group controlId="formBasicPassword">
                         <Col sm = "3">

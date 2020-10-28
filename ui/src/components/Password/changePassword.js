@@ -107,7 +107,7 @@ class changePassword extends Component{
       <Container className = "register">
         <Col>
           <Form className = "register-form">
-            <h3>Change your password</h3>
+            <h4>Change your password</h4>
             <Form.Group controlId="formBasicUsername">
               <Col sm = "3">
               <Form.Label>Old Password</Form.Label>

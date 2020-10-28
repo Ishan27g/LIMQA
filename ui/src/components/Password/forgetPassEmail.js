@@ -85,7 +85,7 @@ class forgetPassEmail extends Component{
             <Container className = "register">
 
                 <Form className = "register-form">
-                    <h3>An email has send to your email addres</h3>
+                    <h4>An email has send to your email addres</h4>
                     <p>please follow attached link to reset your password!</p>
 
                     <Button href='/' variant="dark" block>return to home page</Button>
@@ -98,7 +98,7 @@ class forgetPassEmail extends Component{
             <Container className = "register">
                 <Col>
                 <Form className = "register-form">
-                    <h3>Password Recovery</h3>
+                    <h4>Password Recovery</h4>
                     <Form.Group controlId="formBasicUsername">
                     <Col sm = "3">
                     <Form.Label>Email</Form.Label>
