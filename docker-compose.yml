@@ -6,6 +6,7 @@ services:
     build: ./ui
     image: eportfolio-react-ui-img
     container_name: react-ui
+    restart: always
     ports:
       - '3000:3000'
     volumes:
