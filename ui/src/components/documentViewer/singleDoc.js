@@ -205,7 +205,20 @@ class singleDoc extends Component {
 
     /* Leaves abruptly w/o saving Changes */
     handleAbruptLeave = () => {
-        this.setState({docEditor:false, docViewer: true, checkEdit: false});
+        this.setState({
+            docEditor:false, 
+            docViewer: true, 
+            checkEdit: false,
+            updateAcdate: this.state.acdate,
+            updateAchievement: this.state.achievement,
+            updateAcinst: this.state.acinst,
+            updateDocdate: this.state.docdate,
+            updateDocdesc: this.state.docdesc,
+            updateDocname: this.state.docname,
+            updateHighlighted: this.state.highlighted,
+            updateTagColor: this.state.tagColors,
+            updateTags: this.state.tags,
+        });
     }
 
     handleAddTags = () =>{
