@@ -6,7 +6,7 @@ const photoSchema = new Schema({
     owner: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
     profilePhoto: {type : String, required: false, timestamp: true},
     coverImages: [{type : String, required: false, timestamp: true}],
-    bgImage: [{type : String, required: false}]
+    bgImage: {type : String, required: false}
 });
 
 photoSchema.plugin(uniqueValidator);

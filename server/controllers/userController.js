@@ -147,7 +147,7 @@ const signup = async (req, res, next) => {
     owner : createdUser.id,
     profilePhoto: "",
     coverImages: "",
-    bgImage: ["#182848", "#4B6CB7"]
+    bgImage: "default"
   })
   try {
     await createdPhotos.save();
@@ -380,7 +380,7 @@ const forgotPassword = async (req, res, next) => {
     from: `${EMAIL}`,
     to: req.body.email,
     subject: 'Password reset link',
-    text:`Navigate to 'http://${host}/reset/${token}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`
+    text:`Navigate to 'https://${host}/reset/${token}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`
   }
   //send the email
   tr.sendMail(mailOptions, function(err,data){
