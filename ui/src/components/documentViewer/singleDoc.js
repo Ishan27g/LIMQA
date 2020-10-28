@@ -7,7 +7,6 @@ import "./docEditor.css";
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import Image from 'react-bootstrap/Image';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Col from 'react-bootstrap/Col';
@@ -16,7 +15,6 @@ import Container from 'react-bootstrap/Container';
 import Collapse from 'react-bootstrap/Collapse';
 import Spinner from 'react-bootstrap/Spinner';
 
-import doc from '../../Image/documents.png';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import FileViewer from 'react-file-viewer';
@@ -74,12 +72,23 @@ class singleDoc extends Component {
             docId: this.props.match.params.id,
             /*All Tags Created*/
             allTags: [],
+            allTagColors: [],
             fileType: "",
             filePath: "",
             loaded: false,
             dateChange: false,
-
+            tagColors: [],
+            updateTagColor: [],
             /*update properties*/
+            updateDocname: "Untitled",
+            updateDocdate: "",
+            updateTags: [],
+            updateHighlighted: false,
+            updateDocdesc: "",
+            updateAchievement: false,
+            updateAcinst: "",
+            updateAcdate: "",
+
         }
 
     }
@@ -97,13 +106,21 @@ class singleDoc extends Component {
             var pathParts = res.data.document.path.split('/');
             this.setState({
                 docname: res.data.document.name,
+                updateDocname: res.data.document.name,
                 docdate: res.data.document.dateCreated.split("T")[0],
+                updateDocdate: res.data.document.dateCreated.split("T")[0],
                 highlighted: res.data.document.highlighted,
+                updateHighlighted: res.data.document.highlighted,
                 docdesc: res.data.document.description,
+                updateDocdesc: res.data.document.description,
                 achievement: res.data.document.achivement,
+                updateAchievement: res.data.document.achivement,
                 acinst: res.data.document.institution,
+                updateAcinst: res.data.document.institution,
                 acdate: res.data.document.dateAchieved.split("T")[0],
+                updateAcdate: res.data.document.dateAchieved.split("T")[0],
                 tags: tempTag,
+                updateTags: tempTag,
                 owner: res.data.document.owner,
                 filePath: pathParts[pathParts.length-1],
                 fileType: parts[parts.length-1]
@@ -112,17 +129,29 @@ class singleDoc extends Component {
                 this.setState({
                     loaded: true
                 })
-                console.log(this.state.filePath);
+                var i;
+                var currentColor = [];
+                for(i=0; i<res.data.document.tags.length; i++){
+                    currentColor.push(res.data.document.tags[i].color);
+                }
+                this.setState({
+                    tagColors: currentColor,
+                    updateTagColor:currentColor,
+                })
+
                 const tagUrl = http+'/api/tags/' + this.state.owner;
                 axios.get(tagUrl)
                 .then(res =>{
                     var tempTag = [];
-                    var i;
+                    var tempTagColors = [];
+
                     for(i=0; i<res.data.length; i++){
                       tempTag.push(res.data[i].name);
+                      tempTagColors.push(res.data[i].color);
                     }
                     this.setState({
-                      allTags: tempTag
+                      allTags: tempTag,
+                      allTagColors: tempTagColors
                     })
                 })
                 .catch(function(error) {
@@ -176,7 +205,20 @@ class singleDoc extends Component {
 
     /* Leaves abruptly w/o saving Changes */
     handleAbruptLeave = () => {
-        this.setState({docEditor:false, docViewer: true, checkEdit: false});
+        this.setState({
+            docEditor:false, 
+            docViewer: true, 
+            checkEdit: false,
+            updateAcdate: this.state.acdate,
+            updateAchievement: this.state.achievement,
+            updateAcinst: this.state.acinst,
+            updateDocdate: this.state.docdate,
+            updateDocdesc: this.state.docdesc,
+            updateDocname: this.state.docname,
+            updateHighlighted: this.state.highlighted,
+            updateTagColor: this.state.tagColors,
+            updateTags: this.state.tags,
+        });
     }
 
     handleAddTags = () =>{
@@ -216,37 +258,46 @@ class singleDoc extends Component {
     }
 
     handleAchievement =()=>{
-        this.setState({achievement: true})
+        this.setState({updateAchievement: true})
     }
 
     handleRemoveAchievement =()=>{
-        this.setState({achievement: false})
+        this.setState({updateAchievement: false})
     }
 
   updateDoc(){
     var date;
 
     if(this.state.dateChange){
-        date = this.state.dateChange.toISOString().split('T')[0];
+        date = this.state.updateAcdate.toISOString().split('T')[0];
     }else{
-        date = this.state.acdate;
+        date = this.state.updateAcdate;
     }
 
       // wait for backend for updating tags
     const docForm = {
-        'name': this.state.docname,
-        'highlighted': this.state.highlighted,
-        'description': this.state.docdesc,
-        'achivement': this.state.achievement,
-        'institution': this.state.acinst,
+        'name': this.state.updateDocname,
+        'highlighted': this.state.updateHighlighted,
+        'description': this.state.updateDocdesc,
+        'achivement': this.state.updateAchievement,
+        'institution': this.state.updateAcinst,
         'dateAchieved': date,
-        'tagName': this.state.tags,
+        'tagName': this.state.updateTags,
     }
 
     const putDoc = http+'/api/editDocument/' + this.props.match.params.id;
     axios.put(putDoc, docForm, { withCredentials: true } )
     .then(res=>{
-        console.log(res.status)
+        this.setState({
+            docname: this.state.updateDocname,
+            docdate: this.state.updateDocdate,
+            highlighted: this.state.updateHighlighted,
+            docdesc: this.state.updateDocdesc,
+            achievement: this.state.updateAchievement,
+            acinst: this.state.updateAcinst,
+            acdate: date,
+            tagColors: this.state.updateTagColor,
+        })
     })
     .catch(function(error) {
       console.log(error);
@@ -256,34 +307,37 @@ class singleDoc extends Component {
 
   onChangeDescripton(e){
     this.setState({
-      docdesc: e.target.value
+        updateDocdesc: e.target.value
     });
   }
 
   onChangeName(e){
     this.setState({
-      docname: e.target.value
+        updateDocname: e.target.value
     });
   }
 
   onChangeInstitution(e){
     this.setState({
-        acinst: e.target.value
+        updateAcinst: e.target.value
     })
   }
 
   onChangeTags(e){
-    var chosetag = this.state.tags;
+    var chosetag = this.state.updateTags;
+    var chooseTagColors = this.state.updateTagColor;
+    var colorIndex = this.state.allTags.indexOf(e.target.value);
     if(e.target.checked){
         chosetag.push(e.target.value);
+        chooseTagColors.push(this.state.allTagColors[colorIndex])
     }else{
         var index = chosetag.indexOf(e.target.value);
         chosetag.splice(index, 1);
+        chooseTagColors.splice(index, 1);
     }
     this.setState({
-        tags: chosetag
-    }, ()=>{
-        console.log(this.state.tags)
+        updateTags: chosetag,
+        updateTagColor: chooseTagColors
     })
   }
 
@@ -292,11 +346,20 @@ class singleDoc extends Component {
   };
 
   render(){
-    var tags = this.state.tags;
+    var tags;
+    var tagColors;
 
-    let tagsMap = tags.map(tags =>{
+    if(this.state.docEditor){
+        tags = this.state.updateTags;
+        tagColors = this.state.updateTagColor;
+    }else{
+        tags = this.state.tags;
+        tagColors = this.state.tagColors;
+    }
+
+    let tagsMap = tags.map((tags, idx) =>{
         return(
-            <Tag note={tags} />
+            <Tag note={tags} variant={tagColors[idx]}/>
         )
     })
 
@@ -311,7 +374,9 @@ class singleDoc extends Component {
     })
 
     var allTags = this.state.allTags;
-    let SelectTags = allTags.map(onetag =>{
+    var allTagColors = this.state.allTagColors;
+
+    let SelectTags = allTags.map((onetag, idx) =>{
         var check = this.state.tags.includes(onetag);
         return(
             <InputGroup className = "select-tags">
@@ -319,7 +384,7 @@ class singleDoc extends Component {
                 <InputGroup.Checkbox onChange={this.onChangeTags} value={onetag} checked={check}/>
               </InputGroup.Prepend>
               <InputGroup.Append>
-                  <Tag note={onetag} />
+                  <Tag note={onetag} variant={allTagColors[idx]}/>
               </InputGroup.Append>
             </InputGroup>
         )
@@ -329,19 +394,17 @@ class singleDoc extends Component {
     // change line 501 {require("/usr/src/uploads/images/"+path)}
 
     return(
-        <div>
+        <body>
+        <Modal
+            dialogClassName = "docedit"
+            show = {this.state.docViewer}
+            onHide={this.handleViewerClose}
+            backdrop="static"
+            keyboard={false}
+        >
         { this.state.docEditor ?(
-            <div>
-                <Modal
-                 dialogClassName = "docedit"
-                 show = {this.state.docViewer}
-                 onHide={this.handleViewerClose}
-                 backdrop="static"
-                 keyboard={false}
-                >
-                <Modal.Header className = "docedit-header">
-
-                  <Modal.Title className = "doc-highlight">
+            <Modal.Header className = "docedit-header">
+                <Modal.Title className = "doc-highlight">
                     <InputGroup size ="lg">
                         <FormControl
                         defaultValue = {this.state.docname}
@@ -360,221 +423,204 @@ class singleDoc extends Component {
                         }
                         </InputGroup.Append>
                     </InputGroup>
-
-                  </Modal.Title>
+                </Modal.Title>
                   {/*Change doc-date to document added date*/}
                   <h6> Added on: <span> {this.state.docdate} </span> </h6>
-                </Modal.Header>
-
-                <Modal.Body className = "docedit-body" >
-                    <Container fluid>
-                    <Row>
-                        <Col  xs ={5} md = {5}>
-                            <Row className = "docview-image">
-                                <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
-                            </Row>
-                            <Row>
-                                <Button
-                                 block
-                                 variant = "outline-danger"
-                                 onClick = {this.handleCheckDelete}>
-                                    Delete Document
-                                </Button>
-                            </Row>
-                        </Col>
-                        <Col className = "docedit-properties">
-                            <Row>
-                                <h4>Attached Tags</h4>
-                            </Row>
-                            <Row className = "doc-tags">
-                                <h4>{showtagButtons}</h4>
-                                <Button block variant = "success" onClick ={this.handleAddTags}>Alter Tags</Button>
-                            </Row>
-
-                            <Row>
-                            <h4> Description</h4>
-                            </Row>
-
-                            <Row className = "doc-description">
-                                <FormControl
-                                as = "textarea"
-                                rows = "4"
-                                placeholder = "About the Document"
-                                defaultValue = {this.state.docdesc}
-                                aria-label= "description"
-                                onChange={this.onChangeDescripton}/>
-                            </Row>
-                            <Row>
-                            {this.state.achievement ? (
-                                <Button variant='outline-warning' onClick={this.handleRemoveAchievement} style={{marginRight: "1vmax"}}> Remove  </Button>
-                            ):(
-                                <Button variant='outline-success' onClick={this.handleAchievement} style={{marginRight: "1vmax"}}> Add </Button>
-                            )}
-                            <h4>Achievement Details</h4>
-                            </Row>
-                            {/* only show this row when document is an achievement is checked out */}
-                            <Collapse in={this.state.achievement}>
-                            <Row className = "doc-achievement">
-                                <FormControl
-                                placeholder = "Issuing Institution"
-                                defaultValue = {this.state.acinst}
-                                style ={{marginBottom: "0.6vmax"}}
-                                onChange = {this.onChangeInstitution}/>
-                              <DatePicker
-                               selected={new Date(this.state.acdate)}
-                               onChange={date  => this.setState({acdate: date, dateChange: true})}
-                               dateFormat={'yyyy/MM/dd'}
-                               />
-                            </Row>
-                            </Collapse>
-                        </Col>
-                    </Row>
-                    </Container>
-                </Modal.Body>
-                <Modal.Footer className = "docedit-footer">
-                    <Button variant = "outline-dark" onClick ={this.handleEditorClose} >Close</Button>
-                    <Button variant = "outline-dark" onClick ={this.handleSaveChanges}>Save Changes</Button>
-
-
-                </Modal.Footer>
-                </Modal>
-
-                <Modal
-                    show={this.state.checkEdit}
-                    className = "docedit-leave">
-                <Modal.Header>
-                    <h4> All unsaved changes will be lost </h4>
-                </Modal.Header>
-                <Modal.Footer className = "docedit-footer">
-                    <Button variant = "outline-dark" onClick ={this.handleEditorShow} >Return</Button>
-                    <Button
-                        variant = "outline-danger"
-                        onClick ={this.handleAbruptLeave}>Close</Button>
-                </Modal.Footer>
-                </Modal>
-
-                <Modal
-                    show = {this.state.addTags}
-                    className = "docedit-add-tags">
-                    <Modal.Header>
-                        <h4>Select Relevant tags</h4>
-                    </Modal.Header>
-                    <Modal.Body>
-                    {SelectTags}
-                    </Modal.Body>
-                    <Modal.Footer className = "docedit-footer-tags">
-                        <Button
-                        variant = "outline-success"
-                        onClick ={this.handleSetTags}>Save</Button>
-                    </Modal.Footer>
-                </Modal>
-
-                <Modal
-                    show={this.state.checkDelete}
-                    className = "docedit-delte">
-                <Modal.Header>
-                    <h4> Document will be permanently deleted </h4>
-                </Modal.Header>
-                <Modal.Footer className = "docedit-footer">
-                    <Button variant = "outline-dark" onClick ={this.handleEditorShow} >Return</Button>
-                    <Button
-                        variant = "outline-danger"
-                        onClick ={this.handleDelete}>Delete</Button>
-                </Modal.Footer>
-                </Modal>
-
-            </div>
+            </Modal.Header>
         ):(
-            <Modal
-             dialogClassName = "docview"
-             show = {this.state.docViewer}
-             onHide={this.handleViewerClose}
-             backdrop="static"
-             keyboard={false}
-            >
-
-                <Modal.Header className = "docview-header">
-                    {/*Change doc-name to document name*/}
-                    {this.state.highlighted ?
-                    (<Modal.Title className = "doc-highlighted">
+            <Modal.Header className = "docview-header">
+                {/*Change doc-name to document name*/}
+                {this.state.highlighted ?(
+                    <Modal.Title className = "doc-highlighted">
                     <h4>{this.state.docname}</h4>
-                    </Modal.Title>):
-                    (<Modal.Title ><h4>{this.state.docname}</h4></Modal.Title>)
-                    }
-                    {/*Change doc-date to document added date*/}
-                    <h6> Added on: <span> {this.state.docdate} </span> </h6>
-                </Modal.Header>
+                    </Modal.Title>
+                ):(
+                    <Modal.Title ><h4>{this.state.docname}</h4></Modal.Title>)
+                }
+                {/*Change doc-date to document added date*/}
+                <h6> Added on: <span> {this.state.docdate} </span> </h6>
+            </Modal.Header>
+        )}
 
-                <Modal.Body className = "docview-body" >
-                    <Container fluid>
-                    <Row>
-                        <Col className = "docview-image" xs ={5} md = {5} style={{height: "40vmax"}}>
-                        {this.state.loaded? (
-                            <FileViewer
+        <Modal.Body className = "docedit-body" >
+            <Container fluid>
+            <Row>
+                <Col className = "docview-image" xs ={5} md = {5} style={{height: "35vmax"}}>
+                    {this.state.loaded? (
+                        <FileViewer
                             fileType={this.state.fileType}
                             filePath={require("./"+path)}
                             errorComponent={CustomErrorComponent}
                             onError={this.onError}
                             key={this.props.match.params.id}
-                            />
-                        ):(
-                            <Spinner animation="border" variant="secondary" />
-                        )}
+                        />
+                    ):(
+                        <Spinner animation="border" variant="secondary" />
+                    )}
 
-                        </Col>
-                        <Col className = "docview-properties">
+                    { this.state.docEditor ? (
+                        <Row>
+                            <Button
+                             block
+                             variant = "outline-danger"
+                             onClick = {this.handleCheckDelete}>
+                                Delete Document
+                            </Button>
+                            </Row>
+                    ):(
+                        <Row></Row>
+                    )}
+                </Col>
+                    
+                {this.state.docEditor?(
+                    <Col className = "docedit-properties">
                         <Row>
                             <h4>Attached Tags</h4>
+                        </Row>
+                        
+                        <Row className = "doc-tags">
+                            <h4>{showtagButtons}</h4>
+                            <Button block variant = "success" onClick ={this.handleAddTags}>Alter Tags</Button>
+                        </Row>
 
+                        <Row>
+                            <h4> Description</h4>
+                        </Row>
+
+                        <Row className = "doc-description">
+                        <FormControl
+                            as = "textarea"
+                            rows = "4"
+                            placeholder = "About the Document"
+                            defaultValue = {this.state.docdesc}
+                            aria-label= "description"
+                            onChange={this.onChangeDescripton}
+                        />
+                        </Row>
+
+                        <Row>
+                            {this.state.updateAchievement ? (
+                                <Button variant='outline-warning' onClick={this.handleRemoveAchievement} style={{marginRight: "1vmax"}}> Remove  </Button>
+                            ):(
+                                <Button variant='outline-success' onClick={this.handleAchievement} style={{marginRight: "1vmax"}}> Add </Button>
+                            )}
+                            <h4>Achievement Details</h4>
+                        </Row>
+                            {/* only show this row when document is an achievement is checked out */}
+                        <Collapse in={this.state.updateAchievement}>
+                            <Row className = "doc-achievement">
+                                <FormControl
+                                    placeholder = "Issuing Institution"
+                                    defaultValue = {this.state.acinst}
+                                    style ={{marginBottom: "0.6vmax"}}
+                                    onChange = {this.onChangeInstitution}/>
+                                <DatePicker
+                                selected={new Date(this.state.updateAcdate)}
+                                onChange={date  => this.setState({updateAcdate: date, dateChange: true})}
+                                dateFormat={'yyyy/MM/dd'}
+                                />
+                            </Row>
+                        </Collapse>
+                    </Col>
+                ):(
+                    <Col className = "docview-properties">
+                        <Row>
+                            <h4>Attached Tags</h4>
+    
                         </Row>
                         <Row className = "doc-tags">
                             <h4>{tagsMap}</h4>
                         </Row>
+
                         <Row>
                             <h4> Description</h4>
                         </Row>
+
                         <Row className = "doc-description">
                             <p>
-                            {this.state.docdesc}
+                                {this.state.docdesc}
                             </p>
                         </Row>
-                        <Row>
-                            {this.state.achievement ?
-                                (<h4>Achievement Details</h4>):
-                                (<h4 style = {{color: "rgba(200,200,200,0.6)", textDecoration: "line-through"}}>
-                                    Achievement Details
-                                </h4>)
-                            }
 
-                            {/* If the field is not an achievemnt change the opacity of h4*/}
+                        <Row>
+                        {this.state.achievement ?(
+                            <h4>Achievement Details</h4>
+                        ):(
+                            <h4 style = {{color: "rgba(200,200,200,0.6)", textDecoration: "line-through"}}>
+                                Achievement Details
+                            </h4>
+                        )}
+    
+                                {/* If the field is not an achievemnt change the opacity of h4*/}
                         </Row>
-                        {/* only show this row when document is an achievement is checked out */}
+                            {/* only show this row when document is an achievement is checked out */}
                         <Collapse in={this.state.achievement}>
                             <Row className = "doc-achievement">
-                            {/* Add acheivement name */}
-                            <h5>Institution: <span>{this.state.acinst}</span></h5>
-                            {/* Add acheivement date */}
-                            <h5>Date: <span>{this.state.acdate}</span></h5>
+                                <h5>Institution: <span>{this.state.acinst}</span></h5>
+                                <h5>Date: <span>{this.state.acdate}</span></h5>
                             </Row>
                         </Collapse>
+    
+                    </Col>
+                )}
+                   
+                     
+            </Row>
+            </Container>
+        </Modal.Body>
+        {this.state.docEditor?(
+            <Modal.Footer className = "docedit-footer">
+                <Button variant = "outline-dark" onClick ={this.handleEditorClose} >Close</Button>
+                <Button variant = "outline-dark" onClick ={this.handleSaveChanges}>Save Changes</Button>
+             </Modal.Footer>
 
-                        </Col>
-                    </Row>
-                    </Container>
-                </Modal.Body>
-                <Modal.Footer className = "docview-footer">
-                    <Button variant = "outline-dark" onClick ={this.handleViewerClose} >Close</Button>
-                    {this.state.login ? (
-                        <Button variant = "outline-dark" onClick ={this.handleViewerEdit}>Edit</Button>
-                    ):(
-                        <div></div>
-                    )}
-
-                </Modal.Footer>
-            </Modal>
+        ):(
+            <Modal.Footer className = "docview-footer">
+            <Button variant = "outline-dark" onClick ={this.handleViewerClose} >Close</Button>
+            {this.state.login ? (
+                <Button variant = "outline-dark" onClick ={this.handleViewerEdit}>Edit</Button>
+            ):(
+                <div></div>
+            )}
+            </Modal.Footer>
         )}
-      </div>
+
+                
+        <Modal
+            show={this.state.checkEdit}
+            className = "docedit-leave">
+            <Modal.Header>
+                <h4> All unsaved changes will be lost </h4>
+            </Modal.Header>
+
+            <Modal.Footer className = "docedit-footer">
+                <Button variant = "outline-dark" onClick ={this.handleEditorShow} >Return</Button>
+                <Button
+                    variant = "outline-danger"
+                    onClick ={this.handleAbruptLeave}>Close</Button>
+            </Modal.Footer>
+        </Modal>
+
+        <Modal
+            show = {this.state.addTags}
+            className = "docedit-add-tags">
+            <Modal.Header>
+                <h4>Select Relevant tags</h4>
+            </Modal.Header>
+            <Modal.Body>
+                {SelectTags}
+            </Modal.Body>
+            <Modal.Footer className = "docedit-footer-tags">
+                <Button
+                    variant = "outline-success"
+                    onClick ={this.handleSetTags}>Save</Button>
+                </Modal.Footer>
+        </Modal>
+
+
+        </Modal>
+    </body>
     )
-}
+ }
 }
 export default singleDoc;
