@@ -40,7 +40,7 @@ router.get('/coverImages/:uid', photoController.getCoverImages);
 router.get('/coverImages/:uid/:id', photoController.getCoverImagesById);
 router.delete('/coverImages/:uid/:id', ensureAuthenticated, photoController.delCoverImagesById);
 
-router.post('/bgImage/:uid', ensureAuthenticated, fileUpload.single('file'), photoController.addBgImage);
+router.put('/bgImage/:uid', ensureAuthenticated, photoController.addBgImage);
 router.get('/bgImage/:uid', photoController.getBgImage);
 router.delete('/bgImage/:uid', ensureAuthenticated, photoController.delBgImage);
 
