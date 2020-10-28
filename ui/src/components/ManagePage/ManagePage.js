@@ -876,7 +876,7 @@ class ManagePage extends Component {
                     <Modal.Title>Select Background Gradient</Modal.Title>
                   </Modal.Header>
                   <Modal.Body >
-                    <Container fluid className = "manage-background-list">
+                    <Container fluid>
                       <Row className = "justify-content-center">
                         <h5>Select Gradient Direction</h5>
                       </Row>
@@ -888,12 +888,12 @@ class ManagePage extends Component {
                         </ToggleButtonGroup>
                       </Row>
                       <Collapse in = {this.state.bgDirection === "left"}>
-                        <Container className = "mt-3 overflow-scroll">
+                        <Container className = "mt-3 manage-background-list">
                           {LeftBgColormap}
                         </Container>
                       </Collapse>
                       <Collapse in = {this.state.bgDirection === "right"}>
-                        <Container className = "mt-3 overflow-scroll">
+                        <Container className = "mt-3 manage-background-list">
                           {RightBgColormap}
                         </Container>
                       </Collapse>
