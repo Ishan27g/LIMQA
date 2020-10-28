@@ -147,7 +147,7 @@ const signup = async (req, res, next) => {
     owner : createdUser.id,
     profilePhoto: "",
     coverImages: "",
-    bgImage: "default"
+    bgImage: "app-background-default"
   })
   try {
     await createdPhotos.save();
