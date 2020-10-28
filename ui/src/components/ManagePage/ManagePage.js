@@ -95,6 +95,7 @@ class ManagePage extends Component {
         this.abortDeleteTag = this.abortDeleteTag.bind(this);
         this.handleSelectBackground = this.handleSelectBackground.bind(this);
         this.handleCheckBackground =this.handleCheckBackground.bind(this);
+        this.updateBgGradient =this.updateBgGradient.bind(this);
     }
 
     componentDidMount(){
@@ -158,9 +159,21 @@ class ManagePage extends Component {
       .catch(function(error) {
         console.log(error);
       });
-
-
     };
+
+    updateBgGradient(){
+      const testBg = "app-background-dusk-left";
+      const obj = {
+        bgImage: testBg
+      };
+      axios.put(http+'/api/users/bgImage/'+this.state.userid, obj, { withCredentials: true })
+      .then(response =>{
+        const updateBgGradient = testBg;
+        this.setState({
+          bgClass: updateBgGradient
+        })
+      }, () => console.log(this.state.bgClass))
+    }
 
     onChangeProfileImage(e){
       this.setState({
@@ -662,7 +675,6 @@ class ManagePage extends Component {
           )}
 
         </div>
-
             <div class = "manage-basic-info">
               <Container fluid = {true}>
                   <Row>
@@ -737,6 +749,7 @@ class ManagePage extends Component {
                       <Col xs={6} md={8}>
 
                       <Container fluid style={{height:'40rem'}}>
+
                         <Row className = "justify-content-center">
                           <Form inline className = "document-arena-search">
                               {this.state.filter === "Title" ? (
@@ -765,6 +778,7 @@ class ManagePage extends Component {
                               </Dropdown>
                           </Form>
                         </Row>
+
                         {this.state.filter === "Title" ? (
                           <Row className = "mt-sm-2 mb-sm-4"></Row>
                         ):(
@@ -832,7 +846,7 @@ class ManagePage extends Component {
                     <Button variant="danger" onClick={this.handleCheckBackground}>
                       Close
                     </Button>
-                    <Button variant="primary" onClick={this.handleCheckBackground}>Save Changes</Button>
+                    <Button variant="primary" onClick={this.updateBgGradient}>Save Changes</Button>
                   </Modal.Footer>
                 </Modal>
 
