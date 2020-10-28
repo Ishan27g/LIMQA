@@ -148,9 +148,17 @@ class ManagePage extends Component {
         console.log(error);
       })
 
-      this.setState({
-        bgClass: "app-background-dusk-left"
+      const bgUrl = http+'/api/users/bgImage/'+this.props.match.params.id;
+      axios.get(bgUrl)
+      .then(response => {
+        this.setState({
+          bgClass: "app-background-"+response.data.bgImage
+        }, () => console.log(this.state.bgClass))
       })
+      .catch(function(error) {
+        console.log(error);
+      });
+
 
     };
 
