@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "../../App.css";
 import './Manage.css';
 
 import axios from "axios";
@@ -21,6 +20,7 @@ import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 import InputGroup from 'react-bootstrap/InputGroup';
+import Collapse from 'react-bootstrap/Collapse';
 
 import Tag from './../Tags/Tag.js';
 import CoverImage from '../CoverImage/coverImage.js';
@@ -52,8 +52,9 @@ class ManagePage extends Component {
           updateCover: null,
           updateDoc: null,
           profileImg: http+'/api/users/profilePhoto/'+this.props.match.params.id,
-          bgImg: http+'/api/users/bgImage/'+this.props.match.params.id,
-          updatebgImg: null,
+          bgClass: "",
+          bgDirection: "left",
+          selectBackground: false,
           docPath: '',
           doctype: '',
           documents: [],
@@ -81,8 +82,6 @@ class ManagePage extends Component {
         this.uploadCoverImage = this.uploadCoverImage.bind(this);
         this.onChangeDocUpload = this.onChangeDocUpload.bind(this);
         this.openDocView = this.openDocView.bind(this);
-        this.onChangeBgImg = this.onChangeBgImg.bind(this);
-        this.uploadBgImg = this.uploadBgImg.bind(this);
         this.onChangeSearch = this.onChangeSearch.bind(this);
         this.handleAddTagClose = this.handleAddTagClose.bind(this);
         this.handleAddTagShow = this.handleAddTagShow.bind(this);
@@ -94,6 +93,8 @@ class ManagePage extends Component {
         this.tagColorChange = this.tagColorChange.bind(this);
         this.deleteTag = this.deleteTag.bind(this);
         this.abortDeleteTag = this.abortDeleteTag.bind(this);
+        this.handleSelectBackground = this.handleSelectBackground.bind(this);
+        this.handleCheckBackground =this.handleCheckBackground.bind(this);
     }
 
     componentDidMount(){
@@ -146,6 +147,11 @@ class ManagePage extends Component {
       .catch(function(error) {
         console.log(error);
       })
+
+      this.setState({
+        bgClass: "app-background-dusk-left"
+      })
+
     };
 
     onChangeProfileImage(e){
@@ -307,32 +313,6 @@ class ManagePage extends Component {
       });
     }
 
-    onChangeBgImg(e){
-      this.setState({
-        updatebgImg: e.target.files[0]
-      }, ()=>{
-        if(this.state.updatebgImg !== null){
-          this.uploadBgImg();
-        }
-      })
-    }
-
-    uploadBgImg(){
-      const bgImg = new FormData();
-      bgImg.append('file', this.state.updatebgImg)
-      axios.post(http+'/api/users/bgImage/'+this.state.userid, bgImg, { withCredentials: true })
-      .then( res => {
-        console.log(res);
-        const tempProfile = URL.createObjectURL(this.state.updatebgImg);
-        this.setState({
-          bgImg: tempProfile
-        })
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-
-    }
 
     openDocView = () =>{
       this.docView.current.handleViewerShow();
@@ -496,6 +476,20 @@ class ManagePage extends Component {
         delTag: ""
       })
     }
+
+    handleSelectBackground(){
+      this.setState({
+        selectBackground: true
+      })
+    }
+
+    handleCheckBackground(){
+      this.setState({
+        selectBackground: false
+      }, () => {window.location.href = "/manage/" + this.state.userid})
+    }
+
+
     render(){
       var doc = {doc: this.state.updateDoc, id: this.state.userid};
       //const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
@@ -624,9 +618,11 @@ class ManagePage extends Component {
                                           variant = {variant} value = {variant}>
                             </ToggleButton>)
                         });
-      return(
-        <body>
+      var bgColors = ["default", "roseanna", "wave", "purple", "mauve", "socialive", "cherry", "lush", "dusk"];
 
+
+      return(
+        <body className = {this.state.bgClass}>
         <div class = "manage-cover-image">
           {this.state.alertCover?(
             <Alert variant="danger" show={this.state.alertCover} block>
@@ -787,15 +783,50 @@ class ManagePage extends Component {
                   <Row style={{marginTop: '1rem'}}>
 
                   </Row>
-                  <Row className = "mt-3">
+                  <Row className = "mt-sm-5 pb-sm-5">
                     <input
                           type="file"
-                          style={{display: "none"}}
-                          onChange={this.onChangeBgImg}
-                          ref={bgInput=>this.bgInput=bgInput}/>
-                    <Button block variant="info" onClick = {() => this.docInput.click()}>
-                      Select Background Gradient</Button>
+                          style={{display: "none"}}/>
+                        <Button block variant="info"onClick ={this.handleSelectBackground}>
+                      Select Background Gradient
+                    </Button>
                   </Row>
+
+                  <Modal
+                    show={this.state.selectBackground}
+                    onHide={this.handleCheckBackground}
+                    backdrop="static"
+                    keyboard={false}
+                    dialogClassName ="manage-background"
+                  >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Select Background Gradient</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <h5>Select Gradient Direction</h5>
+                    <Container fluid className = "manage-background-list">
+                      <Row>
+                        <ToggleButtonGroup type="radio" name ="direction" defaultValue="left"
+                          onChange ={(value) => {this.setState({bgDirection: value})}}>
+                          <ToggleButton variant = "outline-dark" value = "left">Left</ToggleButton>
+                          <ToggleButton variant = "outline-dark" value = "right" >Right</ToggleButton>
+                        </ToggleButtonGroup>
+                      </Row>
+                      <Collapse in = {this.state.bgDirection === "left"}>
+                          <h5>Select Direction left</h5>
+                      </Collapse>
+                      <Collapse in = {this.state.bgDirection === "right"}>
+                        <h5>Select Direction right</h5>
+                      </Collapse>
+                    </Container>
+                  </Modal.Body>
+                  <Modal.Footer className = "tags-management-modal-footer">
+                    <Button variant="danger" onClick={this.handleCheckBackground}>
+                      Close
+                    </Button>
+                    <Button variant="primary" onClick={this.handleCheckBackground}>Save Changes</Button>
+                  </Modal.Footer>
+                </Modal>
 
                   <Modal
                     show={this.state.tagManagement}

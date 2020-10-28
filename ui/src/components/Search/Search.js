@@ -231,8 +231,8 @@ render(){
                 <div>
                 <Card className='documentsCard' >
                     <Card.Img variant='top' src={docImage}/>
-                    <Card.Body onClick = {event =>  window.location.href = '/documents/'+ cardDoc._id }>
-                    <Card.Title>
+                    <Card.Body style ={{backgroundColor: "rgba(200,200,200,0.3)"}}onClick = {event =>  window.location.href = '/documents/'+ cardDoc._id }>
+                    <Card.Title >
                         {cardDoc.name}
                     </Card.Title>
                     </Card.Body>
@@ -243,54 +243,52 @@ render(){
     });
 
     return (
+      <body className = "app-background">
+        <Container style={{paddingBottom:"5rem"}} fluid>
+            <Row className = "landing-header">
+                Discover documents
+            </Row>
+            <Row className = "landing-header">
+              <Button variant='primary' size='lg' onClick= {this.handleMethodChange}>Title</Button>
+              <Button variant='secondary' size='lg'onClick= {this.handleMethodChange} >Tag</Button>
+            </Row>
+            <Row className = "user-search">
+            {this.state.searchMethod === "Title"?(
+              <FormControl type="text" size = "lg"
+              onChange = {this.onChangeSearch}
+              value = {this.state.search}
+              placeholder="Search documents by Titles"/>
+            ):(
+              <FormControl type="text" size = "lg"
+              onChange = {this.onChangeSearch}
+              value = {this.state.search}
+              placeholder="Search documents by Tags"
+              readOnly />
+            )}
+            </Row>
+            {this.state.searchMethod === "Title"?(
+              <br />
+            ):(
+              <Row className = "user-search">
+              {tagsMap}
+              </Row>
+            )}
 
-        <body>
-            <Container style={{marginBottom:"5rem"}} fluid>
-                <Row className = "landing-header">
-                    Discover documents
-                </Row>
-                <Row className = "landing-header">
-                  <Button variant='primary' size='lg' onClick= {this.handleMethodChange}>Title</Button>
-                  <Button variant='secondary' size='lg'onClick= {this.handleMethodChange} >Tag</Button>
-                </Row>
-                <Row className = "user-search">
-                {this.state.searchMethod === "Title"?(
-                  <FormControl type="text" size = "lg"
-                  onChange = {this.onChangeSearch}
-                  value = {this.state.search}
-                  placeholder="Search documents by Titles"/>
-                ):(
-                  <FormControl type="text" size = "lg"
-                  onChange = {this.onChangeSearch}
-                  value = {this.state.search}
-                  placeholder="Search documents by Tags"
-                  readOnly />
-                )}
-                </Row>
-                {this.state.searchMethod === "Title"?(
-                  <br />
-                ):(
-                  <Row className = "user-search">
-                  {tagsMap}
-                  </Row>
-                )}
-
-                {this.state.searching ? (
-                    <Container>
-                        <div class="row justify-content-md-center" style={{marginTop:"2rem"}}>
-                            {showDocs}
-                        </div>
-                    </Container>
-                ):(
-                    <Container>
-                        <div class="row justify-content-md-center" style={{marginTop:"2rem"}}>
-                            {alldocs}
-                        </div>
-                    </Container>
-                )}
-            </Container>
-        </body>
-
+            {this.state.searching ? (
+                <Container>
+                    <div class="row justify-content-md-center" style={{marginTop:"1rem"}}>
+                        {showDocs}
+                    </div>
+                </Container>
+            ):(
+                <Container>
+                    <div class="row justify-content-md-center" style={{marginTop:"1rem"}}>
+                        {alldocs}
+                    </div>
+                </Container>
+            )}
+        </Container>
+      </body>
     )
   }
 }

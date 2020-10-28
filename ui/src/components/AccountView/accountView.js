@@ -466,7 +466,7 @@ class AccountView extends Component {
         });
 
         return(
-            <body>
+            <body className ="app-background">
               {this.state.editVersion ? (
                 <div className = "edit-set">
                   <Container>
@@ -620,7 +620,6 @@ class AccountView extends Component {
               ):(
               <div className = "acc-set">
                 <Container>
-
                   <Row className = "acc-header">
                     <h1>ACCOUNT SETTINGS</h1>
                   </Row>
@@ -735,7 +734,7 @@ class AccountView extends Component {
                 </Container>
               </div>
               )}
-            </body>
+          </body>
         )
     }
 }

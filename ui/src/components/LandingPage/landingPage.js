@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import "../../App.css";
 import './landingPage.css';
 
 import FormControl from 'react-bootstrap/FormControl';
@@ -129,7 +130,7 @@ class Landing extends Component{
     });
 
     return (
-      <div style={{overflowY:"scroll"}}>
+      <body className = "app-background">
         <Container className = "app-body">
           <Row className = "landing-header">
               Discover New Talents
@@ -156,7 +157,7 @@ class Landing extends Component{
           </Fade>
           </Row>
         </Container>
-      </div>
+      </body>
     )
   }
 }

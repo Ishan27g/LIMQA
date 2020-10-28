@@ -329,7 +329,7 @@ class singleDoc extends Component {
     // change line 501 {require("/usr/src/uploads/images/"+path)}
 
     return(
-        <body>
+        <div>
         { this.state.docEditor ?(
             <div>
                 <Modal
@@ -573,7 +573,7 @@ class singleDoc extends Component {
                 </Modal.Footer>
             </Modal>
         )}
-        </body>
+      </div>
     )
 }
 }

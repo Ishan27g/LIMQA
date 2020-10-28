@@ -170,7 +170,7 @@ class Timeline extends Component {
       label: this.state.username + ' updated their profile photo',
       icon: <Image className = "icon-hover" alt = "photo" src = {photoIcon}
                    style = {{height:"50px", width: "50px"}}
-                   onClick = {event =>  window.location.href= '/manage/' + this.state.userid}/>,
+                   onClick = {event =>  window.location.href= '/home/' + this.state.userid}/>,
       datetime: "2020-10-19T04:23:28.855Z", /*Add DateAdded after response.data structure is created*/
       description: "",
       photo : this.state.userProfilePhoto
@@ -183,7 +183,7 @@ class Timeline extends Component {
       label: this.state.username + ' added a cover image',
       icon: <Image className = "icon-hover" alt = "photo" src = {photoIcon}
                    style = {{height:"50px", width: "50px"}}
-                   onClick = {e =>  window.location.href= '/manage/' + this.state.userid}/>,
+                   onClick = {e =>  window.location.href= '/home/' + this.state.userid}/>,
       datetime: "2020-10-19T04:23:28.855Z",/*Add DateAdded after response.data structure is created*/
       description: "",
       photo : event
@@ -199,7 +199,7 @@ class Timeline extends Component {
             </div>,
       icon: <Image className = "icon-hover" alt = "tag" src = {tagIcon}
                    style = {{height:"50px", width: "50px"}}
-                   onClick = {event =>  window.location.href= "/manage/" + this.state.userid}/>,
+                   onClick = {event =>  window.location.href= "/search/" + this.state.userid}/>,
       datetime: event.dateAdded, /*Add DateAdded after response.data structure is created*/
       description: "",
       photo : ""
@@ -224,17 +224,20 @@ class Timeline extends Component {
         return(<CustomMarker event = {event} />)
       });
       return (
+        <body className = "app-background">
           <div className = "timeline-body">
-          <h2>Recent Activity</h2>
-          <ActivityTimeline>
-            {timelineMarker}
-          </ActivityTimeline>
-        </div>
+            <h2>Recent Activity</h2>
+            <ActivityTimeline>
+              {timelineMarker}
+            </ActivityTimeline>
+          </div>
+        </body>
+
       )
     } else {
       console.log(this.state);
       return(
-
+      <body className = "app-background">
         <Container fluid className = "default-timeline-body">
           <Row>
             <Spinner animation="border" />
@@ -277,6 +280,7 @@ class Timeline extends Component {
              </OverlayTrigger>
           </Row>
         </Container>
+      </body>
 
       )
     }

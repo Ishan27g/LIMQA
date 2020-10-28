@@ -122,8 +122,8 @@ class Home extends Component {
 
 
         return(
-        <div>
-          <body className = "home">
+        <body className ="app-background-default">
+        <div className = "home">
             <div class = "cover-image">
                 <Carousel Fluid >
                     {coverImage}
@@ -182,8 +182,8 @@ class Home extends Component {
 
 
             </div>
-          </body>
         </div>
+      </body>
         )
     }
 }

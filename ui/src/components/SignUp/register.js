@@ -111,6 +111,7 @@ class Register extends Component{
 
   render(){
     return(
+      <body className = "app-background">
       <Container fluid className = "register">
         <Col>
           <Form className = "register-form">
@@ -194,6 +195,7 @@ class Register extends Component{
           </Form>
         </Col>
       </Container>
+    </body>
     )
   }
 }
