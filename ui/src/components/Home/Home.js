@@ -101,15 +101,14 @@ class Home extends Component {
                     textAlign: "center",
                     fontsize: "2em",
                     fontfamily: "Roboto, sans-serif",
-                    fontWeight: "bolder",
-                    width: "70vw"
+                    fontWeight: "bolder"
+            
                 }}>
                     <Card.Img variant='top' src={docImage}/>
                     <Card.Body 
                     style={{
                         backgroundColor: "rgba(180,180,180,0.5)",
                         height: "5vmax",
-                        width: "70vw"
                     }} 
                     styonClick = {event =>  window.location.href = '/documents/'+doc._id }>
                       <Card.Title>
