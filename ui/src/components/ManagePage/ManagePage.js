@@ -643,12 +643,13 @@ class ManagePage extends Component {
                             </ToggleButton>)
                         });
       var bgColors = ["default", "dusk", "roseanna", "wave", "purple", "mauve", "sociallive", "cherry", "lush"];
+      var colorClass = "row app-background-";
       var LeftBgColormap = bgColors.map(color => {
 
         if(color === "default"){
-          var colorClass = "row app-background-" + color;
+          colorClass = colorClass + color;
         } else {
-          var colorClass = "row app-background-" + color + "-left";
+          colorClass = colorClass + color + "-left";
         }
         return(
           <Container className = "mt-3">
@@ -671,9 +672,9 @@ class ManagePage extends Component {
       var RightBgColormap = bgColors.map(color => {
 
         if(color === "default"){
-          var colorClass = "row app-background-" + color ;
+          colorClass = colorClass + color;
         } else {
-          var colorClass = "row app-background-" + color + "-right";
+          colorClass = colorClass + color + "-right";
         }
         return(
           <Container className = "mt-3">
@@ -712,7 +713,8 @@ class ManagePage extends Component {
               multiple="multiple"/>
               <img
               src = {uploadCoverImageBg}
-              onClick = {() => this.coverInput.click()} />
+              onClick = {() => this.coverInput.click()}
+              alt = "Upload Icon Background"/>
             <Carousel.Caption>
               <img
                 src = {uploadIcon}
