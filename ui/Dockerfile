@@ -1,4 +1,4 @@
-FROM node:10.16-alpine
+FROM node:10.23-alpine
 # Create app directory
 RUN mkdir -p /usr/src/uploads
 WORKDIR /usr/src/app/

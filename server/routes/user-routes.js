@@ -31,6 +31,9 @@ router.get('/logout', (req, res) => {
 // this route send the login status back to front end.
 router.get('/check', userController.check);
 
+router.get('/coverImages/timeStamps/:uid',photoController.getCoverImagesTimeStamp)
+router.get('/profilePhoto/timeStamps/:uid',photoController.getProfilePhotoTimeStamp)
+
 router.post('/profilePhoto/:uid', ensureAuthenticated, fileUpload.single('file'), photoController.addProfilePhoto);
 router.get('/profilePhoto/:uid', photoController.getProfilePhoto);
 router.delete('/profilePhoto/:uid', ensureAuthenticated, photoController.deleteProfilePhoto);
@@ -43,6 +46,9 @@ router.delete('/coverImages/:uid/:id', ensureAuthenticated, photoController.delC
 router.post('/bgImage/:uid', ensureAuthenticated, fileUpload.single('file'), photoController.addBgImage);
 router.get('/bgImage/:uid', photoController.getBgImage);
 router.delete('/bgImage/:uid', ensureAuthenticated, photoController.delBgImage);
+
+
+
 
 // expect user email address
 router.post('/forgot', userController.forgotPassword);
