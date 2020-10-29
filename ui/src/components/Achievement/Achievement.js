@@ -56,7 +56,7 @@ class Achievements extends Component{
     });
 
     return (
-      <CardDeck style = {{marginRight: "10vw", marginLeft: "10vw"}}>
+      <CardDeck style = {{marginRight: "10vw", marginLeft: "13vw", marginBottom: "20vh"}}>
       {achievementDoc}
       </CardDeck>
       

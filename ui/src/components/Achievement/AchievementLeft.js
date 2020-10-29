@@ -27,7 +27,6 @@ class CardLeft extends React.Component{
             width: "70vw",
             height: "30vh",
             top: "50px",
-            margin: "0 auto",
             marginBottom: "50px"}}>
           <Card.Img src={docIcon} style={{position:'relative', left:"10%", top: "4vh", width:"6.5vw", height:"17vh"}}/>
           <Card.Body style={{
@@ -36,13 +35,13 @@ class CardLeft extends React.Component{
             background: "white",
             margin: "0 auto"
             }}>
-            <Card.Title style = {{position:'relative', left:"20%", bottom:"18vh", "font-size":"3vh", color:"white"}}>
+            <Card.Title style = {{position:'relative', left:"20%", bottom:"16vh", "font-size":"3vh", color:"white"}}>
               {this.state.name}
             </Card.Title>    
-            <Card.Text className="desc" style = {{position:'relative', left:"20%", bottom:"18vh", "font-size":"2.5vh", width: "60%" }}>
+            <Card.Text className="desc" style = {{position:'relative', left:"20%", bottom:"16vh", "font-size":"2.5vh", width: "60%" }}>
               {this.state.description}
             </Card.Text>
-            <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"15vh", "font-size":"2vh" , color:"black"}}> 
+            <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"14vh", "font-size":"2vh" , color:"black"}}> 
               <b>Institution</b>: {this.state.institution} 
               <br/>
               <b>Date</b>: {this.state.dateAchieved}
