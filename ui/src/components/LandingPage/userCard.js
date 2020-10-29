@@ -37,7 +37,14 @@ class UserCard extends Component{
 
         return (
                 <Card className = "user-card"
-                  style={{ height: "auto"}}
+                  style={{ 
+                        backgroundColor: "rgba(0,0,0,0)",
+                        color: "white",
+                        textAlign: "center",
+                        fontSize: "2em",
+                        fontfamily: "Roboto, sans-serif",
+                        fontWeight: "bolder",
+                        height: "auto"}}
                   bg = "light">
 
                   <Image variant="top" src={http+'/api/users/profilePhoto/'+this.props.id}
@@ -53,10 +60,13 @@ class UserCard extends Component{
                                   {this.props.email}
                                 </Card.Text>
                   </Card.Title>
-                  <Card.Body style={{height: "7rem"}}>
-                    <Card.Text style = {{fontSize: "0.6em", color: "black"}}>
+                  <Card.Body style={{
+                          backgroundColor: "rgba(180,180,180,0.5)",
+                          height: "7rem"
+                          }}>
+                  <Card.Text style = {{fontSize: "0.6em", color: "black", margin:"0 auto", border:"red"}}>
                       {this.props.bioinfo}
-                    </Card.Text>
+                  </Card.Text>
                   </Card.Body>
                   <Card.Footer style = {{display: "flex", justifyContent: "space-between"}}>
                     <Image onClick= {event => window.location.href = Facebook}

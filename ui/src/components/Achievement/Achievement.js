@@ -56,11 +56,10 @@ class Achievements extends Component{
     });
 
     return (
-      <h1> Heloo </h1>
-      /*<CardDeck style = {{marginRight: "10vw", marginLeft: "10vw"}}>
+      <CardDeck style = {{marginRight: "10vw", marginLeft: "10vw"}}>
       {achievementDoc}
       </CardDeck>
-      */
+      
     );
   }
 }

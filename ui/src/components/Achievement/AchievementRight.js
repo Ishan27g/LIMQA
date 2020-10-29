@@ -12,21 +12,32 @@ class CardRight extends Component{
     dateAchieved: this.props.dateAchieved
     }
   }
-
+  setMessage() {
+    if(!this.state.institution){
+      this.state.institution = "Missing"
+    }
+  }
   render(){
+    this.setMessage()
     return (
+      <div>
       <Card className="outline right" style={{
           position:'relative',
-          backgroundColor: 'black',
+          backgroundColor: 'white',
           width: "70vw",
           height: "30vh",
           top: "50px",
           margin: "0 auto",
-          marginBottom: "100px"}}>
-      <Card.Img className="imgOutline rightImg" src={docIcon} style={{position:'relative', left:"80%", top:"24%", width:"6.5vw", height:"17vh"}}/>
-      <Card.Body>
-        <Card.Title className="heading" style = {{position:'relative', left:"20%", bottom:"15vh", "font-size":"2vh"}}>{this.state.name}</Card.Title>
-        <Card.Text className="desc" style = {{position:'relative', left:"20%", bottom:"15vh", "font-size":"2.5vh", width: "80%" }}>
+          marginBottom: "50px"}}>
+      <Card.Img className="imgOutline rightImg" src={docIcon} style={{position:'relative', left:"80%",top:"4vh", width:"6.5vw", height:"17vh"}}/>
+      <Card.Body style={{
+            marginTop: "10px",
+            background: "grey",
+            width: "68vw",
+            margin: "0 auto"
+            }}>
+        <Card.Title className="heading" style = {{position:'relative', left:"20%", bottom:"18vh", "font-size":"3vh"}}>{this.state.name}</Card.Title>
+        <Card.Text className="desc" style = {{position:'relative', left:"20%", bottom:"18vh", "font-size":"2.5vh", width: "80%", color:"black" }}>
         {this.state.description}
         </Card.Text>
         <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"15vh", "font-size":"2vh" }}>
@@ -36,6 +47,7 @@ class CardRight extends Component{
         </Card.Text>
       </Card.Body>
       </Card>
+      </div>
     );
   }
 }
