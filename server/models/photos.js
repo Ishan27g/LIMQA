@@ -9,7 +9,7 @@ const photoSchema = new Schema({
     prCreatedOn : {type : Date, required: false},
     prModifiedOn: {type : Date, required: false},
     ciCreatedOn : {type : Date, required: false},
-    ciModifiedOn: {type : Date, required: false}
+    ciModifiedOn: {type : Date, required: false},
     bgImage: {type : String, required: false}
 });
 
