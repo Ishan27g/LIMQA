@@ -37,7 +37,7 @@ class UserCard extends Component{
 
         return (
                 <Card className = "user-card"
-                  style={{ 
+                  style={{
                         color: "white",
                         textAlign: "center",
                         fontSize: "2em",
@@ -60,7 +60,7 @@ class UserCard extends Component{
                   </Card.Title>
                   <Card.Body style={{
                           backgroundColor: "rgba(180,180,180,0.5)",
-                          height: "7rem"
+                          height: "6rem"
                           }}>
                   <Card.Text style = {{fontSize: "0.6em", color: "black", margin:"0 auto", border:"red"}}>
                       {this.props.bioinfo}

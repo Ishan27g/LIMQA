@@ -322,7 +322,7 @@ class App extends Component{
             <Route path="/register" component={Register}/>
             <Route path="/home/:id" component={Home}/>
             <Route path="/timeline/:id" component={Timeline}/>
-            <Route path="/Achievements/:id" component={Construct}/>
+            <Route path="/Achievements/:id" component={Achievements}/>
             <Route path="/documents/:id" component={singleDoc}/>
             <Route path="/search/:id" component={Search}/>
             <Route path="/forget" component={forgetPassEmail}/>
