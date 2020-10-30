@@ -19,6 +19,7 @@ class CardLeft extends React.Component{
   }
   render(){
     this.setMessage()
+    var visualDate = new Date(this.state.dateAchieved).toDateString();
     return (
       <div>
         <Card style={{
@@ -27,7 +28,7 @@ class CardLeft extends React.Component{
             width: "70vw",
             height: "30vh",
             top: "50px",
-            marginBottom: "50px"}}>
+            marginBottom: "30px"}}>
           <Card.Img src={docIcon} style={{position:'relative', left:"10%", top: "4vh", width:"6.5vw", height:"17vh"}}/>
           <Card.Body style={{
             width:"68vw",
@@ -37,19 +38,19 @@ class CardLeft extends React.Component{
             }}>
             <Card.Title style = {{position:'relative', left:"20%", bottom:"16vh", "font-size":"3vh", color:"white"}}>
               {this.state.name}
-            </Card.Title>    
+            </Card.Title>
             <Card.Text className="desc" style = {{position:'relative', left:"20%", bottom:"16vh", "font-size":"2.5vh", width: "60%" }}>
               {this.state.description}
             </Card.Text>
-            <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"12vh", "font-size":"2vh" , color:"black"}}> 
-              <b>Institution</b>: {this.state.institution} 
+            <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"12vh", "font-size":"2vh" , color:"black"}}>
+              <b>Institution</b>: {this.state.institution}
               <br/>
-              <b>Date</b>: {this.state.dateAchieved}
+              <b>Date</b>: {visualDate}
             </Card.Text>
           </Card.Body>
         </Card>
       </div>
-    
+
     );
   }
 }

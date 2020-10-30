@@ -181,7 +181,7 @@ class DocMode extends Component {
       var date;
 
       if(this.state.dateChange){
-          date = this.state.dateChange.toISOString().split('T')[0];
+          date = this.state.acdate.toISOString().split('T')[0];
       }else{
           date = this.state.acdate;
       }
@@ -194,7 +194,7 @@ class DocMode extends Component {
       docForm.append('dateCreated', this.state.docdate);
       docForm.append('dateAchieved', date);
       docForm.append('name', this.state.docname);
-      
+
       if(this.state.tags.length === 1){
         docForm.append('tagName[]', this.state.tags[0])
       }else{

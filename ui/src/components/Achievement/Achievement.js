@@ -14,31 +14,62 @@ class Achievements extends Component{
   constructor(props){
     super(props);
     this.state = {
-      /*{name: 'A', description: 'alot has happened in te lst dor djkwqufdwebdebvwhjfdge ehqwkfruwf wfejwhfuhuhdekjwenc hfwkjafj.rjfareigs jfaljfijresvnjkewjoidjdw dljwio', achivement: true, Institution: 'SPV', dateAchieved:'11-12-14', highlighted: false },
-        {name: 'B', description: 'b', achivement: true, Institution: 'Unimelb', dateAchieved: '12-13-14', highlighted: false}*/
+      username: "",
       documents: [],
       userId: this.props.match.params.id,
+      bgClass: ""
+
     }
+
+    this.getBgGradient =this.getBgGradient.bind(this);
+    this.getUsername = this.getUsername.bind(this);
   }
 
   componentDidMount(){
+    this.getBgGradient();
+    this.getUsername();
     axios.get(http+'/api/documents/'+this.state.userId)
       .then(res =>{
           this.setState({
               documents: res.data.documents,
-          },() => {console.log(this.state.documents)}) 
+          })
       })
       .catch(function(error) {
           console.log(error);
-      })
+      });
   }
 
+  getBgGradient(){
+    const bgUrl = http+'/api/users/bgImage/'+this.props.match.params.id;
+    axios.get(bgUrl)
+    .then(response => {
+      this.setState({
+        bgClass: response.data.bgImage
+      })
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+  }
+
+  getUsername(){
+    const accurl = http + '/api/accSetting/' + this.state.userId;
+    axios.get(accurl)
+    .then(response => {
+      this.setState({username: response.data.user.name});
+    })
+    .catch(function(error) {
+      console.log(error);
+      console.log("LEVEL 1 FAILED");
+    });
+  }
 
   render(){
     var counter = 2;
     var aDoc = this.state.documents.filter(document => {
       return document.achivement === true;
-    });
+    }).sort((a,b) => (new Date(b.dateAchieved).getTime()
+                  - new Date(a.dateAchieved).getTime()));
 
     let achievementDoc = aDoc.map(doc =>{
       if (counter%2 === 0){
@@ -56,10 +87,14 @@ class Achievements extends Component{
     });
 
     return (
-      <CardDeck style = {{marginRight: "10vw", marginLeft: "13vw", marginBottom: "20vh"}}>
-      {achievementDoc}
-      </CardDeck>
-      
+      <body className = {this.state.bgClass}>
+        <div className = "pt-2">
+          <h2>{this.state.username + "'s Achievements"}</h2>
+        </div>
+          <CardDeck style = {{marginRight: "10vw", marginLeft: "13vw", paddingBottom: "50px"}}>
+          {achievementDoc}
+          </CardDeck>
+      </body>
     );
   }
 }

@@ -19,6 +19,7 @@ class CardRight extends Component{
   }
   render(){
     this.setMessage()
+    var visualDate = new Date(this.state.dateAchieved).toDateString();
     return (
       <div>
       <Card className="outline right" style={{
@@ -27,7 +28,7 @@ class CardRight extends Component{
           width: "70vw",
           height: "30vh",
           top: "50px",
-          marginBottom: "50px"}}>
+          marginBottom: "30px"}}>
       <Card.Img className="imgOutline rightImg" src={docIcon} style={{position:'relative', left:"80%",top:"4vh", width:"6.5vw", height:"17vh"}}/>
       <Card.Body style={{
             marginTop: "10px",
@@ -42,7 +43,7 @@ class CardRight extends Component{
         <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"12vh", "font-size":"2vh", textAlign: "right", width:"59%"}}>
         <b>Institution</b>: {this.state.institution}
         <br/>
-        <b>Date</b>: {this.state.dateAchieved}
+        <b>Date</b>: {visualDate}
         </Card.Text>
       </Card.Body>
       </Card>

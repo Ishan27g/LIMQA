@@ -206,8 +206,8 @@ class singleDoc extends Component {
     /* Leaves abruptly w/o saving Changes */
     handleAbruptLeave = () => {
         this.setState({
-            docEditor:false, 
-            docViewer: true, 
+            docEditor:false,
+            docViewer: true,
             checkEdit: false,
             updateAcdate: this.state.acdate,
             updateAchievement: this.state.achievement,
@@ -471,13 +471,13 @@ class singleDoc extends Component {
                         <Row></Row>
                     )}
                 </Col>
-                    
+
                 {this.state.docEditor?(
                     <Col className = "docedit-properties">
                         <Row>
                             <h4>Attached Tags</h4>
                         </Row>
-                        
+
                         <Row className = "doc-tags">
                             <h4>{showtagButtons}</h4>
                             <Button block variant = "success" onClick ={this.handleAddTags}>Alter Tags</Button>
@@ -526,7 +526,7 @@ class singleDoc extends Component {
                     <Col className = "docview-properties">
                         <Row>
                             <h4>Attached Tags</h4>
-    
+
                         </Row>
                         <Row className = "doc-tags">
                             <h4>{tagsMap}</h4>
@@ -550,7 +550,7 @@ class singleDoc extends Component {
                                 Achievement Details
                             </h4>
                         )}
-    
+
                                 {/* If the field is not an achievemnt change the opacity of h4*/}
                         </Row>
                             {/* only show this row when document is an achievement is checked out */}
@@ -560,11 +560,11 @@ class singleDoc extends Component {
                                 <h5>Date: <span>{this.state.acdate}</span></h5>
                             </Row>
                         </Collapse>
-    
+
                     </Col>
                 )}
-                   
-                     
+
+
             </Row>
             </Container>
         </Modal.Body>
@@ -585,7 +585,7 @@ class singleDoc extends Component {
             </Modal.Footer>
         )}
 
-                
+
         <Modal
             show={this.state.checkEdit}
             className = "docedit-leave">
