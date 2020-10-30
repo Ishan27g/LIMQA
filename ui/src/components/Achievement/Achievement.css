@@ -1,21 +1,54 @@
-.ac-body{
-  width: 60%;
-  height: auto;
+.outline { 
+    position: relative; 
+    width: 70vw;
+    height: 30vh; 
+    top: 50px;
+    margin: 0 auto;
+    margin-bottom: 30px;
 }
 
-.ac-body > .row{
-  margin-bottom: 50px;
-  border: 1px solid red;
-  padding: 10px;
+.left {
+    background-color: #d9b382;
 }
 
-.ac-body > .row > .col{
-  border: 1px solid red;
-
+.right {
+    background-color: #F5F5DC;
 }
-.ac-iamge {
-  display:flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
+
+.imgOutline {
+    position: relative;
+    top: 24%;
+    width: 6.5vw;
+    height: 17vh;
+}
+
+.leftImg {
+    left: 10%;   
+}
+
+.heading { 
+    position: relative;
+    left: 20%;
+    bottom: 15vh; 
+    font-size: 2vh;
+}
+
+.desc {
+    position: relative;
+    left: 20%;  
+    bottom: 15vh; 
+    font-size: 2.5vh;
+    width: 60%;
+}
+
+.misc {
+    position: relative;
+    left: 20%;
+    bottom: 15vh; 
+    font-size: 2vh;
+}
+
+
+.rightImg {
+    left: 80%;
 }
