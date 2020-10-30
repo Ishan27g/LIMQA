@@ -64,7 +64,7 @@ class forgetPass extends Component{
           this.setState({
               updateStatus: true
           })
-          
+
           //window.location.href='/';
         })
         .catch(function(error) {
@@ -143,7 +143,7 @@ class forgetPass extends Component{
                         )
                         }
                         <Row>
-                        <Button block variant = "outline-dark" onClick = {this.handleUpdate}> Reset </Button>
+                        <Button block variant = "dark" onClick = {this.handleUpdate}> Reset </Button>
                         </Row>
                     </Form>
                     </Col>

@@ -121,7 +121,7 @@ class forgetPassEmail extends Component{
                     )
                     }
                     <Row>
-                    <Button block variant = "outline-dark" onClick = {this.handleUpdate}> Next </Button>
+                    <Button block variant = "dark" onClick = {this.handleUpdate}> Next </Button>
                     </Row>
                 </Form>
                 </Col>
