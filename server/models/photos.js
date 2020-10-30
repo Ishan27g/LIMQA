@@ -4,13 +4,9 @@ const Schema = mongoose.Schema;
 
 const photoSchema = new Schema({
     owner: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
-    profilePhoto: {type : String, required: false},
-    coverImages: [{type : String, required: false}],
-    prCreatedOn : {type : Date, required: false},
-    prModifiedOn: {type : Date, required: false},
-    ciCreatedOn : {type : Date, required: false},
-    ciModifiedOn: {type : Date, required: false},
-    bgImage: {type : String, required: false}
+    profilePhoto: {type : String, required: false, timestamp: true},
+    coverImages: [{type : String, required: false, timestamp: true}],
+    bgImage: [{type : String, required: false}]
 });
 
 photoSchema.plugin(uniqueValidator);

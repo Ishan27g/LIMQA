@@ -12,7 +12,7 @@ const getBgImage = async (req, res, next) => {
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
         const error = new HttpError(
-        'Photos not found for this user' ,
+        'Photos not found.',
         500
         );
         return next(error);
@@ -37,7 +37,7 @@ const delBgImage = async (req, res, next) => {
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
         const error = new HttpError(
-        'Photos not found for this user' ,
+        'Photos not found.',
         500
         );
         return next(error);
@@ -74,13 +74,13 @@ const addBgImage = async (req, res, next) =>{
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
         const error = new HttpError(
-            'Photos not found for this user' ,
+            'Photos not found.',
              500
         );
         return next(error);
     }
     if(existingPhoto) {
-        const update = {bgImage : req.body.bgImage}
+        const update = {bgImage : req.file.path}
         await existingPhoto.updateOne(update);
         res.status(201).json({bgImage:true});
     }else{
@@ -98,7 +98,7 @@ const getCoverImages = async (req, res, next) => {
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
         const error = new HttpError(
-            'Photos not found for this user' ,
+        'Photos not found.',
         500
         );
         return next(error);
@@ -123,7 +123,7 @@ const getCoverImagesById = async (req, res, next) =>{
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
         const error = new HttpError(
-            'Photos not found for this user' ,
+        'Photos not found.',
         500
         );
         return next(error);
@@ -159,7 +159,7 @@ const delCoverImagesById = async (req, res, next) =>{
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
         const error = new HttpError(
-            'Photos not found for this user' ,
+        'Photos not found.',
         500
         );
         return next(error);
@@ -188,13 +188,13 @@ const delCoverImagesById = async (req, res, next) =>{
         });
         console.log(path)
 
-        const update = {coverImages : path, ciModifiedOn: new Date ()}
+        const update = {coverImages : path}
         await existingPhoto.updateOne(update);
         res.status(201).json({coverImages:false});
     }
     else{
         const error = new HttpError(
-            'Photos not found for this user' ,
+            'User not found.' ,
             500
             );
         return next(error);
@@ -214,16 +214,14 @@ const addCoverImages = async (req, res, next) =>{
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
         const error = new HttpError(
-            'Photos not found for this user' ,
+            'Photos not found.',
              500
         );
         return next(error);
     }
     if(existingPhoto.coverImages[0] === ""){
         limit = path.length;
-        existingPhoto.ciCreatedOn = new Date()
     }else{
-        existingPhoto.ciModifiedOn = new Date()
         limit = existingPhoto.coverImages.length + path.length;
     }
     
@@ -236,6 +234,7 @@ const addCoverImages = async (req, res, next) =>{
         existingPhoto.coverImages = existingPhoto.coverImages.concat(path);
     }
     console.log(existingPhoto.coverImages);
+
     try {
         await existingPhoto.save();
     } catch (err) {
@@ -256,7 +255,7 @@ const getProfilePhoto = async (req, res, next) => {
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
         const error = new HttpError(
-            'User not found' ,
+        'Photos not found.',
         500
         );
         return next(error);
@@ -276,7 +275,7 @@ const getProfilePhoto = async (req, res, next) => {
     }
     else{
         const error = new HttpError(
-            'Photos not found.'+req.user.email,
+            'User not found.'+req.user.email,
             500
             );
         return next(error);
@@ -290,19 +289,13 @@ const addProfilePhoto = async (req, res, next) =>{
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
         const error = new HttpError(
-            'User not found' ,
+            'Photos not found.',
              500
         );
         return next(error);
     }
     if(existingPhoto) {
-        let update
-        if(existingPhoto.profilePhoto == ""){
-            update = {profilePhoto : req.file.path, prCreatedOn: new Date()}
-        }
-        else{
-            update = {profilePhoto : req.file.path, prModifiedOn: new Date()}
-        }
+        const update = {profilePhoto : req.file.path}
         await existingPhoto.updateOne(update);
         res.status(201).json({profilePhoto:true});
     }else{
@@ -320,7 +313,7 @@ const deleteProfilePhoto = async (req, res, next) =>{
         existingPhoto = await Photos.findOne({ owner: userId})
     } catch (err) {
         const error = new HttpError(
-            'User not found' ,
+            'Photos not found.',
              500
         );
         return next(error);
@@ -340,7 +333,7 @@ const deleteProfilePhoto = async (req, res, next) =>{
             }
         });
 
-        const update = {profilePhoto : "", prModifiedOn: new Date()}
+        const update = {profilePhoto : ""}
         await existingPhoto.updateOne(update);
         res.status(201).json({profilePhoto:false});
     }else{
@@ -351,53 +344,6 @@ const deleteProfilePhoto = async (req, res, next) =>{
         return next(error);
     }
 }
-
-const getProfilePhotoTimeStamp = async (req, res, next) => {
-    let userId = req.params.uid
-    let existingPhoto
-    try {
-        existingPhoto = await Photos.findOne({ owner: userId})
-    } catch (err) {
-        const error = new HttpError(
-        'user not found.',
-        500
-        );
-        return next(error);
-    }
-    if(existingPhoto) {
-        res.status(200).json({userPhotos: existingPhoto.toObject({getters: true})});
-    }
-    else{
-        const error = new HttpError(
-            'Photos for this user not found.'+req.user.email,
-            500
-            );
-        return next(error);
-    }
-  };
-  const getCoverImagesTimeStamp = async (req, res, next) => {
-    let userId = req.params.uid
-    let existingPhoto
-    try {
-        existingPhoto = await Photos.findOne({ owner: userId})
-    } catch (err) {
-        const error = new HttpError(
-        'user not found.',
-        500
-        );
-        return next(error);
-    }
-    if(existingPhoto) {
-        res.status(200).json({userPhotos: existingPhoto.toObject({getters: true})});
-    }
-    else{
-        const error = new HttpError(
-            'Photos for this user not found.'+req.user.email,
-            500
-            );
-        return next(error);
-    }
-  };
 
 
 exports.getProfilePhoto = getProfilePhoto;
@@ -410,7 +356,3 @@ exports.addBgImage = addBgImage;
 exports.delBgImage = delBgImage;
 exports.getCoverImagesById = getCoverImagesById;
 exports.delCoverImagesById = delCoverImagesById;
-
-exports.getCoverImagesTimeStamp = getCoverImagesTimeStamp;
-exports.getProfilePhotoTimeStamp = getProfilePhotoTimeStamp;
-

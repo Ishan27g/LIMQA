@@ -189,7 +189,7 @@ class Register extends Component{
             )
             }
             <Row>
-            <Button block variant = "dark" onClick = {this.handleRegister}> Register </Button>
+            <Button block variant = "outline-dark" onClick = {this.handleRegister}> Register </Button>
             </Row>
           </Form>
         </Col>

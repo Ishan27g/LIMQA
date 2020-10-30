@@ -64,7 +64,7 @@ class forgetPass extends Component{
           this.setState({
               updateStatus: true
           })
-
+          
           //window.location.href='/';
         })
         .catch(function(error) {
@@ -87,7 +87,7 @@ class forgetPass extends Component{
             <div className ="page-fill">
                 <Container className = "register">
                     <Form className = "register-form">
-                        <h4>Your password has been updated</h4>
+                        <h3>Your password has been updated</h3>
                         <p>You can use your new password to log in!</p>
                         <Button href='/' variant="dark" block>return to home page</Button>
                     </Form>
@@ -98,7 +98,7 @@ class forgetPass extends Component{
                 <Container className = "register">
                     <Col>
                     <Form className = "register-form">
-                        <h4>Reset your password</h4>
+                        <h3>Reset your password</h3>
 
                         <Form.Group controlId="formBasicPassword">
                         <Col sm = "3">
@@ -143,7 +143,7 @@ class forgetPass extends Component{
                         )
                         }
                         <Row>
-                        <Button block variant = "dark" onClick = {this.handleUpdate}> Reset </Button>
+                        <Button block variant = "outline-dark" onClick = {this.handleUpdate}> Reset </Button>
                         </Row>
                     </Form>
                     </Col>

@@ -5,24 +5,8 @@ import Button from 'react-bootstrap/Button';
 import { Spinner } from 'react-rainbow-components';
 
 class NotFound extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      notfound: false
-    }
-  }
-
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-      notfound: true
-    })
-  }, 15000);
-  };
-
-
   render() {
-    if(!this.state.notfound){
+    if(true){
       return(
         <React.Fragment>
           <Container>

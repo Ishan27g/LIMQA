@@ -1,7 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Kavoon&family=Roboto:wght@300&display=swap');
-
-
-
 *{box-sizing: border-box;}
 .manage-cover-image{
   display: flex;
@@ -12,7 +9,6 @@
 
 
 }
-
 .welcome-sign{
   line-height: 2;
   font-family: 'Kavoon', cursive;
@@ -83,6 +79,7 @@
 
 .document-arena{
   margin-top: 5vmax;
+  margin-bottom: 5vmax;
   text-align: center;
 }
 .upload-doc-input{
@@ -114,12 +111,7 @@
 .document-arena-row{
   padding: 1rem;
 }
-
 .tags-management-modal-footer{
   display: flex;
   justify-content: space-between;
-}
-.manage-background-list{
-  overflow: auto;
-  height: 30rem;
 }

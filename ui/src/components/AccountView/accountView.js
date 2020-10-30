@@ -50,8 +50,7 @@ class AccountView extends Component {
       SupplymentaryEmail: '',
       mobile: '',
       media: [],
-      bgClass: "",
-      
+
       // updates information
       updateEmail: '',
       updateName: '',
@@ -89,7 +88,6 @@ class AccountView extends Component {
     this.onChangeSupplymentaryEmail = this.onChangeSupplymentaryEmail.bind(this);
     this.onChangeMobile = this.onChangeMobile.bind(this);
     this.changePass = this.changePass.bind(this);
-    this.getBgGradient =this.getBgGradient.bind(this);
   }
 
   componentDidMount(){
@@ -148,22 +146,7 @@ class AccountView extends Component {
     .catch(function(error) {
       console.log(error);
     })
-
-    this.getBgGradient();
   };
-
-  getBgGradient(){
-    const bgUrl = http+'/api/users/bgImage/'+this.props.match.params.id;
-    axios.get(bgUrl)
-    .then(response => {
-      this.setState({
-        bgClass: response.data.bgImage
-      })
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-  }
 
   handleEditingOpen = () => {
     this.setState({ editVersion: true });
@@ -483,7 +466,7 @@ class AccountView extends Component {
         });
 
         return(
-            <body className = {this.state.bgClass}>
+            <body>
               {this.state.editVersion ? (
                 <div className = "edit-set">
                   <Container>
@@ -637,6 +620,7 @@ class AccountView extends Component {
               ):(
               <div className = "acc-set">
                 <Container>
+
                   <Row className = "acc-header">
                     <h1>ACCOUNT SETTINGS</h1>
                   </Row>
@@ -751,7 +735,7 @@ class AccountView extends Component {
                 </Container>
               </div>
               )}
-          </body>
+            </body>
         )
     }
 }

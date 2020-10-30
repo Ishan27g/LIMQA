@@ -4,6 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
 }
 
 .edit-header,
@@ -37,6 +38,7 @@
 }
 .edit-set{
   margin: 0px;
+  margin-top: 70px;
   margin-Bottom: 1vmax;
 }
 .edit-set > .container{

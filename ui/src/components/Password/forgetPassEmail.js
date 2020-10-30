@@ -85,7 +85,7 @@ class forgetPassEmail extends Component{
             <Container className = "register">
 
                 <Form className = "register-form">
-                    <h4>An email has send to your email addres</h4>
+                    <h3>An email has send to your email addres</h3>
                     <p>please follow attached link to reset your password!</p>
 
                     <Button href='/' variant="dark" block>return to home page</Button>
@@ -98,7 +98,7 @@ class forgetPassEmail extends Component{
             <Container className = "register">
                 <Col>
                 <Form className = "register-form">
-                    <h4>Password Recovery</h4>
+                    <h3>Password Recovery</h3>
                     <Form.Group controlId="formBasicUsername">
                     <Col sm = "3">
                     <Form.Label>Email</Form.Label>
@@ -121,7 +121,7 @@ class forgetPassEmail extends Component{
                     )
                     }
                     <Row>
-                    <Button block variant = "dark" onClick = {this.handleUpdate}> Next </Button>
+                    <Button block variant = "outline-dark" onClick = {this.handleUpdate}> Next </Button>
                     </Row>
                 </Form>
                 </Col>
