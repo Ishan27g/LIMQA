@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import './App.css';
+import './Themes.css';
 
 import Alert from 'react-bootstrap/Alert';
 import axios from 'axios';
@@ -110,7 +111,7 @@ class App extends Component{
           }, ()=>{this.setState({loading: true})})
         }
     });
-    
+
   };
 
   handleSignClose = () => {
@@ -252,79 +253,75 @@ class App extends Component{
     )[0].url;
   }
     return (
-      <div>
+      <React.Fragment>
+        <header>
           {this.state.front && !this.state.login? (
-            <div>
-              <header>
-                <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
-                <Navbar.Brand href="/" className = "mr-auto">
-                  <Image alt="Logo" src = {logo} style = {{width: "9vmax", height: "2.5vmax"}}/>
-                </Navbar.Brand>
-                  <Button
-                    variant="primary-info"
-                    onClick={this.handleSignShow}
-                    className="mr-2">
-                    <img alt="Login" src = {loginButton}/>
-                  </Button>
-                  <Button variant ="outline-dark"
-                          onClick = {() => {window.location.href = "/register"}}>
-                          Register Now!
-                  </Button>
-                </Navbar>
-              </header>
-            </div>
-          ):(
-            <header>
-              <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
-              <Navbar.Brand href="/">
-                <img alt="Logo" src = {logo} style = {{width: "9vmax", height: "2.5vmax"}}
-                  className="d-inline-block align-top"/>
+            <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top">
+              <Navbar.Brand href="/" className = "header-nav mr-auto">
+                <Image alt="Logo" src = {logo} style = {{width: "130px", height: "40px"}}/>
               </Navbar.Brand>
-              <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-              <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className ="mr-auto">
-                    <Nav.Item class = "nav-item">
+              <Button
+                variant="primary-info"
+                onClick={this.handleSignShow}
+                className="mr-2">
+                <img alt="Login" src = {loginButton}/>
+              </Button>
+              <Button variant ="outline-dark"
+                      onClick = {() => {window.location.href = "/register"}}>
+                      Register Now!
+              </Button>
+            </Navbar>
+          ):(
+              <Navbar bg = "light" variant = "light" expand = "lg" fixed ="top" className = "header-nav">
+                <Navbar.Brand href="/">
+                  <img alt="Logo" src = {logo} style = {{width: "130px", height: "40px"}}
+                    className="d-inline-block align-top"/>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                  <Nav className ="mr-auto">
+                    <Nav.Item className = "nav-item">
                     <Nav.Link href={"/home/"+this.state.userId}>About me</Nav.Link>
                     </Nav.Item>
-                    <Nav.Item class = "nav-item">
+                    <Nav.Item className = "nav-item">
                       <Nav.Link href={"/Achievements/"+this.state.userId}>Achievements</Nav.Link>
                     </Nav.Item>
-                    <Nav.Item class = "nav-item">
+                    <Nav.Item className = "nav-item">
                       <Nav.Link href={'/timeline/'+this.state.userId}>Timeline</Nav.Link>
                     </Nav.Item>
-                    </Nav>
-                    <Nav>
-                      {this.state.login ?
-                        (
-                        <DropdownButton id="manage-dropdown" title="Manage"
-                        variant = "outline-dark"
-                        className =" mr-2">
-                          <Dropdown.Item href={"/view/"+this.state.userId}>Account</Dropdown.Item>
-                          <Dropdown.Item href={"/manage/"+this.state.userId}>Manage Documents</Dropdown.Item>
-                          <Dropdown.Divider />
-                          <Dropdown.Item onClick={this.handleLogout}>Log Out</Dropdown.Item>
-                        </DropdownButton>
-                        )
+                  </Nav>
+                  <Nav>
+                    {this.state.login ?
+                      (
+                      <DropdownButton id="manage-dropdown" title="Manage"
+                      variant = "outline-dark"
+                      className =" mr-2">
+                        <Dropdown.Item href={"/view/"+this.state.userId}>Account</Dropdown.Item>
+                        <Dropdown.Item href={"/manage/"+this.state.userId}>Manage Documents</Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item onClick={this.handleLogout}>Log Out</Dropdown.Item>
+                      </DropdownButton>
+                      )
                       :
-                      (<Button inline variant="primary-info" onClick={this.handleSignShow}>
+                      (<Button variant="primary-info" onClick={this.handleSignShow}>
                         <img alt="Login" src = {loginButton}/>
                       </Button>)
                       }
-                      <Form inline>
-                        <Button variant="outline-dark" onClick={this.handleSearchPage}>Search</Button>
-                      </Form>
-                    </Nav>
+                    <Form inline>
+                      <Button variant="outline-dark" onClick={this.handleSearchPage}>Search</Button>
+                    </Form>
+                  </Nav>
                 </Navbar.Collapse>
               </Navbar>
-            </header>
           )}
-        {<BrowserRouter>
+        </header>
+        <BrowserRouter>
           <Switch>
             <Route path="/" component ={Landing} exact/>
             <Route path="/register" component={Register}/>
             <Route path="/home/:id" component={Home}/>
             <Route path="/timeline/:id" component={Timeline}/>
-            <Route path="/Achievements/:id" component={Construct}/>
+            <Route path="/Achievements/:id" component={Achievements}/>
             <Route path="/documents/:id" component={singleDoc}/>
             <Route path="/search/:id" component={Search}/>
             <Route path="/forget" component={forgetPassEmail}/>
@@ -340,119 +337,115 @@ class App extends Component{
             <Route path="/notfound" render = {() => <NotFound link = "/"/> }/>
 
           </Switch>
-        </BrowserRouter>}
-
-        <Modal show={this.state.loginButton} onHide={this.handleSignClose} >
-          <Modal.Body >
-            <form>
-              <h3 className ="text-center font-size-15px" style={{ color: 'black' }}>
-              Welcome back!
-              </h3>
-
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" onChange={this.onChangeEmail} />
-              </Form.Group>
-              {
-                this.state.Alertemail ?(
-                  <Alert variant={'danger'}>
-                    Please enter a valid email!
-                  </Alert>
-                ) : (<section></section>)
-              }
-              <Form.Group   controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
-              </Form.Group>
-              <Form.Group  controlId ="formforgotPassword" style = {{textAlign: "right"}}>
-                <a href = "/forget">Forgot password?</a>
-              </Form.Group>
-              {
-                ((this.state.loginInfo === false) ||
-                    (this.state.Alertpassword === true)) ?
-                    (
-                  <Alert variant={'danger'}>
-                    Incorrect email or password!
-                  </Alert>
-                ) : (<section></section>)
-              }
-            </form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button size="lg" block variant="primary" onClick={this.Adminlogin}>
-              Login
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
+        </BrowserRouter>
+        <footer>
         {this.state.showQR && (!this.state.slinksAlert)? (
-            <footer>
-              <Navbar
-                bg = "light" variant = "light"
-                expand = "sm" fixed ="bottom"
-                className = "profile-footer">
+          <Navbar
+            bg = "light" variant = "light"
+            expand = "lg" fixed ="bottom"
+            className = "profile-footer footer-size">
 
-                    <Navbar.Brand className = "copyright">
-                      <Form>
-                        <Form.Text> Product of team LiMQA ©</Form.Text>
-                      </Form>
-                    </Navbar.Brand>
+                <Navbar.Brand className = "copyright">
+                  <Form>
+                    <Form.Text> Product of team LiMQA ©</Form.Text>
+                  </Form>
+                </Navbar.Brand>
 
-                  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                  <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className = "profile-nav">
-                          <Nav.Item>
-                            <Button className = "qr-button"
-                                    variant = "outline-dark"
-                                    onClick={this.handleQRShow}>QR Code</Button>
+              <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+              <Navbar.Collapse id="responsive-navbar-nav">
+                <Nav className = "profile-nav">
+                      <Nav.Item>
+                        <Button className = "qr-button"
+                                variant = "outline-dark"
+                                onClick={this.handleQRShow}>QR Code</Button>
 
-                          </Nav.Item>
-                          <Nav.Item className = "profile-socials">
-                            <Image onClick= {event => window.location.href = Facebook}
-                                    src = {iconFacebook}
-                                    style = {{width: "30px", height: "30px"}} />
-                            <Image onClick= {event => window.location.href = Instagram}
-                                    src = {iconInstagram}
-                                    style = {{width: "30px", height: "30px"}} />
-                            <Image onClick= {event => window.location.href = Linkedin}
-                                    src = {iconLinkedin}
-                                    style = {{width: "30px", height: "30px"}} />
-                            <Image onClick= {event => window.location.href = Github}
-                                    src = {iconGithub}
-                                    style = {{width: "30px", height: "30px"}} />
-                            <Image onClick= {event => window.location.href = WeChat}
-                                    src = {iconWechat}
-                                    style = {{width: "30px", height: "30px"}} />
-                          </Nav.Item>
-                    </Nav>
-                  </Navbar.Collapse>
+                      </Nav.Item>
+                      <Nav.Item className = "profile-socials">
+                        <Image onClick= {event => window.location.href = Facebook}
+                                src = {iconFacebook}
+                                style = {{width: "30px", height: "30px"}} />
+                        <Image onClick= {event => window.location.href = Instagram}
+                                src = {iconInstagram}
+                                style = {{width: "30px", height: "30px"}} />
+                        <Image onClick= {event => window.location.href = Linkedin}
+                                src = {iconLinkedin}
+                                style = {{width: "30px", height: "30px"}} />
+                        <Image onClick= {event => window.location.href = Github}
+                                src = {iconGithub}
+                                style = {{width: "30px", height: "30px"}} />
+                        <Image onClick= {event => window.location.href = WeChat}
+                                src = {iconWechat}
+                                style = {{width: "30px", height: "30px"}} />
+                      </Nav.Item>
+                </Nav>
+              </Navbar.Collapse>
 
-              </Navbar>
-
-              <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
-                <Modal.Body className ="qr-code">
-                  <Image src={this.state.QRcode} rounded style ={{width: "15vmax", height: "15vmax"}} />
-                </Modal.Body>
-                <Modal.Footer>
-                <Button block variant="outline-dark" onClick={this.handleQRClose}>
-                  Close
-                </Button>
-                </Modal.Footer>
-              </Modal>
-            </footer>
+            </Navbar>
           ):(
-            <footer>
-              <Navbar
-                bg = "light" variant = "light"
-                expand = "lg" fixed = "bottom"
-                className = "copyright">
-                <Form>
-                  <Form.Text> Product of team LiMQA ©</Form.Text>
-                </Form>
-              </Navbar>
-            </footer>
+            <Navbar
+              bg = "light" variant = "light"
+              expand = "lg" fixed = "bottom"
+              className = "copyright footer-size">
+              <Form>
+                <Form.Text> Product of team LiMQA ©</Form.Text>
+              </Form>
+            </Navbar>
           )}
-      </div>
+        </footer>
+
+          <Modal show={this.state.loginButton} onHide={this.handleSignClose} >
+            <Modal.Body >
+              <form>
+                <h3 className ="text-center font-size-15px" style={{ color: 'black' }}>
+                Welcome back!
+                </h3>
+
+                <Form.Group controlId="formBasicEmail">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control type="email" placeholder="Enter email" onChange={this.onChangeEmail} />
+                </Form.Group>
+                {
+                  this.state.Alertemail ?(
+                    <Alert variant={'danger'}>
+                      Please enter a valid email!
+                    </Alert>
+                  ) : (<section></section>)
+                }
+                <Form.Group   controlId="formBasicPassword">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control type="password" placeholder="Password" onChange={this.onChangePassword}/>
+                </Form.Group>
+                <Form.Group  controlId ="formforgotPassword" style = {{textAlign: "right"}}>
+                  <a href = "/forget">Forgot password?</a>
+                </Form.Group>
+                {
+                  ((this.state.loginInfo === false) ||
+                      (this.state.Alertpassword === true)) ?
+                      (
+                    <Alert variant={'danger'}>
+                      Incorrect email or password!
+                    </Alert>
+                  ) : (<section></section>)
+                }
+              </form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button size="lg" block variant="primary" onClick={this.Adminlogin}>
+                Login
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <Modal show={this.state.QRButton} onHide={this.handleQRClose}>
+            <Modal.Body className ="qr-code">
+              <Image src={this.state.QRcode} rounded style ={{width: "15vmax", height: "15vmax"}} />
+            </Modal.Body>
+            <Modal.Footer>
+            <Button block variant="outline-dark" onClick={this.handleQRClose}>
+              Close
+            </Button>
+            </Modal.Footer>
+          </Modal>
+      </React.Fragment>
     )
   }
 }

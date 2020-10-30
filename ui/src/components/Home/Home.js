@@ -34,8 +34,9 @@ class Home extends Component {
             docname:"",
             userId: this.props.match.params.id,
             profileImg: http+'/api/users/profilePhoto/'+this.props.match.params.id,
-            bgImg: http+'/api/users/bgImage/'+this.props.match.params.id,
+            bgClass:""
         }
+        this.getBgGradient =this.getBgGradient.bind(this);
     }
 
     componentDidMount(){
@@ -76,8 +77,22 @@ class Home extends Component {
         .catch(function(error) {
             console.log(error);
         })
+        
+        this.getBgGradient();
     };
 
+    getBgGradient(){
+      const bgUrl = http+'/api/users/bgImage/'+this.props.match.params.id;
+      axios.get(bgUrl)
+      .then(response => {
+        this.setState({
+          bgClass: response.data.bgImage
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }
 
     render(){
         var coverImg = this.state.cover;
@@ -95,7 +110,13 @@ class Home extends Component {
 
         let highlightedDoc = hDoc.map(doc =>{
             return (
-                <Card className='documentsCard'  style={{ height: "auto"}} bg = "light">
+                <Card className='documentsCard' style={{
+                    color: "white",
+                    textAlign: "center",
+                    fontsize: "2em",
+                    fontfamily: "Roboto, sans-serif",
+                    fontWeight: "bolder"
+                }} bg="light">
                   <Image variant="top" src={docImage}
                             style = {{width: "8vmax", height: "10vmax", alignSelf: "center", marginBottom: "10px"}}/>
                   <Card.Body onClick = {event =>  window.location.href = '/documents/'+doc._id }
@@ -122,8 +143,8 @@ class Home extends Component {
 
 
         return(
-        <div>
-          <body className = "home">
+        <body className = {this.state.bgClass}>
+        <div className = "home">
             <div class = "cover-image">
                 <Carousel Fluid >
                     {coverImage}
@@ -182,8 +203,8 @@ class Home extends Component {
 
 
             </div>
-          </body>
         </div>
+      </body>
         )
     }
 }

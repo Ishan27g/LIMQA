@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "../../App.css";
 import './Manage.css';
 
 import axios from "axios";
@@ -21,6 +20,7 @@ import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 import InputGroup from 'react-bootstrap/InputGroup';
+import Collapse from 'react-bootstrap/Collapse';
 
 import Tag from './../Tags/Tag.js';
 import CoverImage from '../CoverImage/coverImage.js';
@@ -52,8 +52,9 @@ class ManagePage extends Component {
           updateCover: null,
           updateDoc: null,
           profileImg: http+'/api/users/profilePhoto/'+this.props.match.params.id,
-          bgImg: http+'/api/users/bgImage/'+this.props.match.params.id,
-          updatebgImg: null,
+          bgClass: "",
+          bgDirection: "left",
+          selectBackground: false,
           docPath: '',
           doctype: '',
           documents: [],
@@ -81,8 +82,6 @@ class ManagePage extends Component {
         this.uploadCoverImage = this.uploadCoverImage.bind(this);
         this.onChangeDocUpload = this.onChangeDocUpload.bind(this);
         this.openDocView = this.openDocView.bind(this);
-        this.onChangeBgImg = this.onChangeBgImg.bind(this);
-        this.uploadBgImg = this.uploadBgImg.bind(this);
         this.onChangeSearch = this.onChangeSearch.bind(this);
         this.handleAddTagClose = this.handleAddTagClose.bind(this);
         this.handleAddTagShow = this.handleAddTagShow.bind(this);
@@ -94,6 +93,11 @@ class ManagePage extends Component {
         this.tagColorChange = this.tagColorChange.bind(this);
         this.deleteTag = this.deleteTag.bind(this);
         this.abortDeleteTag = this.abortDeleteTag.bind(this);
+        this.handleSelectBackground = this.handleSelectBackground.bind(this);
+        this.handleCheckBackground =this.handleCheckBackground.bind(this);
+        this.getBgGradient =this.getBgGradient.bind(this);
+        this.updateBgGradient =this.updateBgGradient.bind(this);
+
     }
 
     componentDidMount(){
@@ -146,7 +150,33 @@ class ManagePage extends Component {
       .catch(function(error) {
         console.log(error);
       })
+      this.getBgGradient();
     };
+    getBgGradient(){
+      const bgUrl = http+'/api/users/bgImage/'+this.props.match.params.id;
+      axios.get(bgUrl)
+      .then(response => {
+        this.setState({
+          bgClass: response.data.bgImage
+        })
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }
+    updateBgGradient(){
+      /*const testBg = "app-background-sociallive-left";*/
+      const obj = {
+        bgImage: this.state.bgClass
+      };
+      axios.put(http+'/api/users/bgImage/'+this.state.userid, obj, { withCredentials: true })
+      .then(response =>{
+        const updatedBgGradient = this.state.bgClass;
+        this.setState({
+          bgClass: updatedBgGradient
+        }, this.handleCheckBackground())
+      })
+    }
 
     onChangeProfileImage(e){
       this.setState({
@@ -307,32 +337,6 @@ class ManagePage extends Component {
       });
     }
 
-    onChangeBgImg(e){
-      this.setState({
-        updatebgImg: e.target.files[0]
-      }, ()=>{
-        if(this.state.updatebgImg !== null){
-          this.uploadBgImg();
-        }
-      })
-    }
-
-    uploadBgImg(){
-      const bgImg = new FormData();
-      bgImg.append('file', this.state.updatebgImg)
-      axios.post(http+'/api/users/bgImage/'+this.state.userid, bgImg, { withCredentials: true })
-      .then( res => {
-        console.log(res);
-        const tempProfile = URL.createObjectURL(this.state.updatebgImg);
-        this.setState({
-          bgImg: tempProfile
-        })
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-
-    }
 
     openDocView = () =>{
       this.docView.current.handleViewerShow();
@@ -496,6 +500,20 @@ class ManagePage extends Component {
         delTag: ""
       })
     }
+
+    handleSelectBackground(){
+      this.setState({
+        selectBackground: true
+      })
+    }
+
+    handleCheckBackground(){
+      this.setState({
+        selectBackground: false
+      }, () => {this.getBgGradient()})
+    }
+
+
     render(){
       var doc = {doc: this.state.updateDoc, id: this.state.userid};
       //const documents = [{Title: "sample documents 1"}, {Title: "sample documents 2"}, {Title: "sample documents 3"},{Title: "sample documents 4"},{Title: "sample documents 5"},{Title: "sample documents 6"},{Title: "sample documents 7"}];
@@ -535,7 +553,7 @@ class ManagePage extends Component {
                 <Card.Img variant='top' src={docImage}
                           style ={{alignSelf: "center", width: "auto", height: "200px"}}/>
                 <Card.Body onClick = {event =>  window.location.href = '/documents/'+card._id }>
-                <Card.Title >
+                <Card.Title>
                   {card.name}
                 </Card.Title>
                 </Card.Body>
@@ -610,7 +628,7 @@ class ManagePage extends Component {
     });
 
       const coverImg = this.state.cover;
-      let coverImage = coverImg.map(cover =>{
+      let coverImage = coverImg.map((cover, idx) =>{
         return(
           <Carousel.Item>
             <CoverImage note={cover} />
@@ -624,16 +642,68 @@ class ManagePage extends Component {
                                           variant = {variant} value = {variant}>
                             </ToggleButton>)
                         });
-      return(
-        <body>
+      var bgColors = ["default", "dusk", "roseanna", "wave", "purple", "mauve", "sociallive", "cherry", "lush"];
 
-        <div class = "manage-cover-image">
+
+      var LeftBgColormap = bgColors.map(color => {
+        var colorClass = "row app-background-";
+        if(color === "default"){
+          colorClass = colorClass + color;
+        } else {
+          colorClass = colorClass + color + "-left";
+        }
+        return(
+          <Container className = "mt-3">
+            <Row className = "d-flex align-items-center">
+              <h5>{color}</h5>
+            </Row>
+            <Container fluid className = {colorClass} style ={{height: "100px", width: "auto"}} >
+            </Container>
+            <Row className = "d-flex align-items-center justify-content-center mt-sm-2">
+                <Button className ="ml-sm-2" variant = "outline-dark"
+                  onClick ={() => {this.setState({bgClass: colorClass.split(" ")[1]})}}>
+                  Select
+                </Button>
+            </Row>
+          </Container>
+        )
+
+      })
+
+      var RightBgColormap = bgColors.map(color => {
+        var colorClass = "row app-background-";
+        if(color === "default"){
+          colorClass = colorClass + color;
+        } else {
+          colorClass = colorClass + color + "-right";
+        }
+        return(
+          <Container className = "mt-3">
+            <Row className = "d-flex align-items-center">
+              <h5>{color}</h5>
+            </Row>
+            <Container fluid className = {colorClass} style ={{height: "100px", width: "auto"}} >
+            </Container>
+            <Row className = "d-flex align-items-center justify-content-center mt-sm-2">
+                <Button className ="ml-sm-2" variant = "outline-dark"
+                  onClick ={() => {this.setState({bgClass: colorClass.split(" ")[1]})}}>
+                  Select
+                </Button>
+            </Row>
+          </Container>
+        )
+
+      })
+
+      return(
+        <body className = {this.state.bgClass}>
+        <div className = "manage-cover-image">
           {this.state.alertCover?(
             <Alert variant="danger" show={this.state.alertCover} block>
             Upload cover image failed, the limit of total cover image is 5!
             </Alert>
           ):(
-            <Carousel Fluid>
+            <Carousel>
               {coverImage}
             <Carousel.Item>
               <input
@@ -644,7 +714,8 @@ class ManagePage extends Component {
               multiple="multiple"/>
               <img
               src = {uploadCoverImageBg}
-              onClick = {() => this.coverInput.click()} />
+              onClick = {() => this.coverInput.click()}
+              alt = "Upload Icon Background"/>
             <Carousel.Caption>
               <img
                 src = {uploadIcon}
@@ -658,8 +729,7 @@ class ManagePage extends Component {
           )}
 
         </div>
-
-            <div class = "manage-basic-info">
+            <div className = "manage-basic-info">
               <Container fluid = {true}>
                   <Row>
                     <Col>
@@ -705,7 +775,7 @@ class ManagePage extends Component {
 
               <Docview doc={doc} ref={this.docView}/>
 
-              <div class = "document-arena">
+              <div className = "document-arena">
                 <h2 style = {{marginBottom: "3vmax"}}>Document Arena</h2>
                 <Container>
                   <Row>
@@ -733,6 +803,7 @@ class ManagePage extends Component {
                       <Col xs={6} md={8}>
 
                       <Container fluid style={{height:'40rem'}}>
+
                         <Row className = "justify-content-center">
                           <Form inline className = "document-arena-search">
                               {this.state.filter === "Title" ? (
@@ -761,6 +832,7 @@ class ManagePage extends Component {
                               </Dropdown>
                           </Form>
                         </Row>
+
                         {this.state.filter === "Title" ? (
                           <Row className = "mt-sm-2 mb-sm-4"></Row>
                         ):(
@@ -787,15 +859,56 @@ class ManagePage extends Component {
                   <Row style={{marginTop: '1rem'}}>
 
                   </Row>
-                  <Row className = "mt-3">
+                  <Row className = "mt-sm-5 pb-sm-5">
                     <input
                           type="file"
-                          style={{display: "none"}}
-                          onChange={this.onChangeBgImg}
-                          ref={bgInput=>this.bgInput=bgInput}/>
-                    <Button block variant="info" onClick = {() => this.docInput.click()}>
-                      Select Background Gradient</Button>
+                          style={{display: "none"}}/>
+                        <Button block variant="info"onClick ={this.handleSelectBackground}>
+                      Select Background Gradient
+                    </Button>
                   </Row>
+
+                  <Modal
+                    show={this.state.selectBackground}
+                    onHide={this.handleCheckBackground}
+                    backdrop="static"
+                    keyboard={false}
+                    dialogClassName ="manage-background"
+                  >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Select Background Gradient</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body >
+                    <Container fluid>
+                      <Row className = "justify-content-center">
+                        <h5>Select Gradient Direction</h5>
+                      </Row>
+                      <Row className = "justify-content-center">
+                        <ToggleButtonGroup type="radio" name ="direction" defaultValue="left"
+                          onChange ={(value) => {this.setState({bgDirection: value})}}>
+                          <ToggleButton variant = "outline-dark" value = "left">Left</ToggleButton>
+                          <ToggleButton variant = "outline-dark" value = "right" >Right</ToggleButton>
+                        </ToggleButtonGroup>
+                      </Row>
+                      <Collapse in = {this.state.bgDirection === "left"}>
+                        <Container className = "mt-3 manage-background-list">
+                          {LeftBgColormap}
+                        </Container>
+                      </Collapse>
+                      <Collapse in = {this.state.bgDirection === "right"}>
+                        <Container className = "mt-3 manage-background-list">
+                          {RightBgColormap}
+                        </Container>
+                      </Collapse>
+                    </Container>
+                  </Modal.Body>
+                  <Modal.Footer className = "tags-management-modal-footer">
+                    <Button variant="danger" onClick={this.handleCheckBackground}>
+                      Close
+                    </Button>
+                    <Button variant="primary" onClick={this.updateBgGradient}>Save Changes</Button>
+                  </Modal.Footer>
+                </Modal>
 
                   <Modal
                     show={this.state.tagManagement}

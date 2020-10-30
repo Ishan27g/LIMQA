@@ -181,7 +181,7 @@ class DocMode extends Component {
       var date;
 
       if(this.state.dateChange){
-          date = this.state.dateChange.toISOString().split('T')[0];
+          date = this.state.acdate.toISOString().split('T')[0];
       }else{
           date = this.state.acdate;
       }
@@ -194,7 +194,7 @@ class DocMode extends Component {
       docForm.append('dateCreated', this.state.docdate);
       docForm.append('dateAchieved', date);
       docForm.append('name', this.state.docname);
-      
+
       if(this.state.tags.length === 1){
         docForm.append('tagName[]', this.state.tags[0])
       }else{
@@ -264,9 +264,6 @@ class DocMode extends Component {
     this.setState({
         tags: chosetag,
         tagColors: chooseTagColors
-    }, ()=>{
-        console.log(this.state.tags)
-        console.log(this.state.tagColors)
     })
   }
 
@@ -488,78 +485,8 @@ class DocMode extends Component {
               </Modal>
 
             </div>
-          ):
-          (
-            <Modal
-              dialogClassName = "docview"
-              show = {this.state.docViewer}
-              onHide={this.handleViewerClose}
-              >
-
-              <Modal.Header className = "docview-header">
-                {/*Change doc-name to document name*/}
-                {this.state.highlighted ?
-                (<Modal.Title className = "doc-highlighted">
-                  <h4>{this.state.docname}</h4>
-                 </Modal.Title>):
-                (<Modal.Title ><h4>{this.state.docname}</h4></Modal.Title>)
-                }
-                {/*Change doc-date to document added date*/}
-                <h6> Added on: <span> {this.state.docdate} </span> </h6>
-              </Modal.Header>
-
-              <Modal.Body className = "docview-body" >
-                <Container fluid>
-                  <Row>
-                    <Col className = "docview-image" xs ={5} md = {5}>
-                      {/*Change Image Src to document preview */}
-                      <Image src ={doc} style = {{height:"100%", width: "100%"}}/>
-                    </Col>
-                    <Col className = "docview-properties">
-                      <Row>
-                        <h4>Attached Tags</h4>
-
-                      </Row>
-                      <Row className = "doc-tags">
-                        <h4>{tagsMap}</h4>
-                      </Row>
-                      <Row>
-                        <h4> Description</h4>
-                      </Row>
-                      <Row className = "doc-description">
-                        <p>
-                          {this.state.docdesc}
-                        </p>
-                      </Row>
-                      <Row>
-                          {this.state.achievement ?
-                            (<h4>Achievement Details</h4>):
-                            (<h4 style = {{color: "rgba(200,200,200,0.6)", textDecoration: "line-through"}}>
-                                Achievement Details
-                             </h4>)
-                          }
-
-                          {/* If the field is not an achievemnt change the opacity of h4*/}
-                      </Row>
-                      {/* only show this row when document is an achievement is checked out */}
-                      <Collapse in={this.state.achievement}>
-                        <Row className = "doc-achievement">
-                          {/* Add acheivement name */}
-                          <h5>Institution: <span>{this.state.acinst}</span></h5>
-                          {/* Add acheivement date */}
-                          <h5>Date: <span>{this.state.acdate}</span></h5>
-                        </Row>
-                      </Collapse>
-
-                    </Col>
-                  </Row>
-                </Container>
-              </Modal.Body>
-              <Modal.Footer className = "docview-footer">
-                <Button variant = "outline-dark" onClick ={this.handleViewerClose} >Close</Button>
-                <Button variant = "outline-dark" onClick ={this.handleViewerEdit}>Edit</Button>
-              </Modal.Footer>
-            </Modal>
+          ):(
+            <div></div>
           )
         }
       </div>

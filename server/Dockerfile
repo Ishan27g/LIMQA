@@ -1,5 +1,5 @@
 #  Dockerfile for Node Express Backend api 
-FROM node:10.16-alpine
+FROM node:10.23-alpine
 
 # ARG NODE_ENV=development
 # Create App Directory
