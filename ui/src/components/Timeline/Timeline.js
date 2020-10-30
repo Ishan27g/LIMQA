@@ -29,7 +29,9 @@ class Timeline extends Component {
       username: "",
       userDocuments:[],
       userProfilePhoto:  http + '/api/users/profilePhoto/' + this.props.match.params.id,
+      userPiTimestamp: "",
       userCoverImages:[],
+      userCiTimestamp: "",
       userTags:[],
       userid: this.props.match.params.id,
       alertDisplay: false,
@@ -40,7 +42,10 @@ class Timeline extends Component {
     this.getUserDocs = this.getUserDocs.bind(this);
     this.getUserCoverImages = this.getUserCoverImages.bind(this);
     this.getUserTags = this.getUserTags.bind(this);
+    this.getProfilePhotoTimeStamp = this.getProfilePhotoTimeStamp.bind(this);
+    this.getCoverImagesTimeStamp = this.getCoverImagesTimeStamp.bind(this);
     this.getBgGradient =this.getBgGradient.bind(this);
+
   }
 
     componentDidMount(){
@@ -76,7 +81,7 @@ class Timeline extends Component {
     getUserTags(){
       axios.get(http + '/api/tags/' + this.state.userid)
       .then(response => {
-        this.setState({userTags: response.data}, () => {this.getUserCoverImages()});
+        this.setState({userTags: response.data}, () => {this.getProfilePhotoTimeStamp()});
       })
       .catch(function(error) {
         console.log(error);
@@ -84,21 +89,55 @@ class Timeline extends Component {
       });
     }
 
-    getUserCoverImages(){
-      axios.get(http + '/api/users/coverImages/' + this.state.userid)
-      .then(response => {
-        console.log(response.data);
-        var coverImagesbyId = [];
-        for (var i = 0; i < response.data.coverImages.coverImages.length; i++){
-          coverImagesbyId.push(http + '/api/users/coverImages/' + this.state.userid +'/'+ i)
+    getProfilePhotoTimeStamp(){
+      axios.get(http + '/api/users/profilePhoto/timeStamps/' + this.state.userid)
+      .then( response => {
+        var datetime = response.data.userPhotos.prModifiedOn;
+        if(datetime === undefined){
+            datetime = response.data.userPhotos.prCreatedOn
         }
-        this.setState({userCoverImages: coverImagesbyId}, () => {this.getUserDocs()});
+        this.setState({
+          userPiTimestamp: datetime
+        }, () => {this.getCoverImagesTimeStamp()});
       })
       .catch(function(error) {
         console.log(error);
         console.log("LEVEL 3 FAILED");
       });
     }
+
+    getCoverImagesTimeStamp(){
+      axios.get(http + '/api/users/coverImages/timeStamps/' + this.state.userid)
+      .then( response => {
+        var datetime = response.data.userPhotos.ciModifiedOn;
+        if(datetime === undefined){
+            datetime = response.data.userPhotos.ciCreatedOn
+        }
+        this.setState({
+          userCiTimestamp: datetime
+        },() => {this.getUserCoverImages()});
+      })
+      .catch(function(error) {
+        console.log(error);
+        console.log("LEVEL 4 FAILED");
+      });
+    }
+
+    getUserCoverImages(){
+      axios.get(http + '/api/users/coverImages/' + this.state.userid)
+      .then(response => {
+        var coverImagesbyId = [];
+        for (var i = 0; i < response.data.coverImages.coverImages.length; i++){
+          coverImagesbyId.push(http + '/api/users/coverImages/' + this.state.userid +'/'+ i)
+        }
+        this.setState({userCoverImages: coverImagesbyId},() => {this.getUserDocs()});
+      })
+      .catch(function(error) {
+        console.log(error);
+        console.log("LEVEL 5 FAILED");
+      });
+    }
+
 
     getUserDocs(){
       const docurl =  http + '/api/documents/' + this.state.userid;
@@ -108,7 +147,7 @@ class Timeline extends Component {
       })
       .catch(function(error) {
         console.log(error);
-        console.log("LEVEL 4 FAILED");
+        console.log("LEVEL 6 FAILED");
       });
     }
 
@@ -185,7 +224,7 @@ class Timeline extends Component {
       icon: <Image className = "icon-hover" alt = "photo" src = {photoIcon}
                    style = {{height:"50px", width: "50px"}}
                    onClick = {event =>  window.location.href= '/home/' + this.state.userid}/>,
-      datetime: "2020-10-19T04:23:28.855Z", /*Add DateAdded after response.data structure is created*/
+      datetime: this.state.userPiTimestamp, /*Add DateAdded after response.data structure is created*/
       description: "",
       photo : this.state.userProfilePhoto
       /*Send photo to create card */
@@ -198,7 +237,7 @@ class Timeline extends Component {
       icon: <Image className = "icon-hover" alt = "photo" src = {photoIcon}
                    style = {{height:"50px", width: "50px"}}
                    onClick = {e =>  window.location.href= '/home/' + this.state.userid}/>,
-      datetime: "2020-10-19T04:23:28.855Z",/*Add DateAdded after response.data structure is created*/
+      datetime: this.state.userCiTimestamp,/*Add DateAdded after response.data structure is created*/
       description: "",
       photo : event
       /*Send photo to create card */

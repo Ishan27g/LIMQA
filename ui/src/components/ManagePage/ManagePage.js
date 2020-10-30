@@ -628,7 +628,7 @@ class ManagePage extends Component {
     });
 
       const coverImg = this.state.cover;
-      let coverImage = coverImg.map(cover =>{
+      let coverImage = coverImg.map((cover, idx) =>{
         return(
           <Carousel.Item>
             <CoverImage note={cover} />
@@ -643,9 +643,10 @@ class ManagePage extends Component {
                             </ToggleButton>)
                         });
       var bgColors = ["default", "dusk", "roseanna", "wave", "purple", "mauve", "sociallive", "cherry", "lush"];
-      var colorClass = "row app-background-";
-      var LeftBgColormap = bgColors.map(color => {
 
+
+      var LeftBgColormap = bgColors.map(color => {
+        var colorClass = "row app-background-";
         if(color === "default"){
           colorClass = colorClass + color;
         } else {
@@ -670,7 +671,7 @@ class ManagePage extends Component {
       })
 
       var RightBgColormap = bgColors.map(color => {
-
+        var colorClass = "row app-background-";
         if(color === "default"){
           colorClass = colorClass + color;
         } else {
@@ -696,13 +697,13 @@ class ManagePage extends Component {
 
       return(
         <body className = {this.state.bgClass}>
-        <div class = "manage-cover-image">
+        <div className = "manage-cover-image">
           {this.state.alertCover?(
             <Alert variant="danger" show={this.state.alertCover} block>
             Upload cover image failed, the limit of total cover image is 5!
             </Alert>
           ):(
-            <Carousel Fluid>
+            <Carousel>
               {coverImage}
             <Carousel.Item>
               <input
@@ -728,7 +729,7 @@ class ManagePage extends Component {
           )}
 
         </div>
-            <div class = "manage-basic-info">
+            <div className = "manage-basic-info">
               <Container fluid = {true}>
                   <Row>
                     <Col>
@@ -774,7 +775,7 @@ class ManagePage extends Component {
 
               <Docview doc={doc} ref={this.docView}/>
 
-              <div class = "document-arena">
+              <div className = "document-arena">
                 <h2 style = {{marginBottom: "3vmax"}}>Document Arena</h2>
                 <Container>
                   <Row>

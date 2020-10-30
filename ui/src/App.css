@@ -42,3 +42,56 @@ body {
   align-items: center;
   justify-content: space-between;
 }
+.app-background-default{
+  background-color: #000428;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #000428, #004e92);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #000428, #004e92); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-roseanna-left {
+  background-color: #ffafbd;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #ffafbd, #ffc3a0);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #ffafbd, #ffc3a0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-roseanna-right {
+  background-color: #ffafbd;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #ffafbd, #ffc3a0);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #ffafbd, #ffc3a0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-wave-left {
+  background-color: #2193b0;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #2193b0, #6dd5ed);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #2193b0, #6dd5ed); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-wave-right {
+  background-color: #2193b0;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #2193b0, #6dd5ed);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #2193b0, #6dd5ed); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-purple-left {
+  background-color: #cc2b5e;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #cc2b5e, #753a88);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #cc2b5e, #753a88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-purple-right {
+  background-color: #cc2b5e;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #cc2b5e, #734b6d);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #cc2b5e, #734b6d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-mauve-left {
+  background-color: #42275a;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #42275a, #734b6d);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #42275a, #734b6d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-mauve-right {
+  background-color: #42275a;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #42275a, #753a88);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #42275a, #753a88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}

@@ -304,7 +304,7 @@ class App extends Component{
                       </DropdownButton>
                       )
                       :
-                      (<Button inline variant="primary-info" onClick={this.handleSignShow}>
+                      (<Button variant="primary-info" onClick={this.handleSignShow}>
                         <img alt="Login" src = {loginButton}/>
                       </Button>)
                       }
