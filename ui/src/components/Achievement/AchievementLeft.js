@@ -41,7 +41,7 @@ class CardLeft extends React.Component{
             <Card.Text className="desc" style = {{position:'relative', left:"20%", bottom:"16vh", "font-size":"2.5vh", width: "60%" }}>
               {this.state.description}
             </Card.Text>
-            <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"14vh", "font-size":"2vh" , color:"black"}}> 
+            <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"12vh", "font-size":"2vh" , color:"black"}}> 
               <b>Institution</b>: {this.state.institution} 
               <br/>
               <b>Date</b>: {this.state.dateAchieved}

@@ -35,11 +35,11 @@ class CardRight extends Component{
             width: "68vw",
             margin: "0 auto"
             }}>
-        <Card.Title className="heading" style = {{position:'relative', left:"20%", bottom:"16vh", "font-size":"3vh"}}>{this.state.name}</Card.Title>
-        <Card.Text className="desc" style = {{position:'relative', left:"20%", bottom:"16vh", "font-size":"2.5vh", width: "80%", color:"black" }}>
+        <Card.Title className="heading" style = {{position:'relative', left:"20%", bottom:"16vh", "font-size":"3vh", textAlign: "right", width:"59%"}}>{this.state.name}</Card.Title>
+        <Card.Text className="desc" style = {{position:'relative', left:"20%", bottom:"16vh", "font-size":"2.5vh", color:"black", textAlign: "right", width:"59%" }}>
         {this.state.description}
         </Card.Text>
-        <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"14vh", "font-size":"2vh" }}>
+        <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"12vh", "font-size":"2vh", textAlign: "right", width:"59%"}}>
         <b>Institution</b>: {this.state.institution}
         <br/>
         <b>Date</b>: {this.state.dateAchieved}

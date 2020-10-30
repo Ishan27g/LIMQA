@@ -96,14 +96,13 @@ class Home extends Component {
         let highlightedDoc = hDoc.map(doc =>{
             return (
                 <Card className='documentsCard' style={{
-                    backgroundColor: "rgba(0,0,0,0)",
                     color: "white",
                     textAlign: "center",
                     fontsize: "2em",
                     fontfamily: "Roboto, sans-serif",
                     fontWeight: "bolder"
             
-                }}>
+                }} bg="light">
                     <Card.Img variant='top' src={docImage}/>
                     <Card.Body 
                     style={{

@@ -38,12 +38,10 @@ class UserCard extends Component{
         return (
                 <Card className = "user-card"
                   style={{ 
-                        backgroundColor: "rgba(0,0,0,0)",
                         color: "white",
                         textAlign: "center",
                         fontSize: "2em",
                         fontfamily: "Roboto, sans-serif",
-                        fontWeight: "bolder",
                         height: "auto"}}
                   bg = "light">
 
