@@ -80,7 +80,7 @@ const addBgImage = async (req, res, next) =>{
         return next(error);
     }
     if(existingPhoto) {
-        const update = {bgImage : req.file.path}
+        const update = {bgImage : req.body.bgImage}
         await existingPhoto.updateOne(update);
         res.status(201).json({bgImage:true});
     }else{

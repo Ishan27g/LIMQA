@@ -4,7 +4,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .acc-header,
@@ -38,7 +37,6 @@
 }
 .acc-set{
   margin: 0px;
-  margin-top: 70px;
   margin-Bottom: 1vmax;
 }
 .acc-set > .container{

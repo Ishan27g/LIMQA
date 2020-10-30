@@ -80,7 +80,7 @@ class changePassword extends Component{
             axios.put(changePass,password, { withCredentials: true })
             .then(response => {
               console.log(response)
-              
+
               window.location.href='/view/'+this.state.userId;
             })
             .catch(function(error) {
@@ -107,7 +107,7 @@ class changePassword extends Component{
       <Container className = "register">
         <Col>
           <Form className = "register-form">
-            <h3>Change your password</h3>
+            <h4>Change your password</h4>
             <Form.Group controlId="formBasicUsername">
               <Col sm = "3">
               <Form.Label>Old Password</Form.Label>
@@ -162,7 +162,7 @@ class changePassword extends Component{
             {this.state.alertRePassword?
             (<Collapse>
               <Row>
-                <Col sm = {{span: 8, offset: 3}}>
+                <Col sm = {{span: 8}}>
                     <Alert variant={'danger'}>
                       Passwords don't match!
                     </Alert>
@@ -173,7 +173,7 @@ class changePassword extends Component{
             )
             }
             <Row>
-            <Button block variant = "outline-dark" onClick = {this.handleUpdate}> Change </Button>
+            <Button block variant = "dark" onClick = {this.handleUpdate}> Change </Button>
             </Row>
             <Row className = "edit-update-password">
               <label onClick={()=>window.location.href = '/forget'} style={{margin: "auto"}}>forget your password?</label>

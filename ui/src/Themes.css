@@ -1,47 +1,3 @@
-
-header{
-  margin-bottom: 60px;
-}
-
-.header-nav{
-  height: 60px;
-}
-footer{
-  margin-top: 50px;
-}
-.footer-size{
-    height: 50px;
-}
-body {
-  background-color: #000428;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #000428, #004e92);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #000428, #004e92); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-.copyright{
-  color: grey;
-
-}
-.profile-nav{
-  display: flex;
-  align-content: center;
-  justify-content: space-between;
-  padding-right: 50px;
-  width: 60%;
-  margin-left: auto;
-}
-
-.qr-code{
-  display: flex;
-  align-self: center;
-  justify-content: center;
-}
-
-.profile-socials{
-  width: 20vw;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 .app-background-default{
   background-color: #000428;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #000428, #004e92);  /* Chrome 10-25, Safari 5.1-6 */
@@ -94,4 +50,52 @@ body {
   background-color: #42275a;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #42275a, #753a88);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #42275a, #753a88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-sociallive-left {
+  background-color: #06beb6;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #06beb6, #48b1bf);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #06beb6, #48b1bf); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-sociallive-right {
+  background-color: #06beb6;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #06beb6, #48b1bf);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #06beb6, #48b1bf); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-cherry-left {
+  background-color: #eb3349;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #eb3349, #f45c43);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #eb3349, #f45c43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-cherry-right {
+  background-color: #eb3349;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #eb3349, #f45c43);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #eb3349, #f45c43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-lush-left {
+  background-color: #56ab2f;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #56ab2f, #a8e063);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #56ab2f, #a8e063); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-lush-right {
+  background-color: #56ab2f;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #56ab2f, #a8e063);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #56ab2f, #a8e063); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-dusk-left {
+  background-color: #ffd89b;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #ffd89b, #19547b);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #ffd89b, #19547b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.app-background-dusk-right {
+  background-color: #ffd89b;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #ffd89b, #19547b);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #ffd89b, #19547b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }

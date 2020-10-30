@@ -147,6 +147,7 @@ const signup = async (req, res, next) => {
     owner : createdUser.id,
     profilePhoto: "",
     coverImages: "",
+    bgImage: "app-background-default"
   })
   try {
     await createdPhotos.save();
@@ -576,6 +577,29 @@ const generateQRCode = (req, res, next) => {
 
 }
 
+const deleteUser = async (req, res, next) => {
+  let userId = req.params.uid;
+  
+  try {
+    await User.findOneAndRemove(
+      { _id:  userId}, 
+      { new: true }
+      )  
+  } catch (err) {
+    console.log(err);
+    const error =  new HttpError (
+      "Cannot delete user, please try again.",
+      500
+    );
+    return next(error);
+  }
+
+  res.json({
+    delete : true
+  })
+  
+}
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
@@ -587,3 +611,4 @@ exports.updatePassword = updatePassword;
 exports.checkPreviousPassword = checkPreviousPassword;
 exports.generateQRCode = generateQRCode;
 exports.getOneUser = getOneUser;
+exports.deleteUser = deleteUser;

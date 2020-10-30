@@ -1,11 +1,7 @@
-import React, {Component} from "react";
-import './Achievement.css';
-import Row from "react-bootstrap/Row";
-import Col  from "react-bootstrap/Col";
-import Image from "react-bootstrap/Image";
+import React from 'react';
+import Card from "react-bootstrap/Card";
 import docIcon from '../../Image/documents.png';
-
-class CardLeft extends Component{
+class CardLeft extends React.Component{
   constructor(props){
     super(props);
     this.state = {
@@ -15,28 +11,46 @@ class CardLeft extends Component{
     dateAchieved: this.props.dateAchieved
     }
   }
-  render(){
-    return (
-          <Row>
-            <Col className = "ac-image" sm = {3}>
-              <Image src={docIcon} style = {{width: "10vmax", height:"14vmax"}}/>
-            </Col>
-            <Col sm = {7}>
-              <Row>
-                <h4>{this.state.name}</h4>
-              </Row>
-              <Row>
-                  <h5>{this.state.description}</h5>
-              </Row>
-              <Row>
-                <h5>Institution: {this.state.institution}</h5>
-              </Row>
-              <Row style ={{display: 'flex', alignItems: "center", justifyContent: "flex-start"}}>
-                <h5>Date: {this.state.dateAchieved}</h5>
-              </Row>
 
-            </Col>
-          </Row>
+  setMessage() {
+    if(!this.state.institution){
+      this.state.institution = "Missing"
+    }
+  }
+  render(){
+    this.setMessage()
+    var visualDate = new Date(this.state.dateAchieved).toDateString();
+    return (
+      <div>
+        <Card style={{
+            position:'relative',
+            background: "grey",
+            width: "70vw",
+            height: "30vh",
+            top: "50px",
+            marginBottom: "30px"}}>
+          <Card.Img src={docIcon} style={{position:'relative', left:"10%", top: "4vh", width:"6.5vw", height:"17vh"}}/>
+          <Card.Body style={{
+            width:"68vw",
+            marginTop: "10px",
+            background: "white",
+            margin: "0 auto"
+            }}>
+            <Card.Title style = {{position:'relative', left:"20%", bottom:"16vh", "font-size":"3vh", color:"white"}}>
+              {this.state.name}
+            </Card.Title>
+            <Card.Text className="desc" style = {{position:'relative', left:"20%", bottom:"16vh", "font-size":"2.5vh", width: "60%" }}>
+              {this.state.description}
+            </Card.Text>
+            <Card.Text className="misc" style = {{position:'relative', left:"20%", bottom:"12vh", "font-size":"2vh" , color:"black"}}>
+              <b>Institution</b>: {this.state.institution}
+              <br/>
+              <b>Date</b>: {visualDate}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </div>
+
     );
   }
 }
