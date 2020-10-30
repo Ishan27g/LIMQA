@@ -110,7 +110,13 @@ class Home extends Component {
 
         let highlightedDoc = hDoc.map(doc =>{
             return (
-                <Card className='documentsCard'  style={{ height: "auto"}} bg = "light">
+                <Card className='documentsCard' style={{
+                    color: "white",
+                    textAlign: "center",
+                    fontsize: "2em",
+                    fontfamily: "Roboto, sans-serif",
+                    fontWeight: "bolder"
+                }} bg="light">
                   <Image variant="top" src={docImage}
                             style = {{width: "8vmax", height: "10vmax", alignSelf: "center", marginBottom: "10px"}}/>
                   <Card.Body onClick = {event =>  window.location.href = '/documents/'+doc._id }
