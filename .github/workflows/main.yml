@@ -14,5 +14,8 @@ jobs:
 
       - name: Test command 
         run: |
-          cd server/
-          ./entry.sh
+          cd ui/
+          npm install
+          cd ../server/
+          npm i nodemailer
+          npm i
