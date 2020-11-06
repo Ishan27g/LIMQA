@@ -16,7 +16,6 @@ jobs:
         run: |
           cd ui/
           npm install
-          npm test
           cd ../server/
           npm i nodemailer
           npm i
