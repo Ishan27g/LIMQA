@@ -85,7 +85,7 @@ class forgetPassEmail extends Component{
             <Container className = "register">
 
                 <Form className = "register-form">
-                    <h4>An email has send to your email addres</h4>
+                    <h4>An email has send to your email address</h4>
                     <p>please follow attached link to reset your password!</p>
 
                     <Button href='/' variant="dark" block>return to home page</Button>
