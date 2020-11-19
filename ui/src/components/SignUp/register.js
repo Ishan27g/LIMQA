@@ -156,6 +156,7 @@ class Register extends Component{
                                         <strong> 6 characters</strong> long<br/>
                                         Should contain a <strong>capital </strong>
                                         letter and a <strong>number</strong>
+                                        <br/> No special characters accepted
                                       </Popover.Content>
                                     </Popover>
                                   }>
