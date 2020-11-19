@@ -125,4 +125,3 @@ function connect(){
         setTimeout(connect, 5000);
     });
 }
-// prepare for the final product submission.

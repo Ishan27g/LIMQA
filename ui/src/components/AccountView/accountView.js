@@ -404,10 +404,10 @@ class AccountView extends Component {
                        {name: "Facebook",url: this.state.facebook,
                         alert: this.state.alertFacebook, onChange: this.onChangeFacebook,
                         imgsrc: iconFacebook},
-                       {name: "GitHub",url: this.state.GitHub,
+                       {name: "GitHub",url: this.state.github,
                         alert: this.state.alertGithub, onChange: this.onChangeGithub,
                         imgsrc: iconGithub},
-                       {name: "WeChat",url: this.state.WeChat,
+                       {name: "WeChat",url: this.state.wechat,
                         alert: this.state.alertWechat, onChange: this.onChangeWechat,
                         imgsrc: iconWechat}
                       ];
